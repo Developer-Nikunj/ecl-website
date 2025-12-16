@@ -1,4 +1,5 @@
 import { DataTypes } from "sequelize";
+import { sequelize } from "@/database/db";
 
 export const actionModel = sequelize.define(
   "action",

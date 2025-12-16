@@ -1,4 +1,5 @@
 import { DataTypes } from "sequelize";
+import { sequelize } from "@/database/db";
 
 export const roleModel = sequelize.define(
   "role",
@@ -13,6 +14,7 @@ export const roleModel = sequelize.define(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique:true,
     },
     description: {
       type: DataTypes.STRING,

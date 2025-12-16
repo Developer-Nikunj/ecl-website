@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 
+import { sequelize } from "@/database/db";
 export const testimonialModel = sequelize.define(
   "testimonial",
   {

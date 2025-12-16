@@ -1,4 +1,5 @@
 import { DataTypes } from "sequelize";
+import { sequelize } from "@/database/db";
 
 export const userModel = sequelize.define(
   "user",
@@ -18,6 +19,9 @@ export const userModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    otp: {
+      type: DataTypes.STRING,
+    },
     role: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -27,7 +31,7 @@ export const userModel = sequelize.define(
       allowNull: false,
       defaultValue: [],
     },
-    verified: {
+    emailVerified: {
       type: DataTypes.BOOLEAN,
       defaultValue:false,
     },

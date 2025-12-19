@@ -62,18 +62,44 @@ export default function DashboardLayout({ children }) {
                         {!collapsed && openMenu === "roles" && (
                             <ul className="nav flex-column ms-3 mt-1">
                                 <li className="nav-item">
-                                    <Link href="/dashboard/roles/admin" className="nav-link text-secondary">
-                                        Admin
+                                    <Link href="/dev/roles/create" className="nav-link text-secondary">
+                                        Create Roles
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link href="/dashboard/roles/user" className="nav-link text-secondary">
-                                        User
+                                    <Link href="/dev/roles/assign" className="nav-link text-secondary">
+                                        Assign Roles
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link href="/dashboard/roles/manager" className="nav-link text-secondary">
-                                        Manager
+                                    <Link href="/dev/roles/action" className="nav-link text-secondary">
+                                        Roles Actions
+                                    </Link>
+                                </li>
+                            </ul>
+                        )}
+                    </li>
+
+                    {/* Seo with Subitems */}
+                    <li className="nav-item">
+                        <button
+                            className="nav-link text-white btn btn-link text-start w-100"
+                            onClick={() => toggleSubMenu("seo")}
+                        >
+                            👥 {!collapsed && "Seo"}
+                            {!collapsed && (
+                                <span className="float-end">
+                                    {openMenu === "seo" ? "▾" : "▸"}
+                                </span>
+                            )}
+                        </button>
+
+                        {/* Subitems */}
+                        {!collapsed && openMenu === "seo" && (
+                            <ul className="nav flex-column ms-3 mt-1">
+                                <li className="nav-item">
+                                    <Link href="/dev/seo/add" className="nav-link text-secondary">
+                                        Add Words
                                     </Link>
                                 </li>
                             </ul>

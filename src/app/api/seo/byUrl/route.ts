@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = seoSchema.parse(body);
 
-    const createdSeo = await seoModel.findOne({
+    const fetchedSeo = await seoModel.findOne({
       where: {
         pageUrl: validatedData.pageUrl,
       },
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({
       status: 1,
       message: "Seo fetched successfully",
-      data:createdSeo,
+      data: fetchedSeo,
     });
     return response;
   } catch (error) {

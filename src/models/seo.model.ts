@@ -15,10 +15,41 @@ export const seoModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    actions: {
-      type: DataTypes.JSON,
+    title: {
+      type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: [],
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    keywords: {
+      type: DataTypes.TEXT, // comma-separated
+      allowNull: true,
+    },
+    robots: {
+      type: DataTypes.STRING,
+      defaultValue: "index, follow",
+    },
+    canonicalUrl: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    ogTitle: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    ogDescription: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    ogImage: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    schema: {
+      type: DataTypes.JSON, // JSON-LD only
+      allowNull: true,
     },
   },
   { tableName: "seo", freezeTableName: true, timestamps: true }

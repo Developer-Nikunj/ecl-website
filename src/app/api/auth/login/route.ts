@@ -1,14 +1,17 @@
 "use server";
 
 import { NextRequest, NextResponse } from "next/server";
-import { sequelize, testConnection } from "@/database/db";
+import {testConnection } from "@/database/db";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { userModel } from "@/models/user.model";
+import { randomUUID, randomBytes } from "crypto";
+import redis from "@/utils/redis/redis"
 
-const jwtSecret = process.env.JWT_SECRET || "default_secret";
 
-export async function POST(request: NextRequest, response: NextResponse) {
+
+
+export async function POST(request: NextRequest) {
   try {
     await testConnection();
     const { email, password } = await request.json();
@@ -23,7 +26,15 @@ export async function POST(request: NextRequest, response: NextResponse) {
       where: {
         email: email,
       },
-      attributes: ["id", "name", "email", "emailVerified", "password","role"],
+      attributes: [
+        "id",
+        "name",
+        "email",
+        "emailVerified",
+        "password",
+        "role",
+        "actions",
+      ],
     });
 
     if (!existuser) {
@@ -44,31 +55,40 @@ export async function POST(request: NextRequest, response: NextResponse) {
       return NextResponse.json({ status: 0, message: "Please Enter correct password" });
     }
 
-    // create token
-    const token = jwt.sign(
+    // create refresh token
+    const refreshToken = randomBytes(40).toString("hex");
+    
+    // create access token
+    const accessToken = jwt.sign(
       {
         id: existuser.id,
         name: existuser.name,
         email: existuser.email,
         role: existuser.role,
+        actions: existuser.actions,
       },
-        jwtSecret,
+      process.env.ACCESS_JWT_SECRET!,
       {
-        expiresIn:"30d"
+        expiresIn: "10m",
       }
-    );
+    );  
+
+    const sessionId = randomUUID();
+
+    await redis.set(`session:${sessionId}`, existuser.id, "EX", 7 * 86400);
+    await redis.set(`refresh:${sessionId}`, refreshToken, "EX", 7 * 86400);
 
     const response = NextResponse.json({
       status: 1,
+      token:accessToken,
       message: "Login successfully",
     });
     response.cookies.set({
-      name: "token",
-      value: token,
+      name: "sessionId",
+      value: sessionId,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       path: "/",
-      maxAge: 30 * 24 * 60 * 60, // 30 days
     });
     return response;
   } catch (error) {

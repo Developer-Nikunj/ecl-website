@@ -1,8 +1,40 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "@/database/db";
 
-export const userModel = sequelize.define(
-  "user",
+interface UserAttributes {
+  id: number;
+  name?: string;
+  token?: string;
+  email: string;
+  password: string;
+  otp?: string;
+  role: string;
+  actions?: any[];
+  emailVerified: boolean;
+}
+
+interface UserCreationAttributes
+  extends Optional<
+    UserAttributes,
+    "id" | "otp" | "actions" | "emailVerified" | "token"
+  > {}
+
+export class User
+  extends Model<UserAttributes, UserCreationAttributes>
+  implements UserAttributes
+{
+  declare id: number;
+  declare name: string;
+  declare token: string;
+  declare email: string;
+  declare password: string;
+  declare otp?: string;
+  declare role: string;
+  declare actions?: any[];
+  declare emailVerified: boolean;
+}
+
+export const userModel = User.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -11,32 +43,36 @@ export const userModel = sequelize.define(
       unique: true,
       allowNull: false,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    name: DataTypes.STRING,
+    token: DataTypes.STRING,
     email: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    otp: {
-      type: DataTypes.STRING,
-    },
-    role: {
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    otp: DataTypes.STRING,
+    role: {
+      type: DataTypes.STRING,
+      defaultValue: "USER",
     },
     actions: {
       type: DataTypes.JSON,
-      allowNull: false,
       defaultValue: [],
     },
     emailVerified: {
       type: DataTypes.BOOLEAN,
-      defaultValue:false,
+      defaultValue: false,
     },
   },
-  { tableName: "user", freezeTableName: true, timestamps: true }
+  {
+    sequelize,
+    tableName: "user",
+    freezeTableName: true,
+    timestamps: true,
+  }
 );
 
 await userModel.sync();

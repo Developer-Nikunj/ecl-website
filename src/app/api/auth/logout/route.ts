@@ -1,51 +1,18 @@
 "use server";
 
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
+import redis from "@/utils/redis/redis";
 
-export async function POST() {
-  try {
-    const response = NextResponse.json({
-      status: 1,
-      message: "Logout successfully",
-    });
 
-    // Clear the token cookie
-    response.cookies.set({
-      name: "token",
-      value: "",
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 0, // Immediately expire the cookie
-    });
-
-    return response;
-  } catch (error) {
-    console.error("Logout Error:", error);
-    return NextResponse.json({ status: 0, message: "Internal server error" });
+export async function POST(req: NextRequest) {
+  const sessionId = req.cookies.get("sessionId")?.value;
+  if (sessionId) {
+    await redis.del(`session:${sessionId}`);
+    await redis.del(`refresh:${sessionId}`);
   }
+
+  const res = NextResponse.json({ success: true });
+  res.cookies.delete("sessionId");
+  return res;
 }
 
-// Optional: GET method for logout if needed
-export async function GET() {
-  try {
-    const response = NextResponse.json({
-      status: 1,
-      message: "Logout successfully",
-    });
-
-    response.cookies.set({
-      name: "token",
-      value: "",
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 0,
-    });
-
-    return response;
-  } catch (error) {
-    console.error("Logout Error:", error);
-    return NextResponse.json({ status: 0, message: "Internal server error" });
-  }
-}

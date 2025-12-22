@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { testConnection } from "@/database/db";
 import { seoModel } from "@/models/seo.model";
-import { verifyAdmin } from "@/utils/authorizations/validateToken";
+import { canUserPerformAction } from "@/utils/authorizations/validateToken";
 import { z } from "zod";
 
 const seoSchema = z.object({
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin();
+    const auth = await canUserPerformAction('getSeo');
 
     if (!auth.valid) {
       return NextResponse.json({ message: auth.message }, { status: 401 });

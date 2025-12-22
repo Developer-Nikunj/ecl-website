@@ -49,4 +49,10 @@ export async function verifyAdmin() {
 }
 
 
-
+export async function canUserPerformAction(action:string){
+  const result = await getDecodedToken();
+  if(!result?.user?.actions.includes(action)){
+    return { valid: false, message: "Not allowed to perform this Acrion" };
+  }
+  return result;
+}

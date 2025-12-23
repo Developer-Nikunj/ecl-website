@@ -1,21 +1,17 @@
 "use server";
 
 import { NextRequest, NextResponse } from "next/server";
-import { sequelize, testConnection } from "@/database/db";
-import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
+import { testConnection } from "@/database/db";
 import bcrypt from "bcrypt";
-import { QueryTypes } from "sequelize";
 import { userModel } from "@/models/user.model";
 import otpGenerator from "otp-generator";
 import { sendEmailToUser } from "@/utils/email/sendVerificationEmail";
+import {logsEntry} from "@/utils/logsEntry/logsEntry"
 
-const jwtSecret = process.env.JWT_SECRET || "default_secret";
-
-export async function POST(request: NextRequest, reponse: NextResponse) {
+export async function POST(request: NextRequest) {
   try {
     await testConnection();
-    const { email, password } = await request.json();
+    const { email, password, role } = await request.json();
     if (!email || !password) {
       return NextResponse.json({
         status: 0,
@@ -40,13 +36,28 @@ export async function POST(request: NextRequest, reponse: NextResponse) {
       specialChars: false,
     });
     const hashedPassword = await bcrypt.hash(password, 10);
-    const [data0] = await userModel.create({ email, hashedPassword, otp });
+    const data0 = await userModel.create({
+      email,
+      password: hashedPassword,
+      otp,
+      role,
+    });
 
-    if (data0.length == 0 || !data0) {
+    if (!data0) {
       return NextResponse.json({ status: 0, message: "Registration Failed" });
     }
     //send otp on email
-    sendEmailToUser(email, otp,"VerificationEmail");
+    sendEmailToUser(email, otp, "VerificationEmail");
+    await logsEntry({
+      userId: "",
+      email: email,
+      action: "REGISTER_SUCCESS",
+      ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+      requestMethod: request.method,
+      endPoint: request.nextUrl.pathname.toString(),
+      status: 200,
+      userAgent: request.headers.get("user-agent") || "unknown",
+    });
     return NextResponse.json({
       status: 1,
       message: "OTP for Verification sent on email",

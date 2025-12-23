@@ -2,18 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { testConnection } from "@/database/db";
 import { roleModel } from "@/models/role.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
+import { logsEntry } from "@/utils/logsEntry/logsEntry";
 
 export async function POST(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin();
-
+    const auth = await verifyAdmin(request);
     if (!auth.valid) {
-      return NextResponse.json({ message: auth.message }, { status: 401 });
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
     }
 
-    const { name,description } = await request.json();
+    const { name, description } = await request.json();
     if (!name) {
       return NextResponse.json({
         status: 0,
@@ -25,12 +28,7 @@ export async function POST(request: NextRequest) {
       where: {
         name: name,
       },
-      attributes: [
-        "id",
-        "name",
-        "description",
-        "active"
-      ],
+      attributes: ["id", "name", "description", "active"],
     });
 
     if (existrole) {
@@ -41,8 +39,9 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await roleModel.create({
-        name,description
-    })
+      name,
+      description,
+    });
 
     if (!data) {
       return NextResponse.json({
@@ -51,6 +50,16 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    await logsEntry({
+      userId: auth?.user?.id.toString(),
+      email: auth?.user?.email,
+      action: "ROLE_CREATED_SUCCESS",
+      ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+      requestMethod: request.method,
+      endPoint: request.nextUrl.pathname.toString(),
+      status: 200,
+      userAgent: request.headers.get("user-agent") || "unknown",
+    });
 
     const response = NextResponse.json({
       status: 1,

@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import { userModel } from "@/models/user.model";
 import { randomUUID, randomBytes } from "crypto";
 import redis from "@/utils/redis/redis"
+import {logsEntry} from "@/utils/logsEntry/logsEntry"
 
 
 
@@ -89,6 +90,17 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       path: "/",
+    });
+
+    await logsEntry({
+      userId: existuser.id.toString(),
+      email: existuser.email,
+      action: "LOGIN_SUCCESS",
+      ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+      requestMethod: request.method,
+      endPoint: request.nextUrl.pathname.toString(),
+      status: 200,
+      userAgent: request.headers.get("user-agent") || "unknown",
     });
     return response;
   } catch (error) {

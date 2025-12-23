@@ -16,10 +16,10 @@ export async function POST(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin();
+    const auth = await verifyAdmin(request);
 
     if (!auth.valid) {
-      return NextResponse.json({ message: auth.message }, { status: 401 });
+      return NextResponse.json({ message: auth.message }, { status: auth.status });
     }
 
     const body = await request.json();

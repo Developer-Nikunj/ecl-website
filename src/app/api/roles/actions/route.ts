@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { testConnection } from "@/database/db";
-import { roleModel } from "@/models/role.model";
 import {userModel} from "@/models/user.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import z from "zod";

@@ -11,7 +11,7 @@ Log.init(
       primaryKey: true,
     },
     userId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING,
     },
     email: {
       type: DataTypes.STRING,

@@ -79,7 +79,7 @@ export const userModel = User.init(
           user.actions = Array.from(new Set(user.actions));
         }
       },
-    },
+    },  
   }
 );
 

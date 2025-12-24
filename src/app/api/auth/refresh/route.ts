@@ -31,7 +31,6 @@ export async function POST(request:NextRequest){
         name: existuser.name,
         email: existuser.email,
         role: existuser.role,
-        actions: existuser.actions,
       },
       process.env.ACCESS_JWT_SECRET!,
       {

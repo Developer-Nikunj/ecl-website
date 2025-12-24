@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { testConnection } from "@/database/db";
-import {userModel} from "@/models/user.model";
+import { permissionModel } from "@/models/permission.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import z from "zod";
 
 const validateInput = z.object({
-  id:z.number(), // userId
-  actions : z.array(z.string()),
-})
+  userId: z.number(), // userId
+  menu: z.number(), // userId
+  permission: z.boolean(),
+});
 
 
-// add actions that a role can do , like if it a operator, cant access role , add in user model
 export async function POST(request: NextRequest) {
   try {
     await testConnection();
@@ -24,11 +24,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validateData = validateInput.parse(body);
 
-    const addActionToUser = await userModel.update(validateData,{
-      where:{
-        id:validateData.id,
-      }
-    })
+    
+
+    const addActionToUser = await permissionModel.create(validateData);
 
     if(!addActionToUser){
       return NextResponse.json({status:0,message:"adding action to user failed"});

@@ -72,14 +72,6 @@ export const userModel = User.init(
     tableName: "user",
     freezeTableName: true,
     timestamps: true,
-
-    hooks: {
-      beforeSave: (user) => {
-        if (Array.isArray(user.actions)) {
-          user.actions = Array.from(new Set(user.actions));
-        }
-      },
-    },  
   }
 );
 

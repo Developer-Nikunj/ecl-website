@@ -5,7 +5,7 @@ import { verifyAdmin } from "@/utils/authorizations/validateToken";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await testConnection();
@@ -15,7 +15,7 @@ export async function GET(
       return NextResponse.json({ message: auth.message }, { status: 403 });
     }
 
-    const { id } = params;
+    const { id } = await context.params; 
     if (!id) {
       return NextResponse.json(
         { status: 0, message: "Role id is required" },
@@ -25,6 +25,7 @@ export async function GET(
 
     const data = await roleModel.findOne({
       where: { id: parseInt(id, 10) }, // convert string → number
+      attributes:['id','name','description','active']
     });
 
     if (!data) {

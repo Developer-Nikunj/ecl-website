@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
       specialChars: false,
       digits: true,
     });
+    console.log("otp", otp);
     const hashedPassword = await bcrypt.hash(password, 10);
     const data0 = await userModel.create({
       email,

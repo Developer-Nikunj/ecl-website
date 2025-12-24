@@ -4,7 +4,7 @@ import { sequelize } from "@/database/db";
 interface PermissionAttributes {
   id: number;
   userId: number;
-  menu?: number;
+  menuId?: number;
   permission: boolean;
 }
 
@@ -16,7 +16,7 @@ export class Permission
 {
   declare id: number;
   declare userId: number;
-  declare menu?: number;
+  declare menuId?: number;
   declare permission: boolean;
 }
 
@@ -31,7 +31,7 @@ export const permissionModel = Permission.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    menu: {
+    menuId: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },

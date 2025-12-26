@@ -9,7 +9,7 @@ const validateInput = z.object({
   menuId: z.array(z.number()), // menu IDs
   permission: z.boolean(),
 });
-
+// to gave permission
 export async function POST(request: NextRequest) {
   try {
     await testConnection();

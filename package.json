@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
+    "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
     "handlebars": "^4.7.8",
     "ioredis": "^5.8.2",
@@ -21,6 +23,7 @@
     "pg-hstore": "^2.3.4",
     "react": "19.2.1",
     "react-dom": "19.2.1",
+    "react-redux": "^9.2.0",
     "redis": "^5.10.0",
     "sequelize": "^6.37.7",
     "zod": "^4.2.1"

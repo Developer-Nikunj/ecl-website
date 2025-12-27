@@ -7,7 +7,7 @@ import z from "zod";
 const validateInput = z.object({
   userId: z.array(z.number()), // user IDs
   menuId: z.array(z.number()), // menu IDs
-  permission: z.boolean(),
+  permission: z.boolean(),    
 });
 // to gave permission
 export async function POST(request: NextRequest) {

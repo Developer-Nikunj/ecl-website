@@ -11,7 +11,7 @@ import {logsEntry} from "@/utils/logsEntry/logsEntry"
 export async function POST(request: NextRequest) {
   try {
     await testConnection();
-    const { email, password, role } = await request.json();
+    const {name, email, password, role } = await request.json();
     if (!email || !password) {
       return NextResponse.json({
         status: 0,
@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
       password: hashedPassword,
       otp,
       role,
+      name,
     });
 
     if (!data0) {

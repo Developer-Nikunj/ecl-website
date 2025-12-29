@@ -4,7 +4,7 @@ import { clearAuth, setAuth } from "@/store/slices/module1/auth/auth.slices"
 
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   withCredentials: true,
 });
 

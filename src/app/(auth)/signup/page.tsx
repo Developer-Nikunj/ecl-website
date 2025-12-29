@@ -1,11 +1,49 @@
-import React from 'react'
+"use client";
 
-const page = () => {
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import Script from "next/script";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { registerUser } from "@/store/slices/module1/auth/auth.thunk";
+import { toast } from "react-toastify";
+
+const Page = () => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      toast.error("Please enter email");
+      return;
+    }
+    if (!name) {
+      toast.error("Please enter userName");
+      return;
+    }
+    if (!password) {
+      toast.error("Please enter password");
+      return;
+    }
+
+    try {
+      await dispatch(registerUser({email,name,password})).unwrap();
+      router.replace("/verify-email");
+    } catch (err) {
+      console.log("Registeration failed",err)
+    }
+  };
   return (
     <div>
       <>
         <meta charSet="utf-8" />
-        <title>Sign Up | Expert code lab - Admin &amp; Dashboard Template</title>
+        <title>
+          Sign Up | Expert code lab - Admin &amp; Dashboard Template
+        </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
           content="Premium Multipurpose Admin & Dashboard Template"
@@ -28,7 +66,11 @@ const page = () => {
           type="text/css"
         />
         {/* App Css*/}
-        <link href="assets/backend/css/app.min.css" rel="stylesheet" type="text/css" />
+        <link
+          href="assets/backend/css/app.min.css"
+          rel="stylesheet"
+          type="text/css"
+        />
         {/* custom Css*/}
         <link
           href="assets/backend/css/custom.min.css"
@@ -86,7 +128,7 @@ const page = () => {
                         <form
                           className="needs-validation"
                           noValidate=""
-                          action="index.html"
+                          onSubmit={handleSubmit}
                         >
                           <div className="mb-3">
                             <label htmlFor="useremail" className="form-label">
@@ -98,6 +140,7 @@ const page = () => {
                               id="useremail"
                               placeholder="Enter email address"
                               required=""
+                              onChange={(e)=>setEmail(e.target.value)}
                             />
                             <div className="invalid-feedback">
                               Please enter email
@@ -113,6 +156,7 @@ const page = () => {
                               id="username"
                               placeholder="Enter username"
                               required=""
+                              onChange={(e)=>setName(e.target.value)}
                             />
                             <div className="invalid-feedback">
                               Please enter username
@@ -135,6 +179,7 @@ const page = () => {
                                 aria-describedby="passwordInput"
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                                 required=""
+                                onChange={(e)=>setPassword(e.target.value)}
                               />
                               <button
                                 className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
@@ -269,6 +314,6 @@ const page = () => {
       </>
     </div>
   );
-}
+};
 
-export default page
+export default Page;

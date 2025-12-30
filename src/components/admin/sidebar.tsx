@@ -55,7 +55,7 @@ const Sidebar = () => {
                       Role{" "}
                     </a>
                   </li>
-                  <li className="nav-item">
+                  {/* <li className="nav-item">
                     <a
                       href="dashboard-crypto.html"
                       className="nav-link"
@@ -101,7 +101,7 @@ const Sidebar = () => {
                         New
                       </span>
                     </a>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </li>{" "}

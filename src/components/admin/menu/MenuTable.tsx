@@ -70,6 +70,21 @@ const MenuTable = () => {
             ))}
           </tbody>
         </table>
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <button
+            className="btn btn-sm text-white"
+            style={{ background: "linear-gradient(135deg, #667eea, #764ba2)" }}
+          >
+            Previous
+          </button>
+
+          <button
+            className="btn btn-sm text-white"
+            style={{ background: "linear-gradient(135deg, #43cea2, #185a9d)" }}
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       {showCreateModal && (

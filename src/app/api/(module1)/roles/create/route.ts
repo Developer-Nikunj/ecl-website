@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, description } = await request.json();
+    const { name, description,status } = await request.json();
     if (!name) {
       return NextResponse.json({
         status: 0,
@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
     const data = await roleModel.create({
       name,
       description,
+      active:status
     });
 
     if (!data) {

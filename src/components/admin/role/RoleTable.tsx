@@ -1,11 +1,39 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { createRole } from "@/store/slices/module1/roles/roles.thunk";
 
 const RoleTable = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [createRoleEntry, setCreateRoleEntry] = useState({
+    name: "",
+    description: "",
+    status: "",
+  });
+
+  const dispatch = useDispatch<AppDispatch>();
+  // const loading = useSelector((state: RootState) => state.roles.loading);
+
+  const handleCreate = () => {
+    dispatch(
+      createRole({
+        name: createRoleEntry.name,
+        description: createRoleEntry.description,
+        status: createRoleEntry.status,
+      })
+    );
+  };
+  const token = useAppSelector((state) => state.auth.accessToken);
+
+  useEffect(() => {
+    console.log(token);
+  }, [token]);
+
   const data = [
     {
       id: 1,
@@ -131,6 +159,13 @@ const RoleTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Role name"
+                        value={createRoleEntry.name}
+                        onChange={(e) =>
+                          setCreateRoleEntry({
+                            ...createRoleEntry,
+                            name: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div className="mb-3">
@@ -139,6 +174,13 @@ const RoleTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter menu description"
+                        value={createRoleEntry.description}
+                        onChange={(e) =>
+                          setCreateRoleEntry({
+                            ...createRoleEntry,
+                            description: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div className="mb-3">
@@ -146,6 +188,13 @@ const RoleTable = () => {
                       <select
                         className="form-select mb-3"
                         aria-label="Default select example"
+                        value={createRoleEntry.status}
+                        onChange={(e) =>
+                          setCreateRoleEntry({
+                            ...createRoleEntry,
+                            status: e.target.value,
+                          })
+                        }
                       >
                         <option selected>Status</option>
                         <option value="1">Active</option>
@@ -162,7 +211,12 @@ const RoleTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={handleCreate}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -290,4 +344,4 @@ const RoleTable = () => {
   );
 };
 
-export default RoleTable
+export default RoleTable;

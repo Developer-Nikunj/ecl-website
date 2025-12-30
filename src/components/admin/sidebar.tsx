@@ -37,22 +37,22 @@ const Sidebar = () => {
                   </li>
                   <li className="nav-item">
                     <a
-                      href="dashboard-crm.html"
+                      href="/dev/users"
                       className="nav-link"
                       data-key="t-crm"
                     >
                       {" "}
-                      CRM{" "}
+                      Users{" "}
                     </a>
                   </li>
                   <li className="nav-item">
                     <a
-                      href="index.html"
+                      href="/dev/role"
                       className="nav-link"
                       data-key="t-ecommerce"
                     >
                       {" "}
-                      Ecommerce{" "}
+                      Role{" "}
                     </a>
                   </li>
                   <li className="nav-item">

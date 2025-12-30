@@ -1,9 +1,8 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import MenuTable from "@/components/admin/menu/MenuTable"
+import UsersTable from "@/components/admin/users/UsersTable";
 
 export default function Home() {
-   
   return (
     <div className="main-content">
       <div className="page-content">
@@ -16,7 +15,7 @@ export default function Home() {
                     <div className="d-flex align-items-lg-center flex-lg-row flex-column">
                       <div className="flex-grow-1">
                         <h4 className="fs-16 mb-1">Good Morning, Anna!</h4>
-                        <MenuTable/>
+                        <UsersTable />
                       </div>
                     </div>
                   </div>

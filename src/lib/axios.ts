@@ -1,7 +1,10 @@
 import axios from "axios";
-import { store } from "@/store";
 import { clearAuth, setAuth } from "@/store/slices/module1/auth/auth.slices"
 
+let storeRef:any;
+export const injectStore = (store:any) => {
+  storeRef = store;
+};
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -9,7 +12,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = store.getState().auth.accessToken;
+  const token = storeRef.getState().auth.accessToken;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -28,7 +31,7 @@ api.interceptors.response.use(
       try {
         const res = await api.post("/auth/refresh");
 
-        store.dispatch(
+        storeRef.dispatch(
           setAuth({
             accessToken: res.data.accessToken,
             user: res.data.user,
@@ -39,7 +42,7 @@ api.interceptors.response.use(
 
         return api(originalRequest);
       } catch (err) {
-        store.dispatch(clearAuth());
+        storeRef.dispatch(clearAuth());
         window.location.href = "/login";
       }
     }

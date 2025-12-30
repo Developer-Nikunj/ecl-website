@@ -1,7 +1,6 @@
 // auth.thunk.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/lib/axios";
-import { setAuth } from "./auth.slices";
 import { toast } from "react-toastify";
 
 interface LoginPayload {
@@ -18,7 +17,7 @@ export const loginUser = createAsyncThunk<
   AuthResponse,
   LoginPayload,
   { rejectValue: string }
->("auth/login", async ({ email, password }, { dispatch, rejectWithValue }) => {
+>("auth/login", async ({ email, password }, { rejectWithValue }) => {
   try {
     const res = await api.post(
       "/auth/login",
@@ -28,13 +27,6 @@ export const loginUser = createAsyncThunk<
       }
     );
     console.log("res", res);
-
-    dispatch(
-      setAuth({
-        accessToken: res.data.token,
-        status: res.data.status,
-      })
-    );
     toast.success(String(res.data.message));
     return res.data;
   } catch (err) {
@@ -59,7 +51,7 @@ export const registerUser = createAsyncThunk<
   { rejectValue: string }
 >(
   "auth/register",
-  async ({ email, name, password }, { dispatch, rejectWithValue }) => {
+  async ({ email, name, password }, { rejectWithValue }) => {
     try {
       const res = await api.post(
         "/auth/register",

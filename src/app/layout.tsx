@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Providers from "./providers";
 import ToastProvider from "@/components/ToastProvider";
+import BootstrapClient from "@/components/admin/BootstrapClient";
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <BootstrapClient />
         <Providers>
           {children}
           <ToastProvider />

@@ -12,7 +12,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = storeRef.getState().auth.accessToken;
+  const token = storeRef.getState().auth.token;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -33,12 +33,12 @@ api.interceptors.response.use(
 
         storeRef.dispatch(
           setAuth({
-            accessToken: res.data.accessToken,
+            token: res.data.token,
             user: res.data.user,
           })
         );
 
-        originalRequest.headers.Authorization = `Bearer ${res.data.accessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${res.data.token}`;
 
         return api(originalRequest);
       } catch (err) {

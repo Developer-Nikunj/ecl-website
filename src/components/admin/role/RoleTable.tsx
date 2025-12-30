@@ -28,11 +28,7 @@ const RoleTable = () => {
       })
     );
   };
-  const token = useAppSelector((state) => state.auth.accessToken);
 
-  useEffect(() => {
-    console.log(token);
-  }, [token]);
 
   const data = [
     {

@@ -9,7 +9,7 @@ interface LoginPayload {
 }
 interface AuthResponse {
   status: boolean;
-  accessToken: string;
+  token: string;
   message: string;
 }
 
@@ -28,6 +28,7 @@ export const loginUser = createAsyncThunk<
     );
     console.log("res", res);
     toast.success(String(res.data.message));
+    
     return res.data;
   } catch (err) {
     toast.error(String(err));

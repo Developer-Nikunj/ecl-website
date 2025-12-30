@@ -4,7 +4,7 @@ import { loginUser } from "./auth.thunk";
 import { registerUser } from "./auth.thunk";
 
 interface AuthState {
-  accessToken: string | null;
+  token: string | null;
   isAuthenticated: boolean;
   status: boolean | null;
   loading: boolean;
@@ -12,7 +12,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  accessToken: null,
+  token: null,
   isAuthenticated: false,
   status: null,
   loading: false,
@@ -20,7 +20,7 @@ const initialState: AuthState = {
 };
 
 interface AuthPayload {
-  accessToken: string;
+  token: string;
   status: boolean;
 }
 
@@ -29,14 +29,14 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setAuth(state, action: PayloadAction<AuthPayload>) {
-      state.accessToken = action.payload.accessToken;
+      state.token = action.payload.token;
       state.status = action.payload.status;
       state.isAuthenticated = true;
       state.loading = false;
       state.error = null;
     },
     clearAuth(state) {
-      state.accessToken = null;
+      state.token = null;
       state.status = null;
       state.isAuthenticated = false;
       state.loading = false;
@@ -51,7 +51,8 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
-        state.accessToken = action.payload.token;
+        console.log("FULFILLED PAYLOAD:", action.payload);
+        state.token = action.payload.token;
         state.status = action.payload.status;
         state.isAuthenticated = true;
         state.loading = false;

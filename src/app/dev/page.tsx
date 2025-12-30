@@ -1,7 +1,16 @@
+"use client"
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
+import {useAppSelector} from "@/store/hooks"
 
 export default function Home() {
+    const token = useAppSelector((state) => state.auth.token);
+
+    useEffect(() => {
+      console.log(token);
+    }, [token]);
   return (
     <div className="main-content">
       <div className="page-content">

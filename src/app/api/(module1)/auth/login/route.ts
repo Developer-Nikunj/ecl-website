@@ -1,16 +1,13 @@
 "use server";
 
 import { NextRequest, NextResponse } from "next/server";
-import {testConnection } from "@/database/db";
+import { testConnection } from "@/database/db";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { userModel } from "@/models/user.model";
 import { randomUUID, randomBytes } from "crypto";
-import redis from "@/utils/redis/redis"
-import {logsEntry} from "@/utils/logsEntry/logsEntry"
-
-
-
+import redis from "@/utils/redis/redis";
+import { logsEntry } from "@/utils/logsEntry/logsEntry";
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,12 +50,15 @@ export async function POST(request: NextRequest) {
     const checkpassword = await bcrypt.compare(password, existuser.password);
 
     if (!checkpassword) {
-      return NextResponse.json({ status: 0, message: "Please Enter correct password" });
+      return NextResponse.json({
+        status: 0,
+        message: "Please Enter correct password",
+      });
     }
 
     // create refresh token
     const refreshToken = randomBytes(40).toString("hex");
-    
+
     // create access token
     const accessToken = jwt.sign(
       {
@@ -69,9 +69,9 @@ export async function POST(request: NextRequest) {
       },
       process.env.ACCESS_JWT_SECRET!,
       {
-        expiresIn: "10m",
+        expiresIn: "1m",
       }
-    );  
+    );
 
     const sessionId = randomUUID();
 
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({
       status: 1,
-      token:accessToken,
+      token: accessToken,
       message: "Login successfully",
     });
     response.cookies.set({

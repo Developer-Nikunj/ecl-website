@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     );
 
   const newRefresh = randomBytes(40).toString("hex");
-  await redis.set(`refresh:${sessionIdValue}`, newRefresh, "EX", 7 * 86400);
+  await redis.set(`refresh:${sessionId}`, newRefresh, "EX", 7 * 86400);
 
   const userId = await redis.get(`session:${sessionIdValue}`);
 

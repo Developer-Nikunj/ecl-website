@@ -37,7 +37,7 @@ export async function getDecodedToken(req: NextRequest): Promise<AuthResult> {
       : null;
 
     if (!token)
-      return { valid: false, message: "Access token missing", status: 400 };
+      return { valid: false, message: "Access token missing", status: 402 };
 
     const decoded = jwt.verify(token, jwtSecret) as AuthUser;
 

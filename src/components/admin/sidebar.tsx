@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from "next/link";
 
 const Sidebar = () => {
   return (
@@ -11,7 +12,7 @@ const Sidebar = () => {
               <span data-key="t-menu">Menu</span>
             </li>
             <li className="nav-item">
-              <a
+              <Link
                 className="nav-link menu-link"
                 href="#sidebarDashboards"
                 data-bs-toggle="collapse"
@@ -21,39 +22,39 @@ const Sidebar = () => {
               >
                 <i className="ri-dashboard-2-line" />{" "}
                 <span data-key="t-dashboards">Admin</span>
-              </a>
+              </Link>
               {/* menu dashboard start here */}
               <div className="collapse menu-dropdown" id="sidebarDashboards">
                 <ul className="nav nav-sm flex-column">
                   <li className="nav-item">
-                    <a
+                    <Link
                       href="/dev/menu"
                       className="nav-link"
                       data-key="t-analytics"
                     >
                       {" "}
                       Menu{" "}
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a
+                    <Link
                       href="/dev/users"
                       className="nav-link"
                       data-key="t-crm"
                     >
                       {" "}
                       Users{" "}
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a
+                    <Link
                       href="/dev/role"
                       className="nav-link"
                       data-key="t-ecommerce"
                     >
                       {" "}
                       Role{" "}
-                    </a>
+                    </Link>
                   </li>
                   {/* <li className="nav-item">
                     <a

@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       },
       process.env.ACCESS_JWT_SECRET!,
       {
-        expiresIn: "1m",
+        expiresIn: "20m",
       }
     );
 

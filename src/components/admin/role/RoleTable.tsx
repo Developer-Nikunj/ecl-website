@@ -4,7 +4,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { createRole } from "@/store/slices/module1/roles/roles.thunk";
+import {
+  createRole,
+  getallRoles,
+  deleteRole,
+} from "@/store/slices/module1/roles/roles.thunk";
 
 const RoleTable = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -15,44 +19,152 @@ const RoleTable = () => {
     description: "",
     status: "",
   });
+  const [filters, setFilters] = useState({
+    startDate: "",
+    endDate: "",
+    limit: 10,
+    offset: 0,
+  });
+  const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
 
-  const dispatch = useDispatch<AppDispatch>();
-  // const loading = useSelector((state: RootState) => state.roles.loading);
+  const dispatch = useAppDispatch();
+  const { roles, meta, loading, error } = useAppSelector((state) => state.role);
 
-  const handleCreate = () => {
+  const fetchRoles = () => {
     dispatch(
+      getallRoles({
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        limit: filters.limit,
+        offset: filters.offset,
+      })
+    );
+  };
+
+  const handleCreate = async () => {
+    const res = await dispatch(
       createRole({
         name: createRoleEntry.name,
         description: createRoleEntry.description,
         status: createRoleEntry.status,
       })
     );
+
+    if (createRole.fulfilled.match(res)) {
+      setShowCreateModal(false);
+      fetchRoles(); // ✅ correct
+    }
+
+    setCreateRoleEntry({
+      name: "",
+      description: "",
+      status: "",
+    });
+  };
+
+  const applyFilter = () => {
+    fetchRoles();
+  };
+
+  const handlePrevious = () => {
+    setFilters((prev) => ({
+      ...prev,
+      offset: Math.max(prev.offset - prev.limit, 0),
+    }));
+  };
+
+  const handleNext = () => {
+    if (meta && filters.offset + filters.limit < meta.total) {
+      setFilters((prev) => ({
+        ...prev,
+        offset: prev.offset + prev.limit,
+      }));
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedRoleId) return;
+
+    const res = await dispatch(deleteRole(selectedRoleId));
+
+    if (deleteRole.fulfilled.match(res)) {
+      setShowDeleteModal(false);
+      setSelectedRoleId(null);
+
+      // 🔥 Refresh list with current filters & pagination
+      dispatch(
+        getallRoles({
+          limit: filters.limit,
+          offset: filters.offset,
+          startDate: filters.startDate || undefined,
+          endDate: filters.endDate || undefined,
+        })
+      );
+    }
   };
 
 
-  const data = [
-    {
-      id: 1,
-      name: "Admin",
-      description: "AdminAdminAdminAdminAdmin",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "User",
-      description: "UserUserUserUserUser",
-      status: "Inactive",
-    },
-    {
-      id: 3,
-      name: "Operator",
-      description: "OperatorOperatorOperatorOperator",
-      status: "Active",
-    },
-    { id: 4, name: "Seo", description: "SeoSeoSeoSeoSeo", status: "Active" },
-  ];
+  useEffect(() => {
+    fetchRoles();
+  }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
+
+
   return (
     <div>
+      <div className="d-flex align-items-end gap-3 mb-3 flex-wrap">
+        {/* Total Rows */}
+        <div>
+          <label htmlFor="totalRows" className="form-label mb-1">
+            Total Rows
+          </label>
+
+          <select
+            id="totalRows"
+            className="form-select"
+            value={filters.limit}
+            onChange={(e) => {
+              setFilters({ ...filters, limit: Number(e.target.value) });
+            }}
+          >
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
+
+        {/* Start Date */}
+        <div>
+          <label className="form-label mb-1">Start Date</label>
+          <input
+            type="date"
+            className="form-control"
+            value={filters.startDate}
+            onChange={(e) => {
+              setFilters({ ...filters, startDate: e.target.value });
+            }}
+          />
+        </div>
+
+        {/* End Date */}
+        <div>
+          <label className="form-label mb-1">End Date</label>
+          <input
+            type="date"
+            className="form-control"
+            value={filters.endDate}
+            onChange={(e) => {
+              setFilters({ ...filters, endDate: e.target.value });
+            }}
+          />
+        </div>
+
+        {/* Apply Button */}
+        <button className="btn btn-primary px-4" onClick={applyFilter}>
+          Apply
+        </button>
+      </div>
+
       <div className="d-flex justify-content-end mb-3">
         <button
           onClick={() => setShowCreateModal((prev) => !prev)}
@@ -74,44 +186,50 @@ const RoleTable = () => {
           </thead>
 
           <tbody>
-            {data.map((item, index) => (
-              <tr key={item.id}>
-                <td>{index + 1}</td>
-                <td>{item.name}</td>
-                <td>{item.description}</td>
-                <td>
-                  <span
-                    className={`badge ${
-                      item.status === "Active" ? "bg-success" : "bg-danger"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
-                </td>
-                <td>
-                  <div className="d-flex gap-2">
-                    <button
-                      className="btn btn-sm btn-primary"
-                      onClick={() => setShowEditModal((prev) => !prev)}
+            {roles.length > 0 &&
+              roles.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{filters.offset + index + 1}</td>
+                  <td>{item.name}</td>
+                  <td>{item.description}</td>
+                  <td>
+                    <span
+                    // className={`badge ${
+                    //   item.status === true ? "bg-success" : "bg-danger"
+                    // }`}
                     >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => setShowDeleteModal((prev) => !prev)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      {item.status == true ? "Active" : "Inactive"}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="d-flex gap-2">
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => setShowEditModal((prev) => !prev)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => {
+                          setShowDeleteModal((prev) => !prev)
+                          setSelectedRoleId(item.id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
         <div className="d-flex justify-content-between align-items-center mt-3">
           <button
             className="btn btn-sm text-white"
             style={{ background: "linear-gradient(135deg, #667eea, #764ba2)" }}
+            onClick={handlePrevious}
+            disabled={filters.offset === 0}
           >
             Previous
           </button>
@@ -119,6 +237,8 @@ const RoleTable = () => {
           <button
             className="btn btn-sm text-white"
             style={{ background: "linear-gradient(135deg, #43cea2, #185a9d)" }}
+            onClick={handleNext}
+            disabled={!meta || filters.offset + filters.limit >= meta.total}
           >
             Next
           </button>
@@ -194,7 +314,7 @@ const RoleTable = () => {
                       >
                         <option selected>Status</option>
                         <option value="1">Active</option>
-                        <option value="2">Inactive</option>
+                        <option value="0">Inactive</option>
                       </select>
                     </div>
                   </form>
@@ -295,38 +415,50 @@ const RoleTable = () => {
       )}
       {showDeleteModal && (
         <>
-          {/* Modal Wrapper */}
+          {/* Modal */}
           <div
             className="modal fade show d-block"
             tabIndex={-1}
-            onClick={() => setShowDeleteModal(false)} // 👈 outside click
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="deleteRoleTitle"
+            onClick={() => setShowDeleteModal(false)}
           >
             <div
-              className="modal-dialog modal-dialog-centered modal-md"
-              onClick={(e) => e.stopPropagation()} // 👈 prevent inner click
+              className="modal-dialog modal-dialog-centered modal-sm"
+              role="document"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Delete Role</h5>
+              <div className="modal-content rounded-3 shadow">
+                <div className="modal-header border-0">
+                  <h5 className="modal-title" id="deleteRoleTitle">
+                    Confirm Deletion
+                  </h5>
                   <button
                     type="button"
                     className="btn-close"
+                    aria-label="Close"
                     onClick={() => setShowDeleteModal(false)}
                   />
                 </div>
 
-                <div className="modal-body">
-                  <h4>Sure, Want to Delete</h4>
+                <div className="modal-body text-center">
+                  <p className="mb-1 fw-semibold">
+                    Are you sure you want to delete this role?
+                  </p>
+                  <small className="text-muted">
+                    This action cannot be undone.
+                  </small>
                 </div>
 
-                <div className="modal-footer">
+                <div className="modal-footer border-0 d-flex justify-content-end gap-2">
                   <button
-                    className="btn btn-sm btn-secondary"
+                    className="btn btn-sm btn-light"
                     onClick={() => setShowDeleteModal(false)}
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Delete</button>
+                  <button className="btn btn-sm btn-danger" onClick={handleDelete}>Delete</button>
                 </div>
               </div>
             </div>

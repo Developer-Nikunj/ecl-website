@@ -7,7 +7,7 @@ import { object } from "zod";
 interface createRolePayload {
   name: string;
   description: string;
-  status: string;
+  status: boolean;
 }
 interface createRoleResponse {
   status: boolean;
@@ -135,3 +135,66 @@ export const deleteRole = createAsyncThunk<
 
 
 
+interface GetSingleRoleResponse {
+  status: number;
+  message: string;
+  data: Role;
+}
+export const getRoleById = createAsyncThunk<
+  GetSingleRoleResponse,
+  number,
+  { rejectValue: string }
+>("roles/getById", async (roleId, { rejectWithValue }) => {
+  try {
+    const res = await api.get(`roles/get/${roleId}`, { withCredentials: true });
+
+    if (res.data.status === 0) {
+      toast.error(res.data.message);
+      return rejectWithValue(res.data.message);
+    }
+
+    return res.data;
+  } catch (err: any) {
+    const message = err.response?.data?.message || "Fetching role failed";
+    toast.error(message);
+    return rejectWithValue(message);
+  }
+});
+
+
+
+interface UpdateRolePayload {
+  roleId: number;
+  name: string;
+  description: string;
+  status: string; // 1 or 0
+}
+
+interface UpdateRoleResponse {
+  status: number;
+  message: string;
+}
+
+export const updateRole = createAsyncThunk<
+  UpdateRoleResponse,
+  UpdateRolePayload,
+  { rejectValue: string }
+>("roles/updateRole", async (payload, { rejectWithValue }) => {
+  try {
+    const res = await api.put("roles/update", payload, {
+      withCredentials: true,
+    });
+
+    if (res.data.status === 0) {
+      toast.error(res.data.message);
+      return rejectWithValue(res.data.message);
+    }
+
+    toast.success(res.data.message);
+    return res.data;
+  } catch (err: any) {
+    const message = err.response?.data?.message || "Role update failed";
+    toast.error(message);
+    return rejectWithValue(message);
+  }
+});

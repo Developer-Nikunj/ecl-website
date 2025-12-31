@@ -12,7 +12,7 @@ export async function GET(
 
     const auth = await verifyAdmin(request);
     if (!auth.valid) {
-      return NextResponse.json({ message: auth.message }, { status: 403 });
+      return NextResponse.json({ message: auth.message }, { status: 400 });
     }
 
     const { id } = await context.params; 
@@ -25,7 +25,7 @@ export async function GET(
 
     const data = await roleModel.findOne({
       where: { id: parseInt(id, 10) }, // convert string → number
-      attributes:['id','name','description','active']
+      attributes:['id','name','description',['active','status']]
     });
 
     if (!data) {

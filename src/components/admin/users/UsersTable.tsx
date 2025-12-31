@@ -1,13 +1,43 @@
-"use client"
-
-import React, { useState } from 'react'
-import { Options } from '../../../../public/assets/backend/libs/choices.js/public/types/src/scripts/interfaces/options';
+"use client";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { Options } from "../../../../public/assets/backend/libs/choices.js/public/types/src/scripts/interfaces/options";
+import { getallUsers } from "@/store/slices/module1/user/user.thunk";
 
 const UsersTable = () => {
-  const [showCreateModal,setShowCreateModal] = useState(false);
-  const [showEditModal,setShowEditModal] = useState(false);
-  const [showDeleteModal,setShowDeleteModal] = useState(false);
-  const [selectedUsers,setSelectedUser] = useState([]);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedUsers, setSelectedUser] = useState([]);
+    const [filters, setFilters] = useState({
+      startDate: "",
+      endDate: "",
+      limit: 10,
+      offset: 0,
+    });
+
+  const dispatch = useAppDispatch();
+  const { users, selectedUser, meta, loading, error } = useAppSelector(
+    (state) => state.user
+  );
+
+  console.log("users", users);
+
+  const fetchUsers = ()=>{
+    dispatch(
+      getallUsers({
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        limit: filters.limit,
+        offset: filters.offset,
+      })
+    );
+  }
+  useEffect(() => {
+    fetchUsers();
+  }, [dispatch]);
 
   const data = [
     { id: 1, name: "nikunj", role: "admin", status: "Active" },
@@ -17,6 +47,36 @@ const UsersTable = () => {
   ];
   return (
     <div>
+      <div className="d-flex align-items-end gap-3 mb-3 flex-wrap">
+        {/* Total Rows */}
+        <div>
+          <label htmlFor="totalRows" className="form-label mb-1">
+            Total Rows
+          </label>
+
+          <select id="totalRows" className="form-select">
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
+
+        {/* Start Date */}
+        <div>
+          <label className="form-label mb-1">Start Date</label>
+          <input type="date" className="form-control" />
+        </div>
+
+        {/* End Date */}
+        <div>
+          <label className="form-label mb-1">End Date</label>
+          <input type="date" className="form-control" />
+        </div>
+
+        {/* Apply Button */}
+        <button className="btn btn-primary px-4">Apply</button>
+      </div>
       <div className="d-flex justify-content-end mb-3">
         {selectedUsers.length > 0 ? (
           <button
@@ -55,13 +115,13 @@ const UsersTable = () => {
               <th scope="col">SNo.</th>
               <th scope="col">Name</th>
               <th scope="col">Role</th>
-              <th scope="col">Status</th>
+              <th scope="col">Email</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {data.map((item, index) => (
+            {users.map((item, index) => (
               <tr
                 key={item.id}
                 className={item.status === "Active" ? "" : "table-active"}
@@ -80,15 +140,13 @@ const UsersTable = () => {
                   </div>
                 </th>
                 <td>{index + 1}</td>
-                <td>{item.name}</td>
+                <td>{item.name || "Unknown"}</td>
                 <td>{item.role}</td>
                 <td>
                   <span
-                    className={`badge ${
-                      item.status === "Active" ? "bg-success" : "bg-danger"
-                    }`}
+                    
                   >
-                    {item.status}
+                    {item.email}
                   </span>
                 </td>
                 <td>
@@ -127,7 +185,7 @@ const UsersTable = () => {
           >
             Next
           </button>
-        </div>  
+        </div>
       </div>
 
       {showCreateModal && (
@@ -367,6 +425,6 @@ const UsersTable = () => {
       )}
     </div>
   );
-}
+};
 
 export default UsersTable;

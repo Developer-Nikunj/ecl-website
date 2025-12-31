@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createRole, getallRoles, deleteRole } from "./roles.thunk";
+import {
+  createRole,
+  getallRoles,
+  deleteRole,
+  getRoleById,
+  updateRole,
+} from "./roles.thunk";
 
 
 interface Role {
@@ -20,6 +26,7 @@ interface RoleState {
   success: boolean;
   error: string | null;
   roles: Role[];
+  selectedRole: Role | null;
   meta: Meta | null;
 }
 
@@ -28,6 +35,7 @@ const initialState: RoleState = {
   success: false,
   error: null,
   roles: [],
+  selectedRole: null,
   meta: null,
 };
 
@@ -84,24 +92,58 @@ const roleSlice = createSlice({
         state.error = (action.payload as string) || "Roles fetching failed";
       })
 
-
       /* ---------------- DELETE ROLE ---------------- */
-    .addCase(deleteRole.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    })
-    .addCase(deleteRole.fulfilled, (state) => {
-      state.loading = false;
-      state.success = true;
-      // ❌ Do NOT remove role here
-      // ✔ Re-fetch list after delete (best practice)
-    })
-    .addCase(deleteRole.rejected, (state, action) => {
-      state.loading = false;
-      state.success = false;
-      state.error =
-        (action.payload as string) || "Role deletion failed";
-    })
+      .addCase(deleteRole.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteRole.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(deleteRole.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = (action.payload as string) || "Role deletion failed";
+      })
+
+      /* ---------------- GET SINGLE ROLE ---------------- */
+      .addCase(getRoleById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.selectedRole = null; // clear previous
+      })
+      .addCase(getRoleById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedRole = action.payload.data; // store single role
+      })
+      .addCase(getRoleById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch role";
+        state.selectedRole = null;
+      })
+
+      /* ---------------- UPDATE SINGLE ROLE ---------------- */
+
+      .addCase(updateRole.pending, (state) => {
+        state.loading = true;
+        state.success = false;
+        state.error = null;
+      })
+
+      // Update role → fulfilled
+      .addCase(updateRole.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+      })
+
+      // Update role → rejected
+      .addCase(updateRole.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = (action.payload as string) || "Role update failed";
+      });
 
   },
 });

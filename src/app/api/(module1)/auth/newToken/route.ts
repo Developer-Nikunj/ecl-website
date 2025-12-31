@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
   if (!storedRefresh)
     return NextResponse.json(
       { message: "storedRefresh Not Found !!" },
-      { status: 403 }
+      { status: 405 }
     );
 
   const newRefresh = randomBytes(40).toString("hex");

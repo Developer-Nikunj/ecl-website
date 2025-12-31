@@ -8,6 +8,8 @@ import {
   createRole,
   getallRoles,
   deleteRole,
+  getRoleById,
+  updateRole,
 } from "@/store/slices/module1/roles/roles.thunk";
 
 const RoleTable = () => {
@@ -28,7 +30,9 @@ const RoleTable = () => {
   const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
 
   const dispatch = useAppDispatch();
-  const { roles, meta, loading, error } = useAppSelector((state) => state.role);
+  const { roles, selectedRole, meta, loading, error } = useAppSelector(
+    (state) => state.role
+  );
 
   const fetchRoles = () => {
     dispatch(
@@ -103,10 +107,42 @@ const RoleTable = () => {
     }
   };
 
+  const handleUpdate = async () => {
+    if (!selectedRoleId) return;
+
+    const res = await dispatch(
+      updateRole({
+        roleId: selectedRoleId,
+        name: createRoleEntry.name,
+        description: createRoleEntry.description,
+        status: createRoleEntry.status,
+      })
+    );
+
+    if (updateRole.fulfilled.match(res)) {
+      // success
+      setShowEditModal(false);
+      dispatch(
+        getallRoles({
+          startDate: filters.startDate,
+          endDate: filters.endDate,
+          limit: filters.limit,
+        })
+      );
+      setCreateRoleEntry({ name: "", description: "", status: "" }); // reset form
+    }
+  };
+
 
   useEffect(() => {
     fetchRoles();
   }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
+
+  useEffect(() => {
+    if (selectedRoleId !== null && showEditModal) {
+      dispatch(getRoleById(selectedRoleId));
+    }
+  }, [selectedRoleId, showEditModal, dispatch]);
 
 
   return (
@@ -193,26 +229,28 @@ const RoleTable = () => {
                   <td>{item.name}</td>
                   <td>{item.description}</td>
                   <td>
-                    <span
-                    // className={`badge ${
-                    //   item.status === true ? "bg-success" : "bg-danger"
-                    // }`}
-                    >
-                      {item.status == true ? "Active" : "Inactive"}
-                    </span>
+                    <span>{item.status == true ? "Active" : "Inactive"}</span>
                   </td>
                   <td>
                     <div className="d-flex gap-2">
                       <button
                         className="btn btn-sm btn-primary"
-                        onClick={() => setShowEditModal((prev) => !prev)}
+                        onClick={() => {
+                          setSelectedRoleId(item.id);
+                          setCreateRoleEntry({
+                            name: item.name,
+                            description: item.description,
+                            status: item.status == true ? '1' : '0',
+                          }); 
+                          setShowEditModal(true);
+                        }}
                       >
                         Edit
                       </button>
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() => {
-                          setShowDeleteModal((prev) => !prev)
+                          setShowDeleteModal((prev) => !prev);
                           setSelectedRoleId(item.id);
                         }}
                       >
@@ -372,6 +410,13 @@ const RoleTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter menu name"
+                        value={createRoleEntry?.name || ""}
+                        onChange={(e) =>
+                          setCreateRoleEntry((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }))
+                        }
                       />
                     </div>
                     <div className="mb-3">
@@ -380,17 +425,34 @@ const RoleTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter menu description"
+                        value={createRoleEntry?.description || ""}
+                        onChange={(e) =>
+                          setCreateRoleEntry((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }))
+                        }
                       />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Status</label>
+                      <label htmlFor="roleStatus" className="form-label">
+                        Role Status
+                      </label>
                       <select
+                        id="roleStatus"
                         className="form-select mb-3"
-                        aria-label="Default select example"
+                        aria-label="Role Status"
+                        value={createRoleEntry.status}
+                        onChange={(e) =>
+                          setCreateRoleEntry((prev) => ({
+                            ...prev,
+                            status: e.target.value, // convert string to number
+                          }))
+                        }
                       >
-                        <option selected>Status</option>
-                        <option value="1">Active</option>
-                        <option value="2">Inactive</option>
+                        <option value="">Select Status</option>
+                        <option value={1}>Active</option>
+                        <option value={0}>Inactive</option>
                       </select>
                     </div>
                   </form>
@@ -403,7 +465,12 @@ const RoleTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={handleUpdate}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -458,7 +525,12 @@ const RoleTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-danger" onClick={handleDelete}>Delete</button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

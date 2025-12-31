@@ -27,7 +27,7 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     console.log("res interceptor 1 started", error.response);
     if (
-      error.response?.status === 401 &&
+      [401, 403].includes(error.response?.status) &&
       error.response?.data?.message == "Invalid or expired token" &&
       !originalRequest._retry
     ) {

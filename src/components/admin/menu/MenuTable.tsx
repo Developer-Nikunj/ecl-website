@@ -15,6 +15,36 @@ const MenuTable = () => {
   ];
   return (
     <div>
+      <div className="d-flex align-items-end gap-3 mb-3 flex-wrap">
+        {/* Total Rows */}
+        <div>
+          <label htmlFor="totalRows" className="form-label mb-1">
+            Total Rows
+          </label>
+
+          <select id="totalRows" className="form-select">
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
+
+        {/* Start Date */}
+        <div>
+          <label className="form-label mb-1">Start Date</label>
+          <input type="date" className="form-control" />
+        </div>
+
+        {/* End Date */}
+        <div>
+          <label className="form-label mb-1">End Date</label>
+          <input type="date" className="form-control" />
+        </div>
+
+        {/* Apply Button */}
+        <button className="btn btn-primary px-4">Apply</button>
+      </div>
       <div className="d-flex justify-content-end mb-3">
         <button
           onClick={() => setShowCreateModal((prev) => !prev)}

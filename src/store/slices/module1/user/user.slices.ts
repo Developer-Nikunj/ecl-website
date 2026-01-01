@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getallUsers } from "./user.thunk";
+import { getallUsers, grantPermision } from "./user.thunk";
 
 interface User {
   id: number;
@@ -63,6 +63,20 @@ const userSlice = createSlice({
         state.loading = false;
         state.success = false;
         state.error = (action.payload as string) || "Users fetching failed";
+      })
+
+      .addCase(grantPermision.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(grantPermision.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(grantPermision.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          (action.payload as string) || "Permission granting failed";
       });
   },
 });

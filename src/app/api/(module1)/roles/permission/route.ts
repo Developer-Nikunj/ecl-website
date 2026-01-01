@@ -3,13 +3,13 @@ import { testConnection } from "@/database/db";
 import { permissionModel } from "@/models/permission.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import z from "zod";
+import { Op } from "sequelize";
 
 const validateInput = z.object({
-  userId: z.array(z.number()), // user IDs
-  menuId: z.array(z.number()), // menu IDs
-  permission: z.boolean(),    
+  userId: z.array(z.number()),
+  menuId: z.array(z.number()),
 });
-// to gave permission
+
 export async function POST(request: NextRequest) {
   try {
     await testConnection();
@@ -23,32 +23,55 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validateData: z.infer<typeof validateInput> =
-      validateInput.parse(body);
+    const validateData = validateInput.parse(body);
 
-    // Prepare array for bulk insert
+    /** 1️⃣ Get existing permissions */
+    const existingPermissions = await permissionModel.findAll({
+      where: {
+        userId: { [Op.in]: validateData.userId },
+        menuId: { [Op.in]: validateData.menuId },
+      },
+      attributes: ["userId", "menuId"],
+      raw: true,
+    });
+
+    /** 2️⃣ Convert existing to Set for fast lookup */
+    const existingSet = new Set(
+      existingPermissions.map((p) => `${p.userId}-${p.menuId}`)
+    );
+
+    /** 3️⃣ Prepare only new permissions */
     const permissionsToCreate = [];
 
     for (const user of validateData.userId) {
       for (const menu of validateData.menuId) {
-        permissionsToCreate.push({
-          userId: user,
-          menuId: menu,
-          permission: validateData.permission,
-        });
+        const key = `${user}-${menu}`;
+        if (!existingSet.has(key)) {
+          permissionsToCreate.push({
+            userId: user,
+            menuId: menu,
+          });
+        }
       }
     }
 
+    /** 4️⃣ Bulk insert only new ones */
     if (permissionsToCreate.length > 0) {
       await permissionModel.bulkCreate(permissionsToCreate);
     }
 
     return NextResponse.json({
       status: 1,
-      message: "Actions added to users successfully",
+      message:
+        permissionsToCreate.length > 0
+          ? "Permissions added successfully"
+          : "All permissions already exist",
     });
   } catch (error) {
-    console.log("error", error);
-    return NextResponse.json({ status: 0, message: "Internal server Error" });
+    console.error("Permission error:", error);
+    return NextResponse.json(
+      { status: 0, message: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

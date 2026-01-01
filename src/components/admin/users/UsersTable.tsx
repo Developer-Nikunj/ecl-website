@@ -3,8 +3,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { getallUsers } from "@/store/slices/module1/user/user.thunk";
-import {getAllMenus} from "@/store/slices/module1/menu/menu.thunk";
+import {
+  getallUsers,
+  grantPermision,
+} from "@/store/slices/module1/user/user.thunk";
+import { getAllMenus } from "@/store/slices/module1/menu/menu.thunk";
 
 type PermissionKey = "get" | "post" | "put" | "delete";
 
@@ -34,7 +37,7 @@ const UsersTable = () => {
     menus,
     creating,
     loading: menuLoading,
-    error:menuError,
+    error: menuError,
   } = useAppSelector((state) => state.menu);
   // console.log("menus", menus);
 
@@ -62,9 +65,9 @@ const UsersTable = () => {
     }
   };
 
-  const fetchMenus= ()=>{
+  const fetchMenus = () => {
     dispatch(getAllMenus());
-  }
+  };
 
   const handleMenuCheckbox = (id: number) => {
     setSelectedMenuIds((prev) =>
@@ -85,48 +88,24 @@ const UsersTable = () => {
   const isAllSelected = (rowMenus: { id: number }[]) =>
     rowMenus.every((m) => selectedMenuIds.includes(m.id));
 
-  const grantPermisionSubmit = async ()=>{
-    console.log("all ids there")
-    console.log("all ids there selectedMenuIds", selectedMenuIds);
-    console.log("all ids there selectedIds", selectedIds);
-    // setShowPermisionModal(false);
-  }
+  const grantPermisionSubmit = async () => {
+    // console.log("all ids there");
+    // console.log("all ids there selectedMenuIds", selectedMenuIds);
+    // console.log("all ids there selectedIds", selectedIds);
+    dispatch(
+      grantPermision({ userId: selectedIds, menuId: selectedMenuIds })
+    );
+    setShowPermisionModal(false);
+    setSelectedIds([]);
+    setSelectedMenuIds([]);
+
+  };
 
   useEffect(() => {
     fetchUsers();
     fetchMenus();
   }, [dispatch]);
 
-  const fakePermissions = [
-    {
-      slug: "users",
-      permissions: {
-        view: false,
-        create: false,
-        edit: false,
-        delete: false,
-      },
-    },
-    {
-      slug: "roles",
-      permissions: {
-        view: false,
-        create: false,
-        edit: false,
-        delete: false,
-      },
-    },
-    {
-      slug: "products",
-      permissions: {
-        view: false,
-        create: false,
-        edit: false,
-        delete: false,
-      },
-    },
-  ];
-  const [permissions, setPermissions] = useState(fakePermissions);
 
   return (
     <div>
@@ -574,7 +553,7 @@ const UsersTable = () => {
                                     type="checkbox"
                                     className="form-check-input"
                                     checked={selectedMenuIds.includes(menu.id)}
-                                    onChange={() => handleMenuCheckbox(menu.id)}  
+                                    onChange={() => handleMenuCheckbox(menu.id)}
                                   />
                                   <span className="ms-2">{menu.menuName}</span>{" "}
                                 </td>
@@ -593,7 +572,12 @@ const UsersTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success" onClick={()=>grantPermisionSubmit()}>Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => grantPermisionSubmit()}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>

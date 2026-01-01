@@ -62,3 +62,42 @@ export const getallUsers = createAsyncThunk<
     }
   }
 );
+
+interface GrantPermisionPayload {
+  userId: number[]; // array of number
+  menuId: number[]; // array of number
+}
+interface GrantPermisionResponse{
+  status:number;
+  message:string;
+}
+export const grantPermision = createAsyncThunk<
+  GrantPermisionResponse,
+  GrantPermisionPayload,
+  { rejectValue: string }
+>("roles/permission", async ({ userId, menuId }, { rejectWithValue }) => {
+  try {
+    const res = await api.post(
+      "/roles/permission",
+      {
+        userId,
+        menuId,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    console.log("res", res);
+    if (res.data.status === 0) {
+      toast.error(String(res.data.message));
+      return rejectWithValue(res.data.message);
+    }
+    toast.success(String(res.data.message));
+    return res.data;
+  } catch (err) {
+    toast.error(String(err));
+    return rejectWithValue(
+      err.response?.data?.message || "Users fetching failed"
+    );
+  }
+});

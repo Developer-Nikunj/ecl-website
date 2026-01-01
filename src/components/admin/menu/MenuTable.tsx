@@ -1,18 +1,73 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react'
-import { Options } from '../../../../public/assets/backend/libs/choices.js/public/types/src/scripts/interfaces/options';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  getAllMenus,
+  createMenu,
+} from "@/store/slices/module1/menu/menu.thunk";
+
+const PERMISSIONS = ["create", "get", "update", "delete"] as const;
 
 const MenuTable = () => {
-  const [showCreateModal,setShowCreateModal] = useState(false);
-  const [showEditModal,setShowEditModal] = useState(false);
-  const [showDeleteModal,setShowDeleteModal] = useState(false);
-  const data = [
-    { id: 1, name: "Dashboard", slug: "dashboard", status: "Active" },
-    { id: 2, name: "Users", slug: "users", status: "Inactive" },
-    { id: 3, name: "Roles", slug: "roles", status: "Active" },
-    { id: 4, name: "Settings", slug: "settings", status: "Active" },
-  ];
+  const dispatch = useAppDispatch();
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [createMenuEntry, setCreateMenuEntry] = useState<{
+    slug: string;
+    submenus: string[];
+  }>({
+    slug: "",
+    submenus: [],
+  });
+
+  const { menus, loading, creating, error } = useAppSelector(
+    (state) => state.menu
+  );
+
+  console.log("menus", menus);
+
+  const fetchMenus = async () => {
+    await dispatch(getAllMenus());
+  };
+
+  const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCreateMenuEntry((prev) => ({
+      ...prev,
+      slug: e.target.value,
+    }));
+  };
+
+  const handlePermissionChange = (permission: string) => {
+    setCreateMenuEntry((prev) => ({
+      ...prev,
+      submenus: prev.submenus.includes(permission)
+        ? prev.submenus.filter((p) => p !== permission)
+        : [...prev.submenus, permission],
+    }));
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    setCreateMenuEntry((prev) => ({
+      ...prev,
+      submenus: checked ? [...PERMISSIONS] : [],
+    }));
+  };
+
+  const createMenuSubmit = async()=>{
+    await dispatch(createMenu(createMenuEntry));
+    setCreateMenuEntry({ slug: "", submenus: [] });
+    setShowCreateModal(false);
+    fetchMenus();
+  }
+
+  useEffect(() => {
+    fetchMenus();
+  }, [dispatch]);
+
   return (
     <div>
       <div className="d-flex align-items-end gap-3 mb-3 flex-wrap">
@@ -45,6 +100,7 @@ const MenuTable = () => {
         {/* Apply Button */}
         <button className="btn btn-primary px-4">Apply</button>
       </div>
+
       <div className="d-flex justify-content-end mb-3">
         <button
           onClick={() => setShowCreateModal((prev) => !prev)}
@@ -58,27 +114,19 @@ const MenuTable = () => {
           <thead className="table-light">
             <tr>
               <th>SNo.</th>
-              <th>Name</th>
               <th>Slug</th>
-              <th>Status</th>
+              <th>Total</th>
               <th>Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {data.map((item, index) => (
+            {menus.map((item, index) => (
               <tr key={item.id}>
                 <td>{index + 1}</td>
-                <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>
-                  <span
-                    className={`badge ${
-                      item.status === "Active" ? "bg-success" : "bg-danger"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
+                  <span>{item?.slug}</span>
                 </td>
                 <td>
                   <div className="d-flex gap-2">
@@ -147,6 +195,8 @@ const MenuTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter menu name"
+                        value={createMenuEntry.slug}
+                        onChange={handleSlugChange}
                       />
                     </div>
 
@@ -158,55 +208,31 @@ const MenuTable = () => {
                           className="form-check-input"
                           type="checkbox"
                           id="selectAll"
+                          checked={
+                            createMenuEntry.submenus.length ===
+                            PERMISSIONS.length
+                          }
+                          onChange={(e) => handleSelectAll(e.target.checked)}
                         />
                         <label className="form-check-label" htmlFor="selectAll">
                           Select All
                         </label>
                       </div>
 
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="create"
-                        />
-                        <label className="form-check-label" htmlFor="create">
-                          Create
-                        </label>
-                      </div>
-
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="get"
-                        />
-                        <label className="form-check-label" htmlFor="get">
-                          Get
-                        </label>
-                      </div>
-
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="update"
-                        />
-                        <label className="form-check-label" htmlFor="update">
-                          Update
-                        </label>
-                      </div>
-
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="delete"
-                        />
-                        <label className="form-check-label" htmlFor="delete">
-                          Delete
-                        </label>
-                      </div>
+                      {PERMISSIONS.map((perm) => (
+                        <div className="form-check" key={perm}>
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={perm}
+                            checked={createMenuEntry.submenus.includes(perm)}
+                            onChange={() => handlePermissionChange(perm)}
+                          />
+                          <label className="form-check-label" htmlFor={perm}>
+                            {perm.charAt(0).toUpperCase() + perm.slice(1)}
+                          </label>
+                        </div>
+                      ))}
                     </div>
                   </form>
                 </div>
@@ -218,7 +244,7 @@ const MenuTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button className="btn btn-sm btn-success" onClick={()=>createMenuSubmit()}>Save</button>
                 </div>
               </div>
             </div>
@@ -384,6 +410,6 @@ const MenuTable = () => {
       )}
     </div>
   );
-}
+};
 
-export default MenuTable
+export default MenuTable;

@@ -3,29 +3,42 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { Options } from "../../../../public/assets/backend/libs/choices.js/public/types/src/scripts/interfaces/options";
 import { getallUsers } from "@/store/slices/module1/user/user.thunk";
+import {getAllMenus} from "@/store/slices/module1/menu/menu.thunk";
+
+type PermissionKey = "get" | "post" | "put" | "delete";
 
 const UsersTable = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedUsers, setSelectedUser] = useState([]);
-    const [filters, setFilters] = useState({
-      startDate: "",
-      endDate: "",
-      limit: 10,
-      offset: 0,
-    });
+  const [filters, setFilters] = useState({
+    startDate: "",
+    endDate: "",
+    limit: 10,
+    offset: 0,
+  });
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [showPermisionModal, setShowPermisionModal] = useState(false);
+  const [selectedMenuIds, setSelectedMenuIds] = useState<number[]>([]);
 
   const dispatch = useAppDispatch();
-  const { users, selectedUser, meta, loading, error } = useAppSelector(
-    (state) => state.user
-  );
+  const {
+    users,
+    selectedUser,
+    meta,
+    loading: userLoading,
+    error: userError,
+  } = useAppSelector((state) => state.user);
+  const {
+    menus,
+    creating,
+    loading: menuLoading,
+    error:menuError,
+  } = useAppSelector((state) => state.menu);
+  // console.log("menus", menus);
 
-  console.log("users", users);
-
-  const fetchUsers = ()=>{
+  const fetchUsers = () => {
     dispatch(
       getallUsers({
         startDate: filters.startDate || undefined,
@@ -34,17 +47,87 @@ const UsersTable = () => {
         offset: filters.offset,
       })
     );
+  };
+
+  const handleCheckboxChange = (id: number) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds(users.map((u) => u.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const fetchMenus= ()=>{
+    dispatch(getAllMenus());
   }
+
+  const handleMenuCheckbox = (id: number) => {
+    setSelectedMenuIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+  const handleSelectAllRow = (rowMenus: { id: number }[], checked: boolean) => {
+    const rowIds = rowMenus.map((m) => m.id);
+
+    if (checked) {
+      // Add all IDs of this row that are not already selected
+      setSelectedMenuIds((prev) => [...new Set([...prev, ...rowIds])]);
+    } else {
+      // Remove all IDs of this row
+      setSelectedMenuIds((prev) => prev.filter((id) => !rowIds.includes(id)));
+    }
+  };
+  const isAllSelected = (rowMenus: { id: number }[]) =>
+    rowMenus.every((m) => selectedMenuIds.includes(m.id));
+
+  const grantPermisionSubmit = async ()=>{
+    console.log("all ids there")
+    console.log("all ids there selectedMenuIds", selectedMenuIds);
+    console.log("all ids there selectedIds", selectedIds);
+    // setShowPermisionModal(false);
+  }
+
   useEffect(() => {
     fetchUsers();
+    fetchMenus();
   }, [dispatch]);
 
-  const data = [
-    { id: 1, name: "nikunj", role: "admin", status: "Active" },
-    { id: 2, name: "kamal", role: "user", status: "Inactive" },
-    { id: 3, name: "raj", role: "user", status: "Active" },
-    { id: 4, name: "aamar", role: "user", status: "Active" },
+  const fakePermissions = [
+    {
+      slug: "users",
+      permissions: {
+        view: false,
+        create: false,
+        edit: false,
+        delete: false,
+      },
+    },
+    {
+      slug: "roles",
+      permissions: {
+        view: false,
+        create: false,
+        edit: false,
+        delete: false,
+      },
+    },
+    {
+      slug: "products",
+      permissions: {
+        view: false,
+        create: false,
+        edit: false,
+        delete: false,
+      },
+    },
   ];
+  const [permissions, setPermissions] = useState(fakePermissions);
+
   return (
     <div>
       <div className="d-flex align-items-end gap-3 mb-3 flex-wrap">
@@ -78,12 +161,12 @@ const UsersTable = () => {
         <button className="btn btn-primary px-4">Apply</button>
       </div>
       <div className="d-flex justify-content-end mb-3">
-        {selectedUsers.length > 0 ? (
+        {selectedIds.length > 0 ? (
           <button
-            onClick={() => setShowCreateModal((prev) => !prev)}
+            onClick={() => setShowPermisionModal((prev) => !prev)}
             className="btn btn-sm btn-success"
           >
-            Permissions
+            Permission
           </button>
         ) : (
           <button
@@ -104,6 +187,10 @@ const UsersTable = () => {
                     className="form-check-input"
                     type="checkbox"
                     id="selectAll"
+                    checked={
+                      selectedIds.length === users.length && users.length > 0
+                    }
+                    onChange={(e) => handleSelectAll(e.target.checked)}
                     // Optional: add onChange to select all
                   />
                   <label
@@ -121,54 +208,53 @@ const UsersTable = () => {
           </thead>
 
           <tbody>
-            {users.map((item, index) => (
-              <tr
-                key={item.id}
-                className={item.status === "Active" ? "" : "table-active"}
-              >
-                <th scope="row">
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id={`check-${item.id}`}
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor={`check-${item.id}`}
-                    ></label>
-                  </div>
-                </th>
-                <td>{index + 1}</td>
-                <td>{item.name || "Unknown"}</td>
-                <td>{item.role}</td>
-                <td>
-                  <span
-                    
-                  >
-                    {item.email}
-                  </span>
-                </td>
-                <td>
-                  <div className="d-flex gap-2">
-                    <button
-                      className="btn btn-sm btn-primary"
-                      onClick={() => setShowEditModal((prev) => !prev)}
-                    >
-                      <i className="ri-edit-line me-1" />
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => setShowDeleteModal((prev) => !prev)}
-                    >
-                      <i className="ri-delete-bin-line me-1" />
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {users.length > 0 &&
+              users.map((item, index) => (
+                <tr
+                  key={item.id}
+                  className={item.status === "Active" ? "" : "table-active"}
+                >
+                  <th scope="row">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={`check-${item.id}`}
+                        checked={selectedIds.includes(item.id)}
+                        onChange={() => handleCheckboxChange(item.id)}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor={`check-${item.id}`}
+                      ></label>
+                    </div>
+                  </th>
+                  <td>{index + 1}</td>
+                  <td>{item.name || "Unknown"}</td>
+                  <td>{item.role}</td>
+                  <td>
+                    <span>{item.email}</span>
+                  </td>
+                  <td>
+                    <div className="d-flex gap-2">
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => setShowEditModal((prev) => !prev)}
+                      >
+                        <i className="ri-edit-line me-1" />
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => setShowDeleteModal((prev) => !prev)}
+                      >
+                        <i className="ri-delete-bin-line me-1" />
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
         <div className="d-flex justify-content-between align-items-center mt-3">
@@ -414,6 +500,100 @@ const UsersTable = () => {
                     Cancel
                   </button>
                   <button className="btn btn-sm btn-success">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Backdrop */}
+          <div className="modal-backdrop fade show" />
+        </>
+      )}
+      {showPermisionModal && (
+        <>
+          {/* Modal Wrapper */}
+          <div
+            className="modal fade show d-block"
+            tabIndex={-1}
+            onClick={() => setShowPermisionModal(false)} // 👈 outside click
+          >
+            <div
+              className="modal-dialog modal-fullscreen"
+              onClick={(e) => e.stopPropagation()} // 👈 prevent inner click
+            >
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Manage Permissions</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setShowPermisionModal(false)}
+                  />
+                </div>
+
+                {/* Body */}
+                <div className="modal-body">
+                  <table className="table table-bordered align-middle">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Module (Slug)</th>
+                        <th>All</th>
+                        <th>Select</th>
+                        <th>Select</th>
+                        <th>Select</th>
+                        <th>Select</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {menus.length > 0 &&
+                        menus.map((item) => (
+                          <tr key={item.slug}>
+                            <td className="fw-semibold text-capitalize">
+                              {item.slug}
+                            </td>
+                            <td className=" text-capitalize">
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                                checked={isAllSelected(item.menus)}
+                                onChange={(e) =>
+                                  handleSelectAllRow(
+                                    item.menus,
+                                    e.target.checked
+                                  )
+                                }
+                              />
+                              <span className="ms-2">All</span>
+                            </td>
+
+                            {item?.menus.map(
+                              (menu: { id: number; menuName: string }) => (
+                                <td key={menu.id} className="text-left">
+                                  <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    checked={selectedMenuIds.includes(menu.id)}
+                                    onChange={() => handleMenuCheckbox(menu.id)}  
+                                  />
+                                  <span className="ms-2">{menu.menuName}</span>{" "}
+                                </td>
+                              )
+                            )}
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    className="btn btn-sm btn-secondary"
+                    onClick={() => setShowPermisionModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button className="btn btn-sm btn-success" onClick={()=>grantPermisionSubmit()}>Save</button>
                 </div>
               </div>
             </div>

@@ -101,3 +101,42 @@ export const grantPermision = createAsyncThunk<
     );
   }
 });
+
+
+export interface MenuItem {
+  id: number;
+  menuName: string;
+}
+
+export interface UserMenu {
+  slug: string;
+  menus: MenuItem[];
+}
+
+interface ApiResponse {
+  status: number;
+  message: string;
+  data: UserMenu[];
+}
+export const getUserMenus = createAsyncThunk<
+  UserMenu[],
+  number,
+  { rejectValue: string }
+>("permission/getUserMenus", async (userId, { rejectWithValue }) => {
+  try {
+    const res = await api.get(`/users/userPermissions?userId=${userId}`, {
+      withCredentials: true,
+    });
+    console.log("res", res);
+    if (res.data.status === 0) {
+      toast.error(res.data.message);
+      return rejectWithValue(res.data.message);
+    }
+    toast.success(res.data.message);
+    return res.data;
+  } catch (err: any) {
+    return rejectWithValue(
+      err.response?.data?.message || "Failed to fetch user menus"
+    );
+  }
+});

@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   getallUsers,
   grantPermision,
+  getUserMenus,
 } from "@/store/slices/module1/user/user.thunk";
 import { getAllMenus } from "@/store/slices/module1/menu/menu.thunk";
 import { number } from "zod";
@@ -25,13 +26,13 @@ const UsersTable = () => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [showPermisionModal, setShowPermisionModal] = useState(false);
   const [selectedMenuIds, setSelectedMenuIds] = useState<number[]>([]);
-  const [selectEditUserId, setSelectEditUserId] = useState<number>(0);
-
+  const [selectEditUserId, setSelectEditUserId] = useState<number>();
 
   const dispatch = useAppDispatch();
   const {
     users,
     selectedUser,
+    userMenus,
     meta,
     loading: userLoading,
     error: userError,
@@ -42,7 +43,8 @@ const UsersTable = () => {
     loading: menuLoading,
     error: menuError,
   } = useAppSelector((state) => state.menu);
-  // console.log("menus", menus);
+
+  console.log("userMenus", userMenus);
 
   const fetchUsers = () => {
     dispatch(
@@ -101,10 +103,20 @@ const UsersTable = () => {
     setSelectedMenuIds([]);
   };
 
+
+
   useEffect(() => {
     fetchUsers();
     fetchMenus();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (selectEditUserId) {
+      console.log("Selected user updated:", selectEditUserId);
+      dispatch(getUserMenus(selectEditUserId));
+      setSelectEditUserId();
+    }
+  }, [selectEditUserId]);
 
   return (
     <div>
@@ -217,7 +229,10 @@ const UsersTable = () => {
                     <div className="d-flex gap-2">
                       <button
                         className="btn btn-sm btn-primary"
-                        onClick={() => setShowEditModal((prev) => !prev)}
+                        onClick={() => {
+                          setShowEditModal((prev) => !prev);
+                          setSelectEditUserId(item.id);
+                        }}
                       >
                         <i className="ri-edit-line me-1" />
                         Edit
@@ -226,7 +241,6 @@ const UsersTable = () => {
                         className="btn btn-sm btn-danger"
                         onClick={() => {
                           setShowDeleteModal((prev) => !prev);
-                          setSelectEditUserId(item.id);
                         }}
                       >
                         <i className="ri-delete-bin-line me-1" />
@@ -345,12 +359,12 @@ const UsersTable = () => {
             onClick={() => setShowEditModal(false)} // 👈 outside click
           >
             <div
-              className="modal-dialog modal-dialog-centered modal-md"
+              className="modal-dialog modal-fullscreen"
               onClick={(e) => e.stopPropagation()} // 👈 prevent inner click
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Edit Menu</h5>
+                  <h5 className="modal-title">Manage Permissions</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -358,76 +372,50 @@ const UsersTable = () => {
                   />
                 </div>
 
+                {/* Body */}
                 <div className="modal-body">
-                  <form>
-                    <div className="mb-3">
-                      <label className="form-label">Menu Name</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter menu name"
-                      />
-                    </div>
+                  <table className="table table-bordered align-middle">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Module (Slug)</th>
+                        <th>All</th>
+                        <th>Select</th>
+                        <th>Select</th>
+                        <th>Select</th>
+                        <th>Select</th>
+                      </tr>
+                    </thead>
 
-                    <div className="mb-3">
-                      <label className="form-label">Options</label>
+                    <tbody>
+                      {menus.length > 0 &&
+                        menus.map((item) => (
+                          <tr key={item.slug}>
+                            <td className="fw-semibold text-capitalize">
+                              {item.slug}
+                            </td>
+                            <td className=" text-capitalize">
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                              />
+                              <span className="ms-2">All</span>
+                            </td>
 
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="selectAll"
-                        />
-                        <label className="form-check-label" htmlFor="selectAll">
-                          Select All
-                        </label>
-                      </div>
-
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="create"
-                        />
-                        <label className="form-check-label" htmlFor="create">
-                          Create
-                        </label>
-                      </div>
-
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="get"
-                        />
-                        <label className="form-check-label" htmlFor="get">
-                          Get
-                        </label>
-                      </div>
-
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="update"
-                        />
-                        <label className="form-check-label" htmlFor="update">
-                          Update
-                        </label>
-                      </div>
-
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="delete"
-                        />
-                        <label className="form-check-label" htmlFor="delete">
-                          Delete
-                        </label>
-                      </div>
-                    </div>
-                  </form>
+                            {item?.menus.map(
+                              (menu: { id: number; menuName: string }) => (
+                                <td key={menu.id} className="text-left">
+                                  <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                  />
+                                  <span className="ms-2">{menu.menuName}</span>{" "}
+                                </td>
+                              )
+                            )}
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
                 </div>
 
                 <div className="modal-footer">
@@ -437,7 +425,12 @@ const UsersTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => grantPermisionSubmit()}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>

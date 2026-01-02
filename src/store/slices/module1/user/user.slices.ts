@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getallUsers, grantPermision } from "./user.thunk";
+import {
+  getallUsers,
+  grantPermision,
+  UserMenu,
+  getUserMenus,
+} from "./user.thunk";
 
 interface User {
   id: number;
@@ -20,6 +25,7 @@ interface UserState {
   error: string | null;
   users: User[];
   selectedUser: User | null;
+  userMenus: UserMenu[];
   meta: Meta | null;
 }
 
@@ -28,6 +34,7 @@ const initialState: UserState = {
   success: false,
   error: null,
   users: [],
+  userMenus: [],
   selectedUser: null,
   meta: null,
 };
@@ -65,6 +72,7 @@ const userSlice = createSlice({
         state.error = (action.payload as string) || "Users fetching failed";
       })
 
+      /* ================= GRANT PERMISSIONS ================= */
       .addCase(grantPermision.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -77,6 +85,21 @@ const userSlice = createSlice({
         state.loading = false;
         state.error =
           (action.payload as string) || "Permission granting failed";
+      })
+
+      /* ================= GET USER PERMISSIONS ================= */
+
+      .addCase(getUserMenus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserMenus.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userMenus = action.payload;
+      })
+      .addCase(getUserMenus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
       });
   },
 });

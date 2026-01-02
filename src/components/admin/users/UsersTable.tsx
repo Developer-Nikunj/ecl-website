@@ -9,7 +9,6 @@ import {
   getUserMenus,
 } from "@/store/slices/module1/user/user.thunk";
 import { getAllMenus } from "@/store/slices/module1/menu/menu.thunk";
-import { number } from "zod";
 
 type PermissionKey = "get" | "post" | "put" | "delete";
 
@@ -27,6 +26,7 @@ const UsersTable = () => {
   const [showPermisionModal, setShowPermisionModal] = useState(false);
   const [selectedMenuIds, setSelectedMenuIds] = useState<number[]>([]);
   const [selectEditUserId, setSelectEditUserId] = useState<number>();
+  const [selectedEditMenuIds, setSelectedEditMenuIds] = useState<number[]>([]);
 
   const dispatch = useAppDispatch();
   const {
@@ -44,10 +44,10 @@ const UsersTable = () => {
     error: menuError,
   } = useAppSelector((state) => state.menu);
 
-  console.log("userMenus", userMenus);
+  // console.log("userMenus", userMenus);
 
-  const fetchUsers = () => {
-    dispatch(
+  const fetchUsers = async () => {
+    await dispatch(
       getallUsers({
         startDate: filters.startDate || undefined,
         endDate: filters.endDate || undefined,
@@ -70,8 +70,8 @@ const UsersTable = () => {
     }
   };
 
-  const fetchMenus = () => {
-    dispatch(getAllMenus());
+  const fetchMenus = async () => {
+    await dispatch(getAllMenus());
   };
 
   const handleMenuCheckbox = (id: number) => {
@@ -95,16 +95,30 @@ const UsersTable = () => {
 
   const grantPermisionSubmit = async () => {
     // console.log("all ids there");
-    // console.log("all ids there selectedMenuIds", selectedMenuIds);
-    // console.log("all ids there selectedIds", selectedIds);
-    dispatch(grantPermision({ userId: selectedIds, menuId: selectedMenuIds }));
+    console.log("all ids there selectedEditMenuIds", selectedEditMenuIds);
+    console.log("all ids there selectEditUserId", selectEditUserId);
+    await dispatch(
+      grantPermision({ userId: selectedIds, menuId: selectedMenuIds })
+    );
     setShowPermisionModal(false);
     setSelectedIds([]);
     setSelectedMenuIds([]);
   };
+  const grantPermisionSubmitForEdit = async () => {
+    // console.log("all ids there");
+    console.log("all ids there selectedEditMenuIds", selectedEditMenuIds);
+    console.log("all ids there selectEditUserId", selectEditUserId);
+    await dispatch(
+      grantPermision({ userId: selectEditUserId, menuId: selectedEditMenuIds })
+    );
+    setShowPermisionModal(false);
+    setSelectEditUserId(undefined);
+    setSelectedEditMenuIds([]);
+  };
 
   const hasUserPermission = (slug, menuName) => {
     // console.log("hasUserPermission",slug,menuName);
+    if (!userMenus) return false;
     const userModule = userMenus?.data.find((m) => m.slug == slug);
     if (!userModule) return false;
     return userModule.menus.some((m) => m.menuName == menuName);
@@ -112,6 +126,7 @@ const UsersTable = () => {
   const isAllChecked = (slug, allMenus) => {
     // console.log("isAllChecked", slug, allMenus);
     // console.log("userMenus", userMenus);
+    if (!userMenus) return false;
     const userModule = userMenus?.data?.find((m) => m.slug == slug);
     if (!userModule) return false;
 
@@ -120,19 +135,28 @@ const UsersTable = () => {
     );
   };
 
-
   useEffect(() => {
     fetchUsers();
     fetchMenus();
   }, [dispatch]);
 
   useEffect(() => {
-    if (selectEditUserId) {
+    if (typeof selectEditUserId === "number") {
       console.log("Selected user updated:", selectEditUserId);
       dispatch(getUserMenus(selectEditUserId));
-      setSelectEditUserId();
     }
   }, [selectEditUserId]);
+
+  useEffect(() => {
+    if (userMenus?.data?.length > 0) {
+      const ExistMenuIDS = Array.from(
+        new Set(userMenus.data.flatMap((m) => m.menus.map((menu) => menu.id)))
+      );
+
+      console.log("Correct menu IDs:", ExistMenuIDS);
+      setSelectedEditMenuIds(ExistMenuIDS);
+    }
+  }, [userMenus]);
 
   return (
     <div>
@@ -394,7 +418,6 @@ const UsersTable = () => {
                     <thead className="table-light">
                       <tr>
                         <th>Module (Slug)</th>
-                        <th>All</th>
                         <th>Select</th>
                         <th>Select</th>
                         <th>Select</th>
@@ -409,14 +432,20 @@ const UsersTable = () => {
                             <td className="fw-semibold text-capitalize">
                               {item.slug}
                             </td>
-                            <td className=" text-capitalize">
+                            {/* <td className=" text-capitalize">
                               <input
                                 type="checkbox"
                                 className="form-check-input"
                                 checked={isAllChecked(item.slug, item.menus)}
+                                onChange={(e) =>
+                                  handleSelectAllRow(
+                                    item.menus,
+                                    e.target.checked
+                                  )
+                                }
                               />
                               <span className="ms-2">All</span>
-                            </td>
+                            </td> */}
 
                             {item?.menus.map(
                               (menu: { id: number; menuName: string }) => (
@@ -424,12 +453,20 @@ const UsersTable = () => {
                                   <input
                                     type="checkbox"
                                     className="form-check-input"
-                                    checked={hasUserPermission(
-                                      item.slug,
-                                      menu.menuName
+                                    checked={selectedEditMenuIds.includes(
+                                      menu.id
                                     )}
+                                    onChange={(e) => {
+                                      const checked = e.target.checked;
+                                      setSelectedEditMenuIds((prev) =>
+                                        checked
+                                          ? [...prev, menu.id]
+                                          : prev.filter((id) => id !== menu.id)
+                                      );
+                                    }}
                                   />
                                   <span className="ms-2">{menu.menuName}</span>{" "}
+                                  {/* <span className="ms-2">{menu.id}</span>{" "} */}
                                 </td>
                               )
                             )}
@@ -442,13 +479,16 @@ const UsersTable = () => {
                 <div className="modal-footer">
                   <button
                     className="btn btn-sm btn-secondary"
-                    onClick={() => setShowEditModal(false)}
+                    onClick={() => {
+                      setShowEditModal(false);
+                      setSelectedEditMenuIds([]);
+                    }}
                   >
                     Cancel
                   </button>
                   <button
                     className="btn btn-sm btn-success"
-                    onClick={() => grantPermisionSubmit()}
+                    onClick={() => grantPermisionSubmitForEdit()}
                   >
                     Save
                   </button>

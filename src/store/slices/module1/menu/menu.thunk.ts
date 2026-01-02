@@ -74,3 +74,115 @@ export const getAllMenus = createAsyncThunk<
   }
 });
 
+
+export interface MenuItemBySlug {
+  slug: string;
+  menus: {
+    id: number;
+    menuName: string;
+  }[];
+}
+
+export interface GetMenuBySlugResponse {
+  status: number;
+  data: MenuItemBySlug | null;
+}
+
+export const getMenuBySlug = createAsyncThunk<
+  GetMenuBySlugResponse,
+  string,
+  { rejectValue: string }
+>("menu/getBySlug", async (slug, { rejectWithValue }) => {
+  try {
+    console.log("slug------",slug);
+    const res = await api.get(`/menu/getBySlug/${slug}`, {
+      withCredentials: true,
+    });
+
+    if (res.data.status === 0) {
+      toast.error(res.data.message);
+      return rejectWithValue(res.data.message || "Failed to fetch menu");
+    }
+    toast.success(res.data.message);
+
+    return res.data;
+  } catch (err: any) {
+    return rejectWithValue(
+      err.response?.data?.message || "Failed to fetch menu by slug"
+    );
+  }
+});
+
+
+
+
+
+export interface MenuItem {
+  id?: number;
+  menuName: string;
+}
+export interface UpdateMenuPayload {
+  slug: string;
+  menus: MenuItem[];
+}
+export const updateMenu = createAsyncThunk<
+  any, // response type from backend
+  UpdateMenuPayload,
+  { rejectValue: string }
+>("menu/updateMenu", async (payload, { rejectWithValue }) => {
+  try {
+    const res = await api.post("/menu/update", payload, {
+      withCredentials: true,
+    });
+    if (res.data.status === 0) {
+      toast.error(res.data.message);
+      return rejectWithValue(res.data.message || "Failed to update menu");
+    }
+    toast.success(res.data.message);
+    return res.data;
+  } catch (err: any) {
+    return rejectWithValue(
+      err.response?.data?.message || "Failed to update menu"
+    );
+  }
+});
+
+
+
+export interface DeleteMenuItemBySlug {
+  slug: string;
+  menus: {
+    id: number;
+    menuName: string;
+  }[];
+}
+
+export interface DeleteMenuBySlugResponse {
+  status: number;
+  message: string;
+}
+
+export const deleteMenuBySlug = createAsyncThunk<
+  DeleteMenuBySlugResponse,
+  string,
+  { rejectValue: string }
+>("menu/delete", async (slug, { rejectWithValue }) => {
+  try {
+    console.log("slug------", slug);
+    const res = await api.delete(`/menu/delete/${slug}`, {
+      withCredentials: true,
+    });
+
+    if (res.data.status === 0) {
+      toast.error(res.data.message);
+      return rejectWithValue(res.data.message || "Failed to fetch menu");
+    }
+    toast.success(res.data.message);
+
+    return res.data;
+  } catch (err: any) {
+    return rejectWithValue(
+      err.response?.data?.message || "Failed to fetch menu by slug"
+    );
+  }
+});

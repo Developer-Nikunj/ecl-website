@@ -7,9 +7,12 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   getAllMenus,
   createMenu,
+  getMenuBySlug,
+  updateMenu,
+  deleteMenuBySlug,
 } from "@/store/slices/module1/menu/menu.thunk";
 
-const PERMISSIONS = ["create", "get", "update", "delete"] as const;
+const PERMISSIONS = ["post", "get", "put", "delete"] as const;
 
 const MenuTable = () => {
   const dispatch = useAppDispatch();
@@ -23,12 +26,20 @@ const MenuTable = () => {
     slug: "",
     submenus: [],
   });
+  const [editMenuEntry, setEditMenuEntry] = useState<{
+    slug: string;
+    menus: string[];
+  }>({
+    slug: "",
+    menus: [],
+  });
+  const [deleteSlug,setDeleteSlug] = useState('')
 
-  const { menus, loading, creating, error } = useAppSelector(
+  const { menus, selectedMenu, loading, creating, error } = useAppSelector(
     (state) => state.menu
   );
 
-  console.log("menus", menus);
+  console.log("selectedMenu", selectedMenu);
 
   const fetchMenus = async () => {
     await dispatch(getAllMenus());
@@ -57,11 +68,63 @@ const MenuTable = () => {
     }));
   };
 
-  const createMenuSubmit = async()=>{
+  const createMenuSubmit = async () => {
     await dispatch(createMenu(createMenuEntry));
     setCreateMenuEntry({ slug: "", submenus: [] });
     setShowCreateModal(false);
     fetchMenus();
+  };
+
+  const handleEditClick = async (slug) => {
+    try {
+      const res = await dispatch(getMenuBySlug(slug)).unwrap();
+      setEditMenuEntry({
+        slug: res?.data?.slug,
+        menus: res?.data?.menus, // or res.data.submenus
+      });
+      console.log("createMenuEntry", createMenuEntry);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const hasPermission = (type) => {
+    return editMenuEntry.menus?.some((m) =>
+      m.menuName.toLowerCase().startsWith(type)
+    );
+  };
+
+  const togglePermission = (type) => {
+    setEditMenuEntry((prev) => {
+      const exists = prev.menus.some((m) => m.menuName.startsWith(type));
+
+      return {
+        ...prev,
+        menus: exists
+          ? prev.menus.filter((m) => !m.menuName.startsWith(type))
+          : [...prev.menus, { menuName: `${type}${prev.slug}` }],
+      };
+    });
+  };
+
+  const handleUpdateMenu = async () => {
+    try {
+      console.log("updated menu", editMenuEntry);
+      await dispatch(updateMenu(editMenuEntry)).unwrap();
+      setShowEditModal(false);
+      await fetchMenus();
+    } catch (err) {
+      console.error("Update failed:", err);
+      // toast.error(err as string);
+    }
+  };
+
+  const handleDelete = async()=>{
+    console.log("delete slug",deleteSlug);
+    await dispatch(deleteMenuBySlug(deleteSlug)).unwrap();
+    await fetchMenus();
+    setShowDeleteModal(false);
+    
   }
 
   useEffect(() => {
@@ -126,19 +189,25 @@ const MenuTable = () => {
                 <td>{index + 1}</td>
                 <td>{item.slug}</td>
                 <td>
-                  <span>{item?.slug}</span>
+                  <span>{item?.menus.length}</span>
                 </td>
                 <td>
                   <div className="d-flex gap-2">
                     <button
                       className="btn btn-sm btn-primary"
-                      onClick={() => setShowEditModal((prev) => !prev)}
+                      onClick={() => {
+                        setShowEditModal((prev) => !prev);
+                        handleEditClick(item.slug);
+                      }}
                     >
                       Edit
                     </button>
                     <button
                       className="btn btn-sm btn-danger"
-                      onClick={() => setShowDeleteModal((prev) => !prev)}
+                      onClick={() => {
+                        setShowDeleteModal((prev) => !prev);
+                        setDeleteSlug(item.slug);
+                      }}
                     >
                       Delete
                     </button>
@@ -244,7 +313,12 @@ const MenuTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success" onClick={()=>createMenuSubmit()}>Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => createMenuSubmit()}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -284,6 +358,13 @@ const MenuTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter menu name"
+                        value={editMenuEntry.slug}
+                        onChange={(e) =>
+                          setEditMenuEntry((prev) => ({
+                            ...prev,
+                            slug: e.target.value,
+                          }))
+                        }
                       />
                     </div>
 
@@ -294,21 +375,12 @@ const MenuTable = () => {
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          id="selectAll"
-                        />
-                        <label className="form-check-label" htmlFor="selectAll">
-                          Select All
-                        </label>
-                      </div>
-
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
                           id="create"
+                          checked={hasPermission("post")}
+                          onChange={() => togglePermission("post")}
                         />
                         <label className="form-check-label" htmlFor="create">
-                          Create
+                          POST
                         </label>
                       </div>
 
@@ -317,6 +389,8 @@ const MenuTable = () => {
                           className="form-check-input"
                           type="checkbox"
                           id="get"
+                          checked={hasPermission("get")}
+                          onChange={() => togglePermission("get")}
                         />
                         <label className="form-check-label" htmlFor="get">
                           Get
@@ -328,9 +402,11 @@ const MenuTable = () => {
                           className="form-check-input"
                           type="checkbox"
                           id="update"
+                          checked={hasPermission("put")}
+                          onChange={() => togglePermission("put")}
                         />
                         <label className="form-check-label" htmlFor="update">
-                          Update
+                          PUT
                         </label>
                       </div>
 
@@ -339,9 +415,11 @@ const MenuTable = () => {
                           className="form-check-input"
                           type="checkbox"
                           id="delete"
+                          checked={hasPermission("delete")}
+                          onChange={() => togglePermission("delete")}
                         />
                         <label className="form-check-label" htmlFor="delete">
-                          Delete
+                          DELETE
                         </label>
                       </div>
                     </div>
@@ -355,7 +433,14 @@ const MenuTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => {
+                      handleUpdateMenu();
+                    }}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -398,7 +483,12 @@ const MenuTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Delete</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => handleDelete()}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

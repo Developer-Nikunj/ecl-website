@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createMenu, getAllMenus } from "./menu.thunk";
+import {
+  createMenu,
+  getAllMenus,
+  getMenuBySlug,
+  updateMenu,
+  deleteMenuBySlug,
+} from "./menu.thunk";
 
 /* =======================
    Types
@@ -12,6 +18,7 @@ export interface MenuItem {
 
 interface MenuState {
   menus: MenuItem[];
+  selectedMenu: MenuItem | null;
   loading: boolean;
   creating: boolean;
   error: string | null;
@@ -23,6 +30,7 @@ interface MenuState {
 
 const initialState: MenuState = {
   menus: [],
+  selectedMenu: null,
   loading: false,
   creating: false,
   error: null,
@@ -70,10 +78,54 @@ const menuSlice = createSlice({
       }
     );
 
-    builder.addCase(getAllMenus.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload || "Failed to fetch menus";
-    });
+    builder
+      .addCase(getAllMenus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch menus";
+      })
+
+      /* -------- GET MENUS BY SLUG-------- */
+      .addCase(getMenuBySlug.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(getMenuBySlug.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedMenu = action.payload.data;
+      })
+
+      .addCase(getMenuBySlug.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch menu by slug";
+      })
+
+      /* ================= UPDATE ================= */
+
+      .addCase(updateMenu.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateMenu.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(updateMenu.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      /* ================= DELETE ================= */
+
+      .addCase(deleteMenuBySlug.pending, (state) => {
+        state.loading = true;
+        state.error = null; 
+      })
+      .addCase(deleteMenuBySlug.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(deleteMenuBySlug.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 

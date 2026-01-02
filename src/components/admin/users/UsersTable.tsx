@@ -8,6 +8,7 @@ import {
   grantPermision,
 } from "@/store/slices/module1/user/user.thunk";
 import { getAllMenus } from "@/store/slices/module1/menu/menu.thunk";
+import { number } from "zod";
 
 type PermissionKey = "get" | "post" | "put" | "delete";
 
@@ -24,6 +25,8 @@ const UsersTable = () => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [showPermisionModal, setShowPermisionModal] = useState(false);
   const [selectedMenuIds, setSelectedMenuIds] = useState<number[]>([]);
+  const [selectEditUserId, setSelectEditUserId] = useState<number>(0);
+
 
   const dispatch = useAppDispatch();
   const {
@@ -92,20 +95,16 @@ const UsersTable = () => {
     // console.log("all ids there");
     // console.log("all ids there selectedMenuIds", selectedMenuIds);
     // console.log("all ids there selectedIds", selectedIds);
-    dispatch(
-      grantPermision({ userId: selectedIds, menuId: selectedMenuIds })
-    );
+    dispatch(grantPermision({ userId: selectedIds, menuId: selectedMenuIds }));
     setShowPermisionModal(false);
     setSelectedIds([]);
     setSelectedMenuIds([]);
-
   };
 
   useEffect(() => {
     fetchUsers();
     fetchMenus();
   }, [dispatch]);
-
 
   return (
     <div>
@@ -225,7 +224,10 @@ const UsersTable = () => {
                       </button>
                       <button
                         className="btn btn-sm btn-danger"
-                        onClick={() => setShowDeleteModal((prev) => !prev)}
+                        onClick={() => {
+                          setShowDeleteModal((prev) => !prev);
+                          setSelectEditUserId(item.id);
+                        }}
                       >
                         <i className="ri-delete-bin-line me-1" />
                         Delete

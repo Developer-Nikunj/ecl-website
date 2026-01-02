@@ -101,6 +101,36 @@ export const grantPermision = createAsyncThunk<
     );
   }
 });
+export const grantPermision2 = createAsyncThunk<
+  GrantPermisionResponse,
+  GrantPermisionPayload,
+  { rejectValue: string }
+>("roles/editpermission", async ({ userId, menuId }, { rejectWithValue }) => {
+  try {
+    const res = await api.put(
+      "/roles/permission",
+      {
+        userId,
+        menuId,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    console.log("res", res);
+    if (res.data.status === 0) {
+      toast.error(String(res.data.message));
+      return rejectWithValue(res.data.message);
+    }
+    toast.success(String(res.data.message));
+    return res.data;
+  } catch (err) {
+    toast.error(String(err));
+    return rejectWithValue(
+      err.response?.data?.message || "Users fetching failed"
+    );
+  }
+});
 
 
 export interface MenuItem {

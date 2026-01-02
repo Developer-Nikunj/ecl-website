@@ -75,3 +75,75 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+
+export async function PUT(request: NextRequest) {
+  try {
+    await testConnection();
+
+    const auth = await verifyAdmin(request);
+    if (!auth.valid) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
+
+    const body = await request.json();
+    const { userId, menuId } = validateInput.parse(body);
+
+    const editUserId = userId[0]; // 👈 single user
+
+    /** 1️⃣ Get all existing permissions for user */
+    const existingPermissions = await permissionModel.findAll({
+      where: { userId: editUserId },
+      attributes: ["menuId"],
+      raw: true,
+    });
+
+    const existingMenuIds = existingPermissions.map((p) => p.menuId);
+
+    /** 2️⃣ Find menus to CREATE */
+    const menusToCreate = menuId.filter(
+      (menu) => !existingMenuIds.includes(menu)
+    );
+
+    /** 3️⃣ Find menus to DELETE */
+    const menusToDelete = existingMenuIds.filter(
+      (menu) => !menuId.includes(menu)
+    );
+
+    /** 4️⃣ Bulk CREATE */
+    if (menusToCreate.length > 0) {
+      await permissionModel.bulkCreate(
+        menusToCreate.map((menu) => ({
+          userId: editUserId,
+          menuId: menu,
+        }))
+      );
+    }
+
+    /** 5️⃣ Bulk DELETE */
+    if (menusToDelete.length > 0) {
+      await permissionModel.destroy({
+        where: {
+          userId: editUserId,
+          menuId: { [Op.in]: menusToDelete },
+        },
+      });
+    }
+
+    return NextResponse.json({
+      status: 1,
+      message: "Permissions updated successfully",
+      created: menusToCreate.length,
+      removed: menusToDelete.length,
+    });
+  } catch (error) {
+    console.error("Permission edit error:", error);
+    return NextResponse.json(
+      { status: 0, message: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

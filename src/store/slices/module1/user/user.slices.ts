@@ -4,6 +4,7 @@ import {
   grantPermision,
   UserMenu,
   getUserMenus,
+  grantPermision2,
 } from "./user.thunk";
 
 interface User {
@@ -82,6 +83,20 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(grantPermision.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          (action.payload as string) || "Permission granting failed";
+      })
+      /* =================EDIT GRANT PERMISSIONS ================= */
+      .addCase(grantPermision2.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(grantPermision2.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(grantPermision2.rejected, (state, action) => {
         state.loading = false;
         state.error =
           (action.payload as string) || "Permission granting failed";

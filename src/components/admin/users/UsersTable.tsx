@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   getallUsers,
   grantPermision,
+  grantPermision2,
   getUserMenus,
 } from "@/store/slices/module1/user/user.thunk";
 import { getAllMenus } from "@/store/slices/module1/menu/menu.thunk";
@@ -107,9 +108,9 @@ const UsersTable = () => {
   const grantPermisionSubmitForEdit = async () => {
     // console.log("all ids there");
     console.log("all ids there selectedEditMenuIds", selectedEditMenuIds);
-    console.log("all ids there selectEditUserId", selectEditUserId);
+    console.log("all ids there selectEditUserId", [selectEditUserId]);
     await dispatch(
-      grantPermision({ userId: selectEditUserId, menuId: selectedEditMenuIds })
+      grantPermision2({ userId: [selectEditUserId], menuId: selectedEditMenuIds })
     );
     setShowPermisionModal(false);
     setSelectEditUserId(undefined);
@@ -138,7 +139,7 @@ const UsersTable = () => {
   useEffect(() => {
     fetchUsers();
     fetchMenus();
-  }, [dispatch]);
+  }, [dispatch, filters]);
 
   useEffect(() => {
     if (typeof selectEditUserId === "number") {
@@ -167,7 +168,18 @@ const UsersTable = () => {
             Total Rows
           </label>
 
-          <select id="totalRows" className="form-select">
+          <select
+            id="totalRows"
+            className="form-select"
+            value={filters.limit}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                limit: Number(e.target.value),
+                offset: 0,
+              }))
+            }
+          >
             <option value={10}>10</option>
             <option value={25}>25</option>
             <option value={50}>50</option>
@@ -178,17 +190,39 @@ const UsersTable = () => {
         {/* Start Date */}
         <div>
           <label className="form-label mb-1">Start Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.startDate}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                startDate: e.target.value,
+                offset: 0,
+              }))
+            }
+          />
         </div>
 
         {/* End Date */}
         <div>
           <label className="form-label mb-1">End Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.endDate}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                endDate: e.target.value,
+                offset: 0,
+              }))
+            }
+          />
         </div>
 
         {/* Apply Button */}
-        <button className="btn btn-primary px-4">Apply</button>
+        {/* <button className="btn btn-primary px-4">Apply</button> */}
       </div>
       <div className="d-flex justify-content-end mb-3">
         {selectedIds.length > 0 ? (
@@ -296,6 +330,13 @@ const UsersTable = () => {
           <button
             className="btn btn-sm text-white"
             style={{ background: "linear-gradient(135deg, #667eea, #764ba2)" }}
+            disabled={filters.offset === 0}
+            onClick={() =>
+              setFilters((prev) => ({
+                ...prev,
+                offset: Math.max(0, prev.offset - prev.limit),
+              }))
+            }
           >
             Previous
           </button>
@@ -303,6 +344,13 @@ const UsersTable = () => {
           <button
             className="btn btn-sm text-white"
             style={{ background: "linear-gradient(135deg, #43cea2, #185a9d)" }}
+            disabled={filters.offset + filters.limit >= meta?.total}
+            onClick={() =>
+              setFilters((prev) => ({
+                ...prev,
+                offset: prev.offset + prev.limit,
+              }))
+            }
           >
             Next
           </button>
@@ -488,7 +536,10 @@ const UsersTable = () => {
                   </button>
                   <button
                     className="btn btn-sm btn-success"
-                    onClick={() => grantPermisionSubmitForEdit()}
+                    onClick={() => {
+                      grantPermisionSubmitForEdit();
+                      setShowEditModal(false);
+                    }}
                   >
                     Save
                   </button>

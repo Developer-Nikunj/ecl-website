@@ -365,6 +365,7 @@ const MenuTable = () => {
                             slug: e.target.value,
                           }))
                         }
+                        disabled
                       />
                     </div>
 

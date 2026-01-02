@@ -103,6 +103,22 @@ const UsersTable = () => {
     setSelectedMenuIds([]);
   };
 
+  const hasUserPermission = (slug, menuName) => {
+    // console.log("hasUserPermission",slug,menuName);
+    const userModule = userMenus?.data.find((m) => m.slug == slug);
+    if (!userModule) return false;
+    return userModule.menus.some((m) => m.menuName == menuName);
+  };
+  const isAllChecked = (slug, allMenus) => {
+    // console.log("isAllChecked", slug, allMenus);
+    // console.log("userMenus", userMenus);
+    const userModule = userMenus?.data?.find((m) => m.slug == slug);
+    if (!userModule) return false;
+
+    return allMenus.every((menu) =>
+      userModule.menus.some((m) => m.menuName == menu.menuName)
+    );
+  };
 
 
   useEffect(() => {
@@ -397,6 +413,7 @@ const UsersTable = () => {
                               <input
                                 type="checkbox"
                                 className="form-check-input"
+                                checked={isAllChecked(item.slug, item.menus)}
                               />
                               <span className="ms-2">All</span>
                             </td>
@@ -407,6 +424,10 @@ const UsersTable = () => {
                                   <input
                                     type="checkbox"
                                     className="form-check-input"
+                                    checked={hasUserPermission(
+                                      item.slug,
+                                      menu.menuName
+                                    )}
                                   />
                                   <span className="ms-2">{menu.menuName}</span>{" "}
                                 </td>

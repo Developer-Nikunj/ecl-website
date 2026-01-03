@@ -1,8 +1,39 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Sidebar from "./sidebar";
 import Profile from "./profile";
 
 const Header = () => {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
+  const toggleDarkMode = () => {
+    if (isDark) {
+      document.body.classList.remove("dark-mode");
+      localStorage.setItem("darkMode", "false");
+      setIsDark(false);
+    } else {
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("darkMode", "true");
+      setIsDark(true);
+    }
+  };
+
+  useEffect(() => {
+    const dark = localStorage.getItem("darkMode") === "true";
+    setIsDark(dark);
+    if (dark) document.body.classList.add("dark-mode");
+  }, []);
   return (
     <>
       <header id="page-topbar">
@@ -238,14 +269,13 @@ const Header = () => {
                   </form>
                 </div>
               </div>
-              
-              
-              
+
               <div className="ms-1 header-item d-none d-sm-flex">
                 <button
                   type="button"
                   className="btn btn-icon btn-topbar material-shadow-none btn-ghost-secondary rounded-circle"
                   data-toggle="fullscreen"
+                  onClick={toggleFullscreen}
                 >
                   <i className="bx bx-fullscreen fs-22" />
                 </button>
@@ -254,6 +284,7 @@ const Header = () => {
                 <button
                   type="button"
                   className="btn btn-icon btn-topbar material-shadow-none btn-ghost-secondary rounded-circle light-dark-mode"
+                  onClick={toggleDarkMode}
                 >
                   <i className="bx bx-moon fs-22" />
                 </button>
@@ -756,7 +787,7 @@ const Header = () => {
                   <span className="d-flex align-items-center">
                     <img
                       className="rounded-circle header-profile-user"
-                      src="/assets/backend/images/users/avatar-1.jpg"
+                      src="/assets/backend/images/users/avatar-2.jpg"
                       alt="Header Avatar"
                     />
                     <span className="text-start ms-xl-2">

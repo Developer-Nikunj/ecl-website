@@ -6,6 +6,7 @@ import Script from "next/script";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { verifyUser } from "@/store/slices/module1/auth/auth.thunk";
 import { toast } from "react-toastify";
+import { useSearchParams } from "next/navigation";
 
 const page = () => {
   const dispatch = useAppDispatch();
@@ -18,11 +19,12 @@ const page = () => {
     d5: "",
     d6: "",
   });
-  const [email, setEmail] = useState("");
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
 
   const handleSubmit = async () => {
     const finalOTP = Object.values(otp).join("");
-    console.log(finalOTP);
+    console.log(finalOTP, email);
 
     try {
       await dispatch(verifyUser({ email, otp: finalOTP })).unwrap();

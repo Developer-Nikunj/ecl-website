@@ -124,8 +124,8 @@ const MenuTable = () => {
     await dispatch(deleteMenuBySlug(deleteSlug)).unwrap();
     await fetchMenus();
     setShowDeleteModal(false);
-    
   }
+
 
   useEffect(() => {
     fetchMenus();

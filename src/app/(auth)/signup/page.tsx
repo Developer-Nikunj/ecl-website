@@ -31,10 +31,10 @@ const Page = () => {
     }
 
     try {
-      await dispatch(registerUser({email,name,password})).unwrap();
-      router.replace("/verify-email");
+      await dispatch(registerUser({ email, name, password })).unwrap();
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`);
     } catch (err) {
-      console.log("Registeration failed",err)
+      console.log("Registeration failed", err);
     }
   };
   return (
@@ -140,7 +140,7 @@ const Page = () => {
                               id="useremail"
                               placeholder="Enter email address"
                               required=""
-                              onChange={(e)=>setEmail(e.target.value)}
+                              onChange={(e) => setEmail(e.target.value)}
                             />
                             <div className="invalid-feedback">
                               Please enter email
@@ -156,7 +156,7 @@ const Page = () => {
                               id="username"
                               placeholder="Enter username"
                               required=""
-                              onChange={(e)=>setName(e.target.value)}
+                              onChange={(e) => setName(e.target.value)}
                             />
                             <div className="invalid-feedback">
                               Please enter username
@@ -179,7 +179,7 @@ const Page = () => {
                                 aria-describedby="passwordInput"
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                                 required=""
-                                onChange={(e)=>setPassword(e.target.value)}
+                                onChange={(e) => setPassword(e.target.value)}
                               />
                               <button
                                 className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"

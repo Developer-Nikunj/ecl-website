@@ -15,7 +15,7 @@ const Profile = () => {
           <span className="d-flex align-items-center gap-2">
             <img
               className="rounded header-profile-user"
-              src="assets/backend/images/users/avatar-1.jpg"
+              src="/assets/backend/images/users/avatar-2.jpg"
               alt="Header Avatar"
             />
             <span className="text-start">

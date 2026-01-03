@@ -11,6 +11,7 @@ import {
   updateMenu,
   deleteMenuBySlug,
 } from "@/store/slices/module1/menu/menu.thunk";
+import PermissionGate from "@/components/admin/PermissionGate"
 
 const PERMISSIONS = ["post", "get", "put", "delete"] as const;
 
@@ -164,75 +165,87 @@ const MenuTable = () => {
         <button className="btn btn-primary px-4">Apply</button>
       </div>
 
-      <div className="d-flex justify-content-end mb-3">
-        <button
-          onClick={() => setShowCreateModal((prev) => !prev)}
-          className="btn btn-sm btn-success"
-        >
-          Create Menu
-        </button>
-      </div>
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle mb-0">
-          <thead className="table-light">
-            <tr>
-              <th>SNo.</th>
-              <th>Slug</th>
-              <th>Total</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {menus.map((item, index) => (
-              <tr key={item.id}>
-                <td>{index + 1}</td>
-                <td>{item.slug}</td>
-                <td>
-                  <span>{item?.menus.length}</span>
-                </td>
-                <td>
-                  <div className="d-flex gap-2">
-                    <button
-                      className="btn btn-sm btn-primary"
-                      onClick={() => {
-                        setShowEditModal((prev) => !prev);
-                        handleEditClick(item.slug);
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => {
-                        setShowDeleteModal((prev) => !prev);
-                        setDeleteSlug(item.slug);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="d-flex justify-content-between align-items-center mt-3">
+      <PermissionGate permission="postmenu">
+        <div className="d-flex justify-content-end mb-3">
           <button
-            className="btn btn-sm text-white"
-            style={{ background: "linear-gradient(135deg, #667eea, #764ba2)" }}
+            onClick={() => setShowCreateModal((prev) => !prev)}
+            className="btn btn-sm btn-success"
           >
-            Previous
-          </button>
-
-          <button
-            className="btn btn-sm text-white"
-            style={{ background: "linear-gradient(135deg, #43cea2, #185a9d)" }}
-          >
-            Next
+            Create Menu
           </button>
         </div>
-      </div>
+      </PermissionGate>
+      <PermissionGate permission="getmenu">
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover align-middle mb-0">
+            <thead className="table-light">
+              <tr>
+                <th>SNo.</th>
+                <th>Slug</th>
+                <th>Total</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {menus.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{index + 1}</td>
+                  <td>{item.slug}</td>
+                  <td>
+                    <span>{item?.menus.length}</span>
+                  </td>
+                  <td>
+                    <div className="d-flex gap-2">
+                      <PermissionGate permission="putmenu">
+                        <button
+                          className="btn btn-sm btn-primary"
+                          onClick={() => {
+                            setShowEditModal((prev) => !prev);
+                            handleEditClick(item.slug);
+                          }}
+                        >
+                          Edit
+                        </button>
+                      </PermissionGate>
+                      <PermissionGate permission="deletemenu">
+                        <button
+                          className="btn btn-sm btn-danger"
+                          onClick={() => {
+                            setShowDeleteModal((prev) => !prev);
+                            setDeleteSlug(item.slug);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </PermissionGate>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #667eea, #764ba2)",
+              }}
+            >
+              Previous
+            </button>
+
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #43cea2, #185a9d)",
+              }}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </PermissionGate>
 
       {showCreateModal && (
         <>

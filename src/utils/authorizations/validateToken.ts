@@ -53,7 +53,7 @@ export async function validateToken(req: NextRequest) {
 export async function verifyAdmin(req: NextRequest, action: string) {
   try {
     const result = await getDecodedToken(req);
-    console.log("result", result);
+    // console.log("result", result);
     if (!result.valid) return result;
 
     if(result.user.role == "admin") return result;

@@ -7,14 +7,27 @@ export default function PermissionGate({
   permission: string;
   children: React.ReactNode;
 }) {
-  const raw =
-    typeof document !== "undefined"
-      ? document.cookie.split("; ").find((c) => c.startsWith("permissions="))
-      : null;
+  if (typeof document === "undefined") return null;
+
+  const raw = document.cookie
+    .split("; ")
+    .find((c) => c.startsWith("permissions="));
 
   if (!raw) return null;
 
-  const perms = JSON.parse(decodeURIComponent(raw.split("=")[1]));
+  try {
+    let value = decodeURIComponent(raw.split("=")[1]);
 
-  return perms.includes(permission) ? <>{children}</> : null;
+    // 🔥 Remove wrapping quotes if present
+    if (value.startsWith('"') && value.endsWith('"')) {
+      value = value.slice(1, -1);
+    }
+
+    const perms: string[] = JSON.parse(value);
+
+    return perms.includes(permission) ? <>{children}</> : null;
+  } catch (err) {
+    console.error("PermissionGate parse error:", err);
+    return null;
+  }
 }

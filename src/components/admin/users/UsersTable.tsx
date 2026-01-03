@@ -11,6 +11,8 @@ import {
 } from "@/store/slices/module1/user/user.thunk";
 import { getAllMenus } from "@/store/slices/module1/menu/menu.thunk";
 
+import PermissionGate from "@/components/admin/PermissionGate";
+
 type PermissionKey = "get" | "post" | "put" | "delete";
 
 const UsersTable = () => {
@@ -226,136 +228,150 @@ const UsersTable = () => {
       </div>
       <div className="d-flex justify-content-end mb-3">
         {selectedIds.length > 0 ? (
-          <button
-            onClick={() => setShowPermisionModal((prev) => !prev)}
-            className="btn btn-sm btn-success"
-          >
-            Permission
-          </button>
+          <PermissionGate permission="postpermission">
+            <button
+              onClick={() => setShowPermisionModal((prev) => !prev)}
+              className="btn btn-sm btn-success"
+            >
+              Permission
+            </button>
+          </PermissionGate>
         ) : (
-          <button
-            onClick={() => setShowCreateModal((prev) => !prev)}
-            className="btn btn-sm btn-success"
-          >
-            Create User
-          </button>
+          <PermissionGate permission="postuser">
+            <button
+              onClick={() => setShowCreateModal((prev) => !prev)}
+              className="btn btn-sm btn-success"
+            >
+              Create User
+            </button>
+          </PermissionGate>
         )}
       </div>
-      <div className="table-responsive">
-        <table className="table table-nowrap mb-0 align-middle">
-          <thead className="table-light">
-            <tr>
-              <th scope="col">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="selectAll"
-                    checked={
-                      selectedIds.length === users.length && users.length > 0
-                    }
-                    onChange={(e) => handleSelectAll(e.target.checked)}
-                    // Optional: add onChange to select all
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="selectAll"
-                  ></label>
-                </div>
-              </th>
-              <th scope="col">SNo.</th>
-              <th scope="col">Name</th>
-              <th scope="col">Role</th>
-              <th scope="col">Email</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
+      <PermissionGate permission="getuser">
+        <div className="table-responsive">
+          <table className="table table-nowrap mb-0 align-middle">
+            <thead className="table-light">
+              <tr>
+                <th scope="col">
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="selectAll"
+                      checked={
+                        selectedIds.length === users.length && users.length > 0
+                      }
+                      onChange={(e) => handleSelectAll(e.target.checked)}
+                      // Optional: add onChange to select all
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="selectAll"
+                    ></label>
+                  </div>
+                </th>
+                <th scope="col">SNo.</th>
+                <th scope="col">Name</th>
+                <th scope="col">Role</th>
+                <th scope="col">Email</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {users.length > 0 &&
-              users.map((item, index) => (
-                <tr
-                  key={item.id}
-                  className={item.status === "Active" ? "" : "table-active"}
-                >
-                  <th scope="row">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id={`check-${item.id}`}
-                        checked={selectedIds.includes(item.id)}
-                        onChange={() => handleCheckboxChange(item.id)}
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor={`check-${item.id}`}
-                      ></label>
-                    </div>
-                  </th>
-                  <td>{index + 1}</td>
-                  <td>{item.name || "Unknown"}</td>
-                  <td>{item.role}</td>
-                  <td>
-                    <span>{item.email}</span>
-                  </td>
-                  <td>
-                    <div className="d-flex gap-2">
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => {
-                          setShowEditModal((prev) => !prev);
-                          setSelectEditUserId(item.id);
-                        }}
-                      >
-                        <i className="ri-edit-line me-1" />
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => {
-                          setShowDeleteModal((prev) => !prev);
-                        }}
-                      >
-                        <i className="ri-delete-bin-line me-1" />
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        <div className="d-flex justify-content-between align-items-center mt-3">
-          <button
-            className="btn btn-sm text-white"
-            style={{ background: "linear-gradient(135deg, #667eea, #764ba2)" }}
-            disabled={filters.offset === 0}
-            onClick={() =>
-              setFilters((prev) => ({
-                ...prev,
-                offset: Math.max(0, prev.offset - prev.limit),
-              }))
-            }
-          >
-            Previous
-          </button>
+            <tbody>
+              {users.length > 0 &&
+                users.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    className={item.status === "Active" ? "" : "table-active"}
+                  >
+                    <th scope="row">
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id={`check-${item.id}`}
+                          checked={selectedIds.includes(item.id)}
+                          onChange={() => handleCheckboxChange(item.id)}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`check-${item.id}`}
+                        ></label>
+                      </div>
+                    </th>
+                    <td>{index + 1}</td>
+                    <td>{item.name || "Unknown"}</td>
+                    <td>{item.role}</td>
+                    <td>
+                      <span>{item.email}</span>
+                    </td>
+                    <td>
+                      <div className="d-flex gap-2">
+                        <PermissionGate permission="putpermission">
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => {
+                              setShowEditModal((prev) => !prev);
+                              setSelectEditUserId(item.id);
+                            }}
+                          >
+                            <i className="ri-edit-line me-1" />
+                            Edit
+                          </button>
+                        </PermissionGate>
+                        <PermissionGate permission="deleteuser">
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => {
+                              setShowDeleteModal((prev) => !prev);
+                            }}
+                          >
+                            <i className="ri-delete-bin-line me-1" />
+                            Delete
+                          </button>
+                        </PermissionGate>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #667eea, #764ba2)",
+              }}
+              disabled={filters.offset === 0}
+              onClick={() =>
+                setFilters((prev) => ({
+                  ...prev,
+                  offset: Math.max(0, prev.offset - prev.limit),
+                }))
+              }
+            >
+              Previous
+            </button>
 
-          <button
-            className="btn btn-sm text-white"
-            style={{ background: "linear-gradient(135deg, #43cea2, #185a9d)" }}
-            disabled={filters.offset + filters.limit >= meta?.total}
-            onClick={() =>
-              setFilters((prev) => ({
-                ...prev,
-                offset: prev.offset + prev.limit,
-              }))
-            }
-          >
-            Next
-          </button>
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #43cea2, #185a9d)",
+              }}
+              disabled={filters.offset + filters.limit >= meta?.total}
+              onClick={() =>
+                setFilters((prev) => ({
+                  ...prev,
+                  offset: prev.offset + prev.limit,
+                }))
+              }
+            >
+              Next
+            </button>
+          </div>
         </div>
-      </div>
+      </PermissionGate>
 
       {showCreateModal && (
         <>

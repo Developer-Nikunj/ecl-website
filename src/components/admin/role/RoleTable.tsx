@@ -12,6 +12,8 @@ import {
   updateRole,
 } from "@/store/slices/module1/roles/roles.thunk";
 
+import PermissionGate from "@/components/admin/PermissionGate"
+
 const RoleTable = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -200,88 +202,99 @@ const RoleTable = () => {
           Apply
         </button>
       </div>
-
-      <div className="d-flex justify-content-end mb-3">
-        <button
-          onClick={() => setShowCreateModal((prev) => !prev)}
-          className="btn btn-sm btn-success"
-        >
-          Create Role
-        </button>
-      </div>
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle mb-0">
-          <thead className="table-light">
-            <tr>
-              <th>SNo.</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {roles.length > 0 &&
-              roles.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{filters.offset + index + 1}</td>
-                  <td>{item.name}</td>
-                  <td>{item.description}</td>
-                  <td>
-                    <span>{item.status == true ? "Active" : "Inactive"}</span>
-                  </td>
-                  <td>
-                    <div className="d-flex gap-2">
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => {
-                          setSelectedRoleId(item.id);
-                          setCreateRoleEntry({
-                            name: item.name,
-                            description: item.description,
-                            status: item.status == true ? '1' : '0',
-                          }); 
-                          setShowEditModal(true);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => {
-                          setShowDeleteModal((prev) => !prev);
-                          setSelectedRoleId(item.id);
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        <div className="d-flex justify-content-between align-items-center mt-3">
+      <PermissionGate permission="postrole">
+        <div className="d-flex justify-content-end mb-3">
           <button
-            className="btn btn-sm text-white"
-            style={{ background: "linear-gradient(135deg, #667eea, #764ba2)" }}
-            onClick={handlePrevious}
-            disabled={filters.offset === 0}
+            onClick={() => setShowCreateModal((prev) => !prev)}
+            className="btn btn-sm btn-success"
           >
-            Previous
-          </button>
-
-          <button
-            className="btn btn-sm text-white"
-            style={{ background: "linear-gradient(135deg, #43cea2, #185a9d)" }}
-            onClick={handleNext}
-            disabled={!meta || filters.offset + filters.limit >= meta.total}
-          >
-            Next
+            Create Role
           </button>
         </div>
-      </div>
+      </PermissionGate>
+      <PermissionGate permission="getrole">
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover align-middle mb-0">
+            <thead className="table-light">
+              <tr>
+                <th>SNo.</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {roles.length > 0 &&
+                roles.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{filters.offset + index + 1}</td>
+                    <td>{item.name}</td>
+                    <td>{item.description}</td>
+                    <td>
+                      <span>{item.status == true ? "Active" : "Inactive"}</span>
+                    </td>
+                    <td>
+                      <div className="d-flex gap-2">
+                        <PermissionGate permission="putrole">
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => {
+                              setSelectedRoleId(item.id);
+                              setCreateRoleEntry({
+                                name: item.name,
+                                description: item.description,
+                                status: item.status == true ? "1" : "0",
+                              });
+                              setShowEditModal(true);
+                            }}
+                          >
+                            Edit
+                          </button>
+                        </PermissionGate>
+                        <PermissionGate permission="deleterole">
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => {
+                              setShowDeleteModal((prev) => !prev);
+                              setSelectedRoleId(item.id);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </PermissionGate>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #667eea, #764ba2)",
+              }}
+              onClick={handlePrevious}
+              disabled={filters.offset === 0}
+            >
+              Previous
+            </button>
+
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #43cea2, #185a9d)",
+              }}
+              onClick={handleNext}
+              disabled={!meta || filters.offset + filters.limit >= meta.total}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </PermissionGate>
 
       {showCreateModal && (
         <>

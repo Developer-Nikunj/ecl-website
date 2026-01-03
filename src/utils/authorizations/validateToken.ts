@@ -1,5 +1,8 @@
 import { NextRequest } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { permissionModel } from "@/models/permission.model";
+import { menuModel } from "@/models/menu.model";
+import "@/models"; // 🔥 ensure associations are registered
 
 if (!process.env.ACCESS_JWT_SECRET) {
   throw new Error("ACCESS_JWT_SECRET is not defined");
@@ -7,11 +10,9 @@ if (!process.env.ACCESS_JWT_SECRET) {
 
 const jwtSecret = process.env.ACCESS_JWT_SECRET;
 
-
 type AuthUser = JwtPayload & {
   userId: string;
   role: string;
-  actions: string[];
 };
 
 type AuthSuccess = {
@@ -26,8 +27,6 @@ type AuthFailure = {
 };
 
 type AuthResult = AuthSuccess | AuthFailure;
-
-
 
 export async function getDecodedToken(req: NextRequest): Promise<AuthResult> {
   try {
@@ -47,38 +46,47 @@ export async function getDecodedToken(req: NextRequest): Promise<AuthResult> {
   }
 }
 
-export async function validateToken(req:NextRequest) {
+export async function validateToken(req: NextRequest) {
   return getDecodedToken(req);
 }
 
-export async function verifyAdmin(req: NextRequest) {
+export async function verifyAdmin(req: NextRequest, action: string) {
   try {
     const result = await getDecodedToken(req);
+    console.log("result", result);
+    if (!result.valid) return result;
 
-     if (!result.valid) return result;
+    if(result.user.role == "admin") return result;
+    if(action){
+      // console.log("actionactionactionactionactionaction", action);
+      const hasPermission = await permissionModel.findOne({
+        where: { userId: result.user.id },
+        include: [
+          {
+            model: menuModel,
+            where: { menuName: action },
+            required: true,
+            attributes: [],
+          },
+        ],
+        attributes: ["id"],
+      });
+      // console.log("resultresultresultresultresultresult", hasPermission);
 
-     if (result.user.role !== "admin") {
-       return { valid: false, message: "Only Admin can access !!" ,status : 400 };
-     }
+      if (!hasPermission) {
+        return {
+          valid: false,
+          message: "Permission denied",
+          status: 406,
+        };
+      }
+    }
 
-     return result;
+
+    return result;
   } catch {
     return { valid: false, message: "Invalid or expired token", status: 401 };
   }
 }
 
-// will be change
-export async function canUserPerformAction(req: NextRequest, action: string) {
-  const result = await getDecodedToken(req);
 
-  if (!result.valid) return result;
-
-  if (!result.user.actions?.includes(action)) {
-    return {
-      valid: false,
-      message: "You are not allowed to perform this action",
-      status: 400,
-    };
-  }
-  return result;
-}

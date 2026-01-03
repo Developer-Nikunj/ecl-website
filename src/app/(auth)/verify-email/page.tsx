@@ -1,9 +1,37 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Script from "next/script";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { verifyUser } from "@/store/slices/module1/auth/auth.thunk";
+import { toast } from "react-toastify";
 
 const page = () => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const [otp, setOtp] = useState({
+    d1: "",
+    d2: "",
+    d3: "",
+    d4: "",
+    d5: "",
+    d6: "",
+  });
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = async () => {
+    const finalOTP = Object.values(otp).join("");
+    console.log(finalOTP);
+
+    try {
+      await dispatch(verifyUser({ email, otp: finalOTP })).unwrap();
+      router.replace("/signin");
+    } catch (error) {
+      console.error("SignIn failed", err);
+    }
+  };
+
   return (
     <div>
       <>
@@ -58,9 +86,9 @@ const page = () => {
                     <div>
                       <a href="index.html" className="d-inline-block auth-logo">
                         <img
-                          src="assets/backend/images/logo-light.png"
-                          alt=""
-                          height={20}
+                          src="assets/backend/images/logo-ecl.png"
+                          alt="logo-ecl"
+                          height={60}
                         />
                       </a>
                     </div>
@@ -86,7 +114,7 @@ const page = () => {
                         <div className="text-muted text-center mb-4 mx-lg-3">
                           <h4 className="">Verify Your Email</h4>
                           <p>
-                            Please enter the 4 digit code sent to{" "}
+                            Please enter the 6 digit code sent to{" "}
                             <span className="fw-semibold">example@abc.com</span>
                           </p>
                         </div>
@@ -103,9 +131,12 @@ const page = () => {
                                 <input
                                   type="text"
                                   className="form-control form-control-lg bg-light border-light text-center"
-                                  onkeyup="moveToNext(1, event)"
                                   maxLength={1}
                                   id="digit1-input"
+                                  value={otp.d1}
+                                  onChange={(e) =>
+                                    setOtp({ ...otp, d1: e.target.value })
+                                  }
                                 />
                               </div>
                             </div>
@@ -121,9 +152,12 @@ const page = () => {
                                 <input
                                   type="text"
                                   className="form-control form-control-lg bg-light border-light text-center"
-                                  onkeyup="moveToNext(2, event)"
                                   maxLength={1}
                                   id="digit2-input"
+                                  value={otp.d2}
+                                  onChange={(e) =>
+                                    setOtp({ ...otp, d2: e.target.value })
+                                  }
                                 />
                               </div>
                             </div>
@@ -139,9 +173,12 @@ const page = () => {
                                 <input
                                   type="text"
                                   className="form-control form-control-lg bg-light border-light text-center"
-                                  onkeyup="moveToNext(3, event)"
                                   maxLength={1}
                                   id="digit3-input"
+                                  value={otp.d3}
+                                  onChange={(e) =>
+                                    setOtp({ ...otp, d3: e.target.value })
+                                  }
                                 />
                               </div>
                             </div>
@@ -157,9 +194,54 @@ const page = () => {
                                 <input
                                   type="text"
                                   className="form-control form-control-lg bg-light border-light text-center"
-                                  onkeyup="moveToNext(4, event)"
                                   maxLength={1}
                                   id="digit4-input"
+                                  value={otp.d4}
+                                  onChange={(e) =>
+                                    setOtp({ ...otp, d4: e.target.value })
+                                  }
+                                />
+                              </div>
+                            </div>
+                            {/* end col */}
+                            <div className="col-3">
+                              <div className="mb-3">
+                                <label
+                                  htmlFor="digit5-input"
+                                  className="visually-hidden"
+                                >
+                                  Digit 5
+                                </label>
+                                <input
+                                  type="text"
+                                  className="form-control form-control-lg bg-light border-light text-center"
+                                  maxLength={1}
+                                  id="digit5-input"
+                                  value={otp.d5}
+                                  onChange={(e) =>
+                                    setOtp({ ...otp, d5: e.target.value })
+                                  }
+                                />
+                              </div>
+                            </div>
+                            {/* end col */}
+                            <div className="col-3">
+                              <div className="mb-3">
+                                <label
+                                  htmlFor="digit6-input"
+                                  className="visually-hidden"
+                                >
+                                  Digit 6
+                                </label>
+                                <input
+                                  type="text"
+                                  className="form-control form-control-lg bg-light border-light text-center"
+                                  maxLength={1}
+                                  id="digit6-input"
+                                  value={otp.d6}
+                                  onChange={(e) =>
+                                    setOtp({ ...otp, d6: e.target.value })
+                                  }
                                 />
                               </div>
                             </div>
@@ -171,6 +253,7 @@ const page = () => {
                           <button
                             type="button"
                             className="btn btn-success w-100"
+                            onClick={() => handleSubmit()}
                           >
                             Confirm
                           </button>

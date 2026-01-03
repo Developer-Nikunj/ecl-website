@@ -10,7 +10,7 @@ export async function PUT(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request);
+    const auth = await verifyAdmin(request,"putrole");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },

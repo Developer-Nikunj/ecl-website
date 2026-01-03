@@ -10,7 +10,7 @@ export async function DELETE(
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request);
+    const auth = await verifyAdmin(request,"deleterole");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },

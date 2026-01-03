@@ -4,6 +4,8 @@ import { menuModel } from "@/models/menu.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import z, { string } from "zod";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
+import { permissionModel } from "@/models/permission.model";
+import "@/models"; // 🔥 ensure associations are registered
 
 const validateInput = z.object({
   slug: z.string().transform((val) => val.replace(/\s+/g, "").toLowerCase()),
@@ -14,7 +16,7 @@ export async function POST(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request);
+    const auth = await verifyAdmin(request,"postmenu");
 
     if (!auth.valid) {
       return NextResponse.json(

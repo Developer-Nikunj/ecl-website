@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request);
+    const auth = await verifyAdmin(request,"postpermission");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },
@@ -94,7 +94,7 @@ export async function PUT(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request);
+    const auth = await verifyAdmin(request,"putpermission");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },

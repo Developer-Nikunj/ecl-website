@@ -8,7 +8,7 @@ import { testConnection } from "@/database/db";
 export async function GET(request: NextRequest) {
   await testConnection();
 
-  const auth = await verifyAdmin(request);
+  const auth = await verifyAdmin(request,"getpermission");
   if (!auth.valid) {
     return NextResponse.json(
       { message: auth.message },

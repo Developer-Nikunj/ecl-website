@@ -11,7 +11,7 @@ export async function GET(
   try {
     const { slug } = await params;
 
-    const auth = await verifyAdmin(request);
+    const auth = await verifyAdmin(request,"getmenu");
     if (!auth.valid) {
       return NextResponse.json(
         { status: 0, message: auth.message },
@@ -64,7 +64,7 @@ export async function DELETE(
   try {
     const { slug } = await params;
 
-    const auth = await verifyAdmin(request);
+    const auth = await verifyAdmin(request,"deletemenu");
     if (!auth.valid) {
       return NextResponse.json(
         { status: 0, message: auth.message },

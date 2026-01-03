@@ -56,7 +56,7 @@ export const userModel = User.init(
     otp: DataTypes.STRING,
     role: {
       type: DataTypes.STRING,
-      defaultValue: "USER",
+      defaultValue: "user",
     },
     actions: {
       type: DataTypes.JSON,

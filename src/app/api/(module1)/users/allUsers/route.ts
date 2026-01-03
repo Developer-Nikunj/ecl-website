@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   try {
     await testConnection();
     
-    const auth = await verifyAdmin(request);
+    const auth = await verifyAdmin(request,"getuser");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },

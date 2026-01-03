@@ -8,6 +8,9 @@ import { userModel } from "@/models/user.model";
 import { randomUUID, randomBytes } from "crypto";
 import redis from "@/utils/redis/redis";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
+import { permissionModel } from "@/models/permission.model";
+import { menuModel } from "@/models/menu.model";
+import "@/models"; // 🔥 ensure associations are registered
 
 export async function POST(request: NextRequest) {
   try {
@@ -78,15 +81,37 @@ export async function POST(request: NextRequest) {
     await redis.set(`session:${sessionId}`, existuser.id, "EX", 7 * 86400);
     await redis.set(`refresh:${sessionId}`, refreshToken, "EX", 7 * 86400);
 
+    const menus = await permissionModel.findAll({
+      where: { userId: existuser.id },
+      include: [
+        {
+          model: menuModel,
+          attributes: ["menuName"],
+          required: true, // 🔥 THIS removes null Menu rows
+        },
+      ],
+      attributes: {
+        exclude: ["id", "menuId", "permission", "createdAt", "updatedAt"],
+      },
+    });
+    const permissions = menus.map((p) => p.Menu.menuName);
+
     const response = NextResponse.json({
       status: 1,
       token: accessToken,
+      permissions: permissions,
       message: "Login successfully",
     });
     response.cookies.set({
       name: "sessionId",
       value: sessionId,
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+    });
+    response.cookies.set({
+      name: "permissions",
+      value: JSON.stringify(permissions),
       secure: process.env.NODE_ENV === "production",
       path: "/",
     });

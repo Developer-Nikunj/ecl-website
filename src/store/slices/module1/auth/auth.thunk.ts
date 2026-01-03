@@ -68,3 +68,36 @@ export const registerUser = createAsyncThunk<
     }
   }
 );
+
+
+
+interface verifyUserPayload {
+  email: string;
+  otp: string;
+}
+interface verifyUserResponse {
+  status: boolean;
+  message: string;
+}
+
+export const verifyUser = createAsyncThunk<
+  verifyUserResponse,
+  verifyUserPayload,
+  { rejectValue: string }
+>("auth/verify-email", async ({ email, otp }, { rejectWithValue }) => {
+  try {
+    const res = await api.post(
+      "/auth/verify-email",
+      { email, otp },
+      { withCredentials: true }
+    );
+    console.log("res", res);
+    toast.success(String(res.data.message));
+    return res.data;
+  } catch (err) {
+    toast.error(String(err));
+    return rejectWithValue(
+      err.response?.data?.message || "verify email failed"
+    );
+  }
+});

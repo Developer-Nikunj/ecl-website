@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { menuModel } from "@/models/menu.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { fn, literal } from "sequelize";
+import { logsEntry } from "@/utils/logsEntry/logsEntry";
 
 export async function GET(
   request: NextRequest,
@@ -56,7 +57,6 @@ export async function GET(
   }
 }
 
-
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
@@ -82,7 +82,17 @@ export async function DELETE(
         message: "Menus not Deleted",
       });
     }
-
+    await logsEntry({
+      userId: auth?.user?.id.toString(),
+      email: auth?.user?.email,
+      role: auth?.user?.role,
+      action: "MENU_DELETED_SUCCESS",
+      ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+      requestMethod: request.method,
+      endPoint: request.nextUrl.pathname.toString(),
+      status: 200,
+      userAgent: request.headers.get("user-agent") || "unknown",
+    });
     return NextResponse.json({
       status: 1,
       message: "Menus delete successfully",

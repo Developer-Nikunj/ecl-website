@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, description,status } = await request.json();
+    const { name, description, status } = await request.json();
     if (!name) {
       return NextResponse.json({
         status: 0,
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     const data = await roleModel.create({
       name,
       description,
-      active:status
+      active: status,
     });
 
     if (!data) {
@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
     await logsEntry({
       userId: auth?.user?.id.toString(),
       email: auth?.user?.email,
+      role: auth?.user?.role,
       action: "ROLE_CREATED_SUCCESS",
       ipAddress: request.headers.get("x-forwarded-for") || "unknown",
       requestMethod: request.method,

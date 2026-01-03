@@ -16,6 +16,9 @@ Log.init(
     email: {
       type: DataTypes.STRING,
     },
+    role: {
+      type: DataTypes.STRING,
+    },
     action: {
       type: DataTypes.STRING,
     },

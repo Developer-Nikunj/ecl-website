@@ -3,12 +3,13 @@ import { testConnection } from "@/database/db";
 import { menuModel } from "@/models/menu.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import z from "zod";
+import { logsEntry } from "@/utils/logsEntry/logsEntry";
 
 const validateInput = z.object({
   slug: z.string().transform((v) => v.replace(/\s+/g, "").toLowerCase()),
   menus: z.array(
     z.object({
-      id: z.number().optional(),    
+      id: z.number().optional(),
       menuName: z.string(),
     })
   ),
@@ -65,7 +66,17 @@ export async function POST(request: NextRequest) {
         },
       });
     }
-
+    await logsEntry({
+      userId: auth?.user?.id.toString(),
+      email: auth?.user?.email,
+      role: auth?.user?.role,
+      action: "MENU_UPDATED_SUCCESS",
+      ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+      requestMethod: request.method,
+      endPoint: request.nextUrl.pathname.toString(),
+      status: 200,
+      userAgent: request.headers.get("user-agent") || "unknown",
+    });
     return NextResponse.json({
       status: 1,
       message: "Menu updated successfully",

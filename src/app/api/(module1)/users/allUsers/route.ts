@@ -55,16 +55,16 @@ export async function GET(request: NextRequest) {
       attributes: ["id", "name", "email", "role"],
     });
 
-    await logsEntry({
-      userId: auth.user.id.toString(),
-      email: auth.user.email,
-      action: "USERS_FETCHED_SUCCESS",
-      ipAddress: request.headers.get("x-forwarded-for") || "unknown",
-      requestMethod: request.method,
-      endPoint: request.nextUrl.pathname,
-      status: 200,
-      userAgent: request.headers.get("user-agent") || "unknown",
-    });
+    // await logsEntry({
+    //   userId: auth.user.id.toString(),
+    //   email: auth.user.email,
+    //   action: "USERS_FETCHED_SUCCESS",
+    //   ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+    //   requestMethod: request.method,
+    //   endPoint: request.nextUrl.pathname,
+    //   status: 200,
+    //   userAgent: request.headers.get("user-agent") || "unknown",
+    // });
 
     return NextResponse.json({
       status: 1,

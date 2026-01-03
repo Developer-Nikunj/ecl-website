@@ -4,6 +4,7 @@ import { permissionModel } from "@/models/permission.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import z from "zod";
 import { Op } from "sequelize";
+import { logsEntry } from "@/utils/logsEntry/logsEntry";
 
 const validateInput = z.object({
   userId: z.array(z.number()),
@@ -59,7 +60,20 @@ export async function POST(request: NextRequest) {
     if (permissionsToCreate.length > 0) {
       await permissionModel.bulkCreate(permissionsToCreate);
     }
-
+    await logsEntry({
+      userId: auth?.user?.id.toString(),
+      email: auth?.user?.email,
+      role: auth?.user?.role,
+      action:
+        permissionsToCreate.length > 0
+          ? "PERMISSION_GRANT_SUCCESS"
+          : "PERMISSION_GRANT_FAILED",
+      ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+      requestMethod: request.method,
+      endPoint: request.nextUrl.pathname.toString(),
+      status: 200,
+      userAgent: request.headers.get("user-agent") || "unknown",
+    });
     return NextResponse.json({
       status: 1,
       message:
@@ -75,7 +89,6 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
 
 export async function PUT(request: NextRequest) {
   try {
@@ -132,7 +145,17 @@ export async function PUT(request: NextRequest) {
         },
       });
     }
-
+    await logsEntry({
+      userId: auth?.user?.id.toString(),
+      email: auth?.user?.email,
+      role: auth?.user?.role,
+      action: "PERMISSION_GRANT_EDIT_SUCCESS",
+      ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+      requestMethod: request.method,
+      endPoint: request.nextUrl.pathname.toString(),
+      status: 200,
+      userAgent: request.headers.get("user-agent") || "unknown",
+    });
     return NextResponse.json({
       status: 1,
       message: "Permissions updated successfully",

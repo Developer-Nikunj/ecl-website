@@ -4,6 +4,7 @@ import { Log } from "@/models/logs.model";
 interface LogsEntryParams {
   userId: string;
   email: string;
+  role: string;
   action: string;
   ipAddress: string;
   requestMethod: string;
@@ -15,6 +16,7 @@ interface LogsEntryParams {
 export const logsEntry = async (
   {userId,
   email,
+  role,
   action,
   ipAddress,
   requestMethod,
@@ -25,6 +27,7 @@ export const logsEntry = async (
   await Log.create({
     userId: userId,
     email: email,
+    role: role,
     action: action,
     ipAddress: ipAddress,
     requestMethod: requestMethod,

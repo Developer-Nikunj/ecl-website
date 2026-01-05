@@ -56,14 +56,7 @@ export default function Home() {
                               </button>
                             </div>
                             {/*end col*/}
-                            <div className="col-auto">
-                              <button
-                                type="button"
-                                className="btn btn-soft-info btn-icon waves-effect waves-light layout-rightside-btn"
-                              >
-                                <i className="ri-pulse-line" />
-                              </button>
-                            </div>
+                            
                             {/*end col*/}
                           </div>
                           {/*end row*/}
@@ -396,55 +389,7 @@ export default function Home() {
                       </div>
                       {/* end card header */}
                       {/* card body */}
-                      <div className="card-body">
-                        <div
-                          id="sales-by-locations"
-                          data-colors='["--vz-light", "--vz-warning", "--vz-primary"]'
-                          style={{ height: 269 }}
-                          dir="ltr"
-                        />
-                        <div className="px-2 py-2 mt-1">
-                          <p className="mb-1">
-                            Canada <span className="float-end">75%</span>
-                          </p>
-                          <div className="progress mt-2" style={{ height: 6 }}>
-                            <div
-                              className="progress-bar progress-bar-striped bg-primary"
-                              role="progressbar"
-                              style={{ width: "75%" }}
-                              aria-valuenow={75}
-                              aria-valuemin={0}
-                              aria-valuemax={75}
-                            ></div>
-                          </div>
-                          <p className="mt-3 mb-1">
-                            Greenland <span className="float-end">47%</span>
-                          </p>
-                          <div className="progress mt-2" style={{ height: 6 }}>
-                            <div
-                              className="progress-bar progress-bar-striped bg-primary"
-                              role="progressbar"
-                              style={{ width: "47%" }}
-                              aria-valuenow={47}
-                              aria-valuemin={0}
-                              aria-valuemax={47}
-                            ></div>
-                          </div>
-                          <p className="mt-3 mb-1">
-                            Russia <span className="float-end">82%</span>
-                          </p>
-                          <div className="progress mt-2" style={{ height: 6 }}>
-                            <div
-                              className="progress-bar progress-bar-striped bg-primary"
-                              role="progressbar"
-                              style={{ width: "82%" }}
-                              aria-valuenow={82}
-                              aria-valuemin={0}
-                              aria-valuemax={82}
-                            ></div>
-                          </div>
-                        </div>
-                      </div>
+                      
                       {/* end card body */}
                     </div>
                     {/* end card */}
@@ -1894,20 +1839,7 @@ export default function Home() {
                               <h6 className="mb-0">5 star</h6>
                             </div>
                           </div>
-                          <div className="col">
-                            <div className="p-1">
-                              <div className="progress animated-progress progress-sm">
-                                <div
-                                  className="progress-bar bg-success"
-                                  role="progressbar"
-                                  style={{ width: "50.16%" }}
-                                  aria-valuenow="50.16"
-                                  aria-valuemin={0}
-                                  aria-valuemax={100}
-                                />
-                              </div>
-                            </div>
-                          </div>
+                          
                           <div className="col-auto">
                             <div className="p-1">
                               <h6 className="mb-0 text-muted">2758</h6>
@@ -1921,20 +1853,7 @@ export default function Home() {
                               <h6 className="mb-0">4 star</h6>
                             </div>
                           </div>
-                          <div className="col">
-                            <div className="p-1">
-                              <div className="progress animated-progress progress-sm">
-                                <div
-                                  className="progress-bar bg-success"
-                                  role="progressbar"
-                                  style={{ width: "29.32%" }}
-                                  aria-valuenow="29.32"
-                                  aria-valuemin={0}
-                                  aria-valuemax={100}
-                                />
-                              </div>
-                            </div>
-                          </div>
+                          
                           <div className="col-auto">
                             <div className="p-1">
                               <h6 className="mb-0 text-muted">1063</h6>
@@ -1942,59 +1861,9 @@ export default function Home() {
                           </div>
                         </div>
                         {/* end row */}
-                        <div className="row align-items-center g-2">
-                          <div className="col-auto">
-                            <div className="p-1">
-                              <h6 className="mb-0">3 star</h6>
-                            </div>
-                          </div>
-                          <div className="col">
-                            <div className="p-1">
-                              <div className="progress animated-progress progress-sm">
-                                <div
-                                  className="progress-bar bg-warning"
-                                  role="progressbar"
-                                  style={{ width: "18.12%" }}
-                                  aria-valuenow="18.12"
-                                  aria-valuemin={0}
-                                  aria-valuemax={100}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-auto">
-                            <div className="p-1">
-                              <h6 className="mb-0 text-muted">997</h6>
-                            </div>
-                          </div>
-                        </div>
+                        
                         {/* end row */}
-                        <div className="row align-items-center g-2">
-                          <div className="col-auto">
-                            <div className="p-1">
-                              <h6 className="mb-0">2 star</h6>
-                            </div>
-                          </div>
-                          <div className="col">
-                            <div className="p-1">
-                              <div className="progress animated-progress progress-sm">
-                                <div
-                                  className="progress-bar bg-success"
-                                  role="progressbar"
-                                  style={{ width: "4.98%" }}
-                                  aria-valuenow="4.98"
-                                  aria-valuemin={0}
-                                  aria-valuemax={100}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-auto">
-                            <div className="p-1">
-                              <h6 className="mb-0 text-muted">227</h6>
-                            </div>
-                          </div>
-                        </div>
+                        
                         {/* end row */}
                         <div className="row align-items-center g-2">
                           <div className="col-auto">
@@ -2002,20 +1871,7 @@ export default function Home() {
                               <h6 className="mb-0">1 star</h6>
                             </div>
                           </div>
-                          <div className="col">
-                            <div className="p-1">
-                              <div className="progress animated-progress progress-sm">
-                                <div
-                                  className="progress-bar bg-danger"
-                                  role="progressbar"
-                                  style={{ width: "7.42%" }}
-                                  aria-valuenow="7.42"
-                                  aria-valuemin={0}
-                                  aria-valuemax={100}
-                                />
-                              </div>
-                            </div>
-                          </div>
+                          
                           <div className="col-auto">
                             <div className="p-1">
                               <h6 className="mb-0 text-muted">408</h6>

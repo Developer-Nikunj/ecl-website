@@ -328,7 +328,7 @@ const Header = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="px-2 pt-2">
+                    {/* <div className="px-2 pt-2">
                       <ul
                         className="nav nav-tabs dropdown-tabs nav-tabs-custom"
                         data-dropdown-tabs="true"
@@ -369,7 +369,7 @@ const Header = () => {
                           </a>
                         </li>
                       </ul>
-                    </div>
+                    </div> */}
                   </div>
                   <div
                     className="tab-content position-relative"
@@ -437,10 +437,10 @@ const Header = () => {
                                 </h6>
                               </a>
                               <div className="fs-13 text-muted">
-                                <p className="mb-1">
+                                {/* <p className="mb-1">
                                   Answered to your comment on the cash flow
                                   forecast's graph 🔔.
-                                </p>
+                                </p> */}
                               </div>
                               <p className="mb-0 fs-11 fw-medium text-uppercase text-muted">
                                 <span>
@@ -621,10 +621,10 @@ const Header = () => {
                                 </h6>
                               </a>
                               <div className="fs-13 text-muted">
-                                <p className="mb-1">
+                                {/* <p className="mb-1">
                                   Answered to your comment on the cash flow
                                   forecast's graph 🔔.
-                                </p>
+                                </p> */}
                               </div>
                               <p className="mb-0 fs-11 fw-medium text-uppercase text-muted">
                                 <span>
@@ -857,12 +857,12 @@ const Header = () => {
             </div>
             <div className="modal-body">
               <div className="mt-2 text-center">
-                <lord-icon
+                {/* <lord-icon
                   src="https://cdn.lordicon.com/gsqxdxog.json"
                   trigger="loop"
                   colors="primary:#f7b84b,secondary:#f06548"
                   style={{ width: 100, height: 100 }}
-                />
+                /> */}
                 <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
                   <h4>Are you sure ?</h4>
                   <p className="text-muted mx-4 mb-0">

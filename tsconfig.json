@@ -28,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "src/types/**/*.d.ts"
 , "src/database/db.js"  ],
   "exclude": ["node_modules","public/assets/backend/libs"]
 }

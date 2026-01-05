@@ -127,7 +127,6 @@ const Page = () => {
                       <div className="p-2 mt-4">
                         <form
                           className="needs-validation"
-                          noValidate=""
                           onSubmit={handleSubmit}
                         >
                           <div className="mb-3">
@@ -139,7 +138,7 @@ const Page = () => {
                               className="form-control"
                               id="useremail"
                               placeholder="Enter email address"
-                              required=""
+                              required
                               onChange={(e) => setEmail(e.target.value)}
                             />
                             <div className="invalid-feedback">
@@ -155,7 +154,6 @@ const Page = () => {
                               className="form-control"
                               id="username"
                               placeholder="Enter username"
-                              required=""
                               onChange={(e) => setName(e.target.value)}
                             />
                             <div className="invalid-feedback">
@@ -173,12 +171,12 @@ const Page = () => {
                               <input
                                 type="password"
                                 className="form-control pe-5 password-input"
-                                onpaste="return false"
+                                onPaste={(e) => e.preventDefault()}
                                 placeholder="Enter password"
                                 id="password-input"
                                 aria-describedby="passwordInput"
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                required=""
+                                
                                 onChange={(e) => setPassword(e.target.value)}
                               />
                               <button

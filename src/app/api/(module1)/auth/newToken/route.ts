@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import redis from "@/utils/redis/redis";
 import { randomBytes } from "crypto";
-import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { userModel } from "@/models/user.model";
 
@@ -26,7 +25,8 @@ export async function POST(request: NextRequest) {
   const newRefresh = randomBytes(40).toString("hex");
   await redis.set(`refresh:${sessionId}`, newRefresh, "EX", 7 * 86400);
 
-  const userId = await redis.get(`session:${sessionIdValue}`);
+  const userIdStr = await redis.get(`session:${sessionIdValue}`);
+  const userId = Number(userIdStr);
 
   const existuser = await userModel.findOne({
     where: {
@@ -34,7 +34,12 @@ export async function POST(request: NextRequest) {
     },
     attributes: ["id", "name", "email", "role", "actions"],
   });
-
+  if (!existuser) {
+    return NextResponse.json(
+      { message: "existuser Not Found !!" },
+      { status: 500 }
+    );
+  }
   const accessToken = jwt.sign(
     {
       id: existuser.id,

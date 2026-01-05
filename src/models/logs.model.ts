@@ -12,6 +12,7 @@ Log.init(
     },
     userId: {
       type: DataTypes.STRING,
+      allowNull:true
     },
     email: {
       type: DataTypes.STRING,

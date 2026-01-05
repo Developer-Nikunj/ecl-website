@@ -35,10 +35,17 @@ export async function DELETE(
     }
 
     await role.destroy();
-
+    
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
     await logsEntry({
       userId: auth.user.id.toString(),
       email: auth.user.email,
+      role: auth.user.role,
       action: "ROLE_DELETED_SUCCESS",
       ipAddress: request.headers.get("x-forwarded-for") || "unknown",
       requestMethod: request.method,

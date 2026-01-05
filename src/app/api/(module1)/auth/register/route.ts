@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
     await logsEntry({
       userId: "",
       email: email,
+      role:role,
       action: "REGISTER_SUCCESS",
       ipAddress: request.headers.get("x-forwarded-for") || "unknown",
       requestMethod: request.method,

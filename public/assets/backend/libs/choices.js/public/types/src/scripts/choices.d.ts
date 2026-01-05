@@ -25,8 +25,8 @@ declare class Choices {
     initialisedOK?: boolean;
     config: Options;
     passedElement: WrappedInput | WrappedSelect;
-    containerOuter: Container;
-    containerInner: Container;
+    containerOuter!: Container;
+    containerInner!: Container;
     choiceList: List;
     itemList: List;
     input: Input;

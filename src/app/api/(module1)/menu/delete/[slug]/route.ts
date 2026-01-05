@@ -29,6 +29,13 @@ export async function DELETE(
       });
     }
 
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
+
     await logsEntry({
       userId: auth?.user?.id.toString(),
       email: auth?.user?.email,

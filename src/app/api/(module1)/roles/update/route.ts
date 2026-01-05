@@ -5,12 +5,11 @@ import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 import { Op } from "sequelize";
 
-
 export async function PUT(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request,"putrole");
+    const auth = await verifyAdmin(request, "putrole");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },
@@ -46,7 +45,7 @@ export async function PUT(request: NextRequest) {
     const duplicateRole = await roleModel.findOne({
       where: {
         name,
-        id: { [Op.ne]: roleId }, 
+        id: { [Op.ne]: roleId },
       },
     });
 
@@ -63,9 +62,17 @@ export async function PUT(request: NextRequest) {
       { where: { id: roleId } }
     );
 
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
+
     await logsEntry({
       userId: auth.user.id.toString(),
       email: auth.user.email,
+      role: auth.user.role,
       action: "ROLE_UPDATED_SUCCESS",
       ipAddress: request.headers.get("x-forwarded-for") || "unknown",
       requestMethod: request.method,

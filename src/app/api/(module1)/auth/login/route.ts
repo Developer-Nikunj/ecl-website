@@ -94,7 +94,10 @@ export async function POST(request: NextRequest) {
         exclude: ["id", "menuId", "permission", "createdAt", "updatedAt"],
       },
     });
-    const permissions = menus.map((p) => p.Menu.menuName);
+    const permissions = menus
+      .filter((p) => p.Menu)
+      .map((p) => p.Menu!.menuName);
+    console.log("permissionspermissionspermissions", permissions);
 
     const response = NextResponse.json({
       status: 1,

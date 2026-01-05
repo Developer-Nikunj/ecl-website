@@ -25,12 +25,14 @@ const page = () => {
   const handleSubmit = async () => {
     const finalOTP = Object.values(otp).join("");
     console.log(finalOTP, email);
-
+    if (!email) {
+      throw new Error("Email is missing");
+    }
     try {
       await dispatch(verifyUser({ email, otp: finalOTP })).unwrap();
       router.replace("/signin");
     } catch (error) {
-      console.error("SignIn failed", err);
+      console.error("SignIn failed", error);
     }
   };
 

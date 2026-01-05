@@ -36,25 +36,6 @@ const Profile = () => {
             <i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1" />{" "}
             <span className="align-middle">Profile</span>
           </a>
-          <a className="dropdown-item" href="apps-chat.html">
-            <i className="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1" />{" "}
-            <span className="align-middle">Messages</span>
-          </a>
-          <a className="dropdown-item" href="apps-tasks-kanban.html">
-            <i className="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1" />{" "}
-            <span className="align-middle">Taskboard</span>
-          </a>
-          <a className="dropdown-item" href="pages-faqs.html">
-            <i className="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1" />{" "}
-            <span className="align-middle">Help</span>
-          </a>
-          <div className="dropdown-divider" />
-          <a className="dropdown-item" href="pages-profile.html">
-            <i className="mdi mdi-wallet text-muted fs-16 align-middle me-1" />{" "}
-            <span className="align-middle">
-              Balance : <b>$5971.67</b>
-            </span>
-          </a>
           <a className="dropdown-item" href="pages-profile-settings.html">
             <span className="badge bg-success-subtle text-success mt-1 float-end">
               New

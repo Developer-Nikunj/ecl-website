@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
       await menuModel.create({
         slug: validateData.slug,
         menuName: `post${validateData.slug}`,
+        status:true,
       });
     }
 
@@ -54,6 +55,7 @@ export async function POST(request: NextRequest) {
       await menuModel.create({
         slug: validateData.slug,
         menuName: `get${validateData.slug}`,
+        status: true,
       });
     }
 
@@ -61,6 +63,7 @@ export async function POST(request: NextRequest) {
       await menuModel.create({
         slug: validateData.slug,
         menuName: `put${validateData.slug}`,
+        status: true,
       });
     }
 
@@ -68,7 +71,15 @@ export async function POST(request: NextRequest) {
       await menuModel.create({
         slug: validateData.slug,
         menuName: `delete${validateData.slug}`,
+        status: true,
       });
+    }
+
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
     }
 
     await logsEntry({

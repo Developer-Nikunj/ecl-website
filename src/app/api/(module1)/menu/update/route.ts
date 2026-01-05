@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
         toCreate.map((menuName) => ({
           slug,
           menuName,
+          status:true,
         }))
       );
     }
@@ -65,6 +66,12 @@ export async function POST(request: NextRequest) {
           menuName: toDelete,
         },
       });
+    }
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
     }
     await logsEntry({
       userId: auth?.user?.id.toString(),

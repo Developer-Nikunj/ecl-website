@@ -50,6 +50,12 @@ export async function POST(request: NextRequest) {
         message: `Role ${name} creation failed`,
       });
     }
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
 
     await logsEntry({
       userId: auth?.user?.id.toString(),

@@ -88,27 +88,27 @@ class Choices {
 
   passedElement: WrappedInput | WrappedSelect;
 
-  containerOuter: Container;
+  containerOuter!: Container;
 
-  containerInner: Container;
+  containerInner!: Container;
 
-  choiceList: List;
+  choiceList!: List;
 
-  itemList: List;
+  itemList!: List;
 
-  input: Input;
+  input!: Input;
 
-  dropdown: Dropdown;
+  dropdown!: Dropdown;
 
-  _elementType: PassedElementType;
+  _elementType!: PassedElementType;
 
-  _isTextElement: boolean;
+  _isTextElement!: boolean;
 
-  _isSelectOneElement: boolean;
+  _isSelectOneElement!: boolean;
 
-  _isSelectMultipleElement: boolean;
+  _isSelectMultipleElement!: boolean;
 
-  _isSelectElement: boolean;
+  _isSelectElement!: boolean;
 
   _hasNonChoicePlaceholder: boolean = false;
 

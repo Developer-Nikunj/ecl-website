@@ -1,6 +1,8 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "@/database/db";
 
+import {Menu} from "./menu.model";
+
 interface PermissionAttributes {
   id: number;
   userId: number;
@@ -18,6 +20,7 @@ export class Permission
   declare userId: number;
   declare menuId?: number;
   declare permission: boolean;
+  declare Menu?: Menu;
 }
 
 export const permissionModel = Permission.init(

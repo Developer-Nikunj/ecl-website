@@ -30,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
 , "src/database/db.js"  ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules","public/assets/backend/libs"]
 }

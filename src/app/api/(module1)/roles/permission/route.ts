@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
           permissionsToCreate.push({
             userId: user,
             menuId: menu,
+            permission:true
           });
         }
       }
@@ -59,6 +60,13 @@ export async function POST(request: NextRequest) {
     /** 4️⃣ Bulk insert only new ones */
     if (permissionsToCreate.length > 0) {
       await permissionModel.bulkCreate(permissionsToCreate);
+    }
+
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
     }
     await logsEntry({
       userId: auth?.user?.id.toString(),
@@ -94,7 +102,7 @@ export async function PUT(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request,"putpermission");
+    const auth = await verifyAdmin(request, "putpermission");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },
@@ -116,14 +124,20 @@ export async function PUT(request: NextRequest) {
 
     const existingMenuIds = existingPermissions.map((p) => p.menuId);
 
+    // Only keep defined numbers
+    const menuIdNumbers = menuId.filter((id): id is number => id !== undefined);
+    const existingMenuIdsNumbers = existingMenuIds.filter(
+      (id): id is number => id !== undefined
+    );
+
     /** 2️⃣ Find menus to CREATE */
-    const menusToCreate = menuId.filter(
-      (menu) => !existingMenuIds.includes(menu)
+    const menusToCreate = menuIdNumbers.filter(
+      (menu) => !existingMenuIdsNumbers.includes(menu)
     );
 
     /** 3️⃣ Find menus to DELETE */
-    const menusToDelete = existingMenuIds.filter(
-      (menu) => !menuId.includes(menu)
+    const menusToDelete = existingMenuIdsNumbers.filter(
+      (menu) => !menuIdNumbers.includes(menu)
     );
 
     /** 4️⃣ Bulk CREATE */
@@ -132,6 +146,7 @@ export async function PUT(request: NextRequest) {
         menusToCreate.map((menu) => ({
           userId: editUserId,
           menuId: menu,
+          permission: true,
         }))
       );
     }
@@ -144,6 +159,12 @@ export async function PUT(request: NextRequest) {
           menuId: { [Op.in]: menusToDelete },
         },
       });
+    }
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
     }
     await logsEntry({
       userId: auth?.user?.id.toString(),

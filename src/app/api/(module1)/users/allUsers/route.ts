@@ -26,6 +26,10 @@ export async function GET(request: NextRequest) {
 
     const where: any = {};
 
+    if (!endDate) {
+      throw new Error("endDate is required");
+    }
+
     const end = new Date(endDate);
     end.setHours(23, 59, 59, 999);
 

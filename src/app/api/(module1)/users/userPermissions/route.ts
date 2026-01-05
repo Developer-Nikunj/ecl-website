@@ -30,13 +30,15 @@ export async function GET(request: NextRequest) {
     include: [
       {
         model: menuModel,
+        as: "menu", // ✅ MUST MATCH association alias
         attributes: ["id", "slug", "menuName", "status"],
-        required: true, // 🔥 THIS removes null Menu rows
+        required: true,
       },
     ],
   });
+
   const grouped = permissions.reduce((acc: any[], perm: any) => {
-    const menu = perm.Menu;
+    const menu = perm.menu;
     if (!menu) return acc;
 
     let group = acc.find((g) => g.slug === menu.slug);

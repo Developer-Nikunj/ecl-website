@@ -86,17 +86,17 @@ export async function POST(request: NextRequest) {
       include: [
         {
           model: menuModel,
+          as: "menu", // ✅ MUST MATCH association
           attributes: ["menuName"],
-          required: true, // 🔥 THIS removes null Menu rows
+          required: true,
         },
       ],
       attributes: {
         exclude: ["id", "menuId", "permission", "createdAt", "updatedAt"],
       },
     });
-    const permissions = menus
-      .filter((p) => p.Menu)
-      .map((p) => p.Menu!.menuName);
+
+    const permissions = menus.map((p: any) => p.menu.menuName);
     console.log("permissionspermissionspermissions", permissions);
 
     const response = NextResponse.json({

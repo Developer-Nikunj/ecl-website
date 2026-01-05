@@ -72,6 +72,7 @@
           include: [
             {
               model: menuModel,
+              as :"menu",
               where: { menuName: action },
               required: true,
               attributes: [],

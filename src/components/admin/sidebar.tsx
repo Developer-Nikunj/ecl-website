@@ -112,17 +112,7 @@ const Sidebar = () => {
             >
               <ul className="nav nav-sm flex-column">
                 <li className="nav-item">
-                  <Link href="/dev/Banner" className="nav-link">
-                    Banner
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link href="/dev/Banner" className="nav-link">
-                    Banner
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link href="/dev/Banner" className="nav-link">
+                  <Link href="/dev/banner" className="nav-link">
                     Banner
                   </Link>
                 </li>
@@ -151,17 +141,7 @@ const Sidebar = () => {
             >
               <ul className="nav nav-sm flex-column">
                 <li className="nav-item">
-                  <Link href="/dev/Footer" className="nav-link">
-                    Footer
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link href="/dev/Footer" className="nav-link">
-                    Footer
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link href="/dev/Footer" className="nav-link">
+                  <Link href="/dev/footer" className="nav-link">
                     Footer
                   </Link>
                 </li>
@@ -189,16 +169,6 @@ const Sidebar = () => {
               id="sidebarHeader"
             >
               <ul className="nav nav-sm flex-column">
-                <li className="nav-item">
-                  <Link href="/dev/header" className="nav-link">
-                    Header
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link href="/dev/header" className="nav-link">
-                    Header
-                  </Link>
-                </li>
                 <li className="nav-item">
                   <Link href="/dev/header" className="nav-link">
                     Header

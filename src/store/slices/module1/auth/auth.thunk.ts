@@ -27,6 +27,10 @@ export const loginUser = createAsyncThunk<
       }
     );
     console.log("res", res);
+    if (res.data.status === 0) {
+      toast.error(String(res.data.message));
+      return rejectWithValue(res.data.message);
+    }
     toast.success(String(res.data.message));
     
     return res.data;
@@ -60,6 +64,10 @@ export const registerUser = createAsyncThunk<
         { withCredentials: true }
       );
       console.log("res", res);
+      if (res.data.status === 0) {
+        toast.error(String(res.data.message));
+        return rejectWithValue(res.data.message);
+      }
       toast.success(String(res.data.message));
       return res.data;
     } catch (err) {
@@ -92,6 +100,40 @@ export const verifyUser = createAsyncThunk<
       { withCredentials: true }
     );
     console.log("res", res);
+    if (res.data.status === 0) {
+      toast.error(String(res.data.message));
+      return rejectWithValue(res.data.message);
+    }
+    toast.success(String(res.data.message));
+    return res.data;
+  } catch (err) {
+    toast.error(String(err));
+    return rejectWithValue(
+      err.response?.data?.message || "verify email failed"
+    );
+  }
+});
+
+
+interface logoutUserResponse {
+  status: boolean;
+  message: string;
+}
+
+export const logoutUser = createAsyncThunk<
+  logoutUserResponse,
+  { rejectValue: string }
+>("auth/logout", async (_, { rejectWithValue }) => {
+  try {
+    const res = await api.post(
+      "/auth/verify-email",
+      { withCredentials: true }
+    );
+    console.log("res", res);
+    if (res.data.status === 0) {
+      toast.error(String(res.data.message));
+      return rejectWithValue(res.data.message);
+    }
     toast.success(String(res.data.message));
     return res.data;
   } catch (err) {

@@ -124,7 +124,7 @@ const page = () => {
                         </div>
                         <form autoComplete="off">
                           <div className="row">
-                            <div className="col-3">
+                            <div className="col-2">
                               <div className="mb-3">
                                 <label
                                   htmlFor="digit1-input"
@@ -145,7 +145,7 @@ const page = () => {
                               </div>
                             </div>
                             {/* end col */}
-                            <div className="col-3">
+                            <div className="col-2">
                               <div className="mb-3">
                                 <label
                                   htmlFor="digit2-input"
@@ -166,7 +166,7 @@ const page = () => {
                               </div>
                             </div>
                             {/* end col */}
-                            <div className="col-3">
+                            <div className="col-2">
                               <div className="mb-3">
                                 <label
                                   htmlFor="digit3-input"
@@ -187,7 +187,7 @@ const page = () => {
                               </div>
                             </div>
                             {/* end col */}
-                            <div className="col-3">
+                            <div className="col-2">
                               <div className="mb-3">
                                 <label
                                   htmlFor="digit4-input"
@@ -208,7 +208,7 @@ const page = () => {
                               </div>
                             </div>
                             {/* end col */}
-                            <div className="col-3">
+                            <div className="col-2">
                               <div className="mb-3">
                                 <label
                                   htmlFor="digit5-input"
@@ -229,7 +229,7 @@ const page = () => {
                               </div>
                             </div>
                             {/* end col */}
-                            <div className="col-3">
+                            <div className="col-2">
                               <div className="mb-3">
                                 <label
                                   htmlFor="digit6-input"

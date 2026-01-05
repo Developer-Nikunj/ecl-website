@@ -82,6 +82,74 @@ const Sidebar = () => {
               </ul>
             </div>
           </li>
+          {/* Banner */}
+          <li className="nav-item">
+            <Link
+              className="nav-link menu-link"
+              href="#sidebarBanner"
+              data-bs-toggle="collapse"
+              role="button"
+              aria-expanded="false"
+              aria-controls="sidebarBanner"
+            >
+              <i className="ri-add-line me-2" />
+              <span>Banner</span>
+            </Link>
+
+            <div className="collapse menu-dropdown" id="sidebarBanner">
+              <ul className="nav nav-sm flex-column">
+                <li className="nav-item">
+                  <Link href="/dev/Banner" className="nav-link">
+                    Banner
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/dev/Banner" className="nav-link">
+                    Banner
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/dev/Banner" className="nav-link">
+                    Banner
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
+          {/* Footer */}
+          <li className="nav-item">
+            <Link
+              className="nav-link menu-link"
+              href="#sidebarFooter"
+              data-bs-toggle="collapse"
+              role="button"
+              aria-expanded="false"
+              aria-controls="sidebarFooter"
+            >
+              <i className="ri-check-line" />
+              <span>Footer</span>
+            </Link>
+
+            <div className="collapse menu-dropdown" id="sidebarFooter">
+              <ul className="nav nav-sm flex-column">
+                <li className="nav-item">
+                  <Link href="/dev/Footer" className="nav-link">
+                    Footer
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/dev/Footer" className="nav-link">
+                    Footer
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/dev/Footer" className="nav-link">
+                    Footer
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
         </ul>
       </div>
     </div>

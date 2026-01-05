@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ status: 0, message: "Registration Failed" });
     }
     //send otp on email
-    // sendEmailToUser(email, otp, "VerificationEmail");
+    sendEmailToUser(email, otp, "VerificationEmail");
     await logsEntry({
       userId: "",
       email: email,

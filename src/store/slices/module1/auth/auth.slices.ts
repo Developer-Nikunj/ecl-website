@@ -1,7 +1,7 @@
 // src/store/slices/module1/auth/auth.slices.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loginUser } from "./auth.thunk";
-import { registerUser, verifyUser } from "./auth.thunk";
+import { registerUser, verifyUser, logoutUser } from "./auth.thunk";
 
 interface AuthState {
   token: string | null;
@@ -90,6 +90,20 @@ const authSlice = createSlice({
       .addCase(verifyUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Verify email failed";
+      });
+    //logout User
+    builder
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logoutUser.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "logout  User failed";
       });
   },
 });

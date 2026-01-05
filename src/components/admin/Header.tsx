@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./sidebar";
 import Profile from "./profile";
 
+import Link from "next/link";
+
 const Header = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isDark, setIsDark] = useState(false);
@@ -47,14 +49,14 @@ const Header = () => {
                     <img
                       src="/assets/backend/images/logo-ecl.png"
                       alt=""
-                      height={22}
+                      height={42}
                     />
                   </span>
                   <span className="logo-lg">
                     <img
                       src="/assets/backend/images/logo-ecl.png"
                       alt=""
-                      height={17}
+                      height={47}
                     />
                   </span>
                 </a>
@@ -63,14 +65,14 @@ const Header = () => {
                     <img
                       src="/assets/backend/images/logo-ecl.png"
                       alt=""
-                      height={22}
+                      height={42}
                     />
                   </span>
                   <span className="logo-lg">
                     <img
                       src="/assets/backend/images/logo-ecl.png"
                       alt=""
-                      height={17}
+                      height={47}
                     />
                   </span>
                 </a>
@@ -803,10 +805,10 @@ const Header = () => {
                 <div className="dropdown-menu dropdown-menu-end">
                   {/* item*/}
                   <h6 className="dropdown-header">Welcome Anna!</h6>
-                  <a className="dropdown-item" href="pages-profile.html">
-                    <i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1" />{" "}
+                  <Link href="/dev/userprofile" className="dropdown-item">
+                    <i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1" />
                     <span className="align-middle">Profile</span>
-                  </a>
+                  </Link>
                   <div className="dropdown-divider" />
                   <a
                     className="dropdown-item"
@@ -817,13 +819,6 @@ const Header = () => {
                     </span>
                     <i className="mdi mdi-cog-outline text-muted fs-16 align-middle me-1" />{" "}
                     <span className="align-middle">Settings</span>
-                  </a>
-                  <a
-                    className="dropdown-item"
-                    href="auth-lockscreen-basic.html"
-                  >
-                    <i className="mdi mdi-lock text-muted fs-16 align-middle me-1" />{" "}
-                    <span className="align-middle">Lock screen</span>
                   </a>
                   <a className="dropdown-item" href="auth-logout-basic.html">
                     <i className="mdi mdi-logout text-muted fs-16 align-middle me-1" />{" "}
@@ -904,14 +899,14 @@ const Header = () => {
               <img
                 src="/assets/backend/images/logo-ecl.png"
                 alt=""
-                height={22}
+                height={42}
               />
             </span>
             <span className="logo-lg">
               <img
                 src="/assets/backend/images/logo-ecl.png"
                 alt=""
-                height={17}
+                height={47}
               />
             </span>
           </a>
@@ -926,9 +921,9 @@ const Header = () => {
             </span>
             <span className="logo-lg">
               <img
-                src="//assets/backend/images/logo-ecl.png"
+                src="/assets/backend/images/logo-ecl.png"
                 alt=""
-                height={27}
+                height={47}
               />
             </span>
           </a>

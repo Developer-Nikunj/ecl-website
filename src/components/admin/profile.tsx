@@ -1,4 +1,5 @@
-import React from 'react'
+import React from "react";
+import Link from "next/link";
 
 const Profile = () => {
   return (
@@ -32,20 +33,16 @@ const Profile = () => {
         <div className="dropdown-menu dropdown-menu-end">
           {/* item*/}
           <h6 className="dropdown-header">Welcome Anna!</h6>
-          <a className="dropdown-item" href="pages-profile.html">
-            <i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1" />{" "}
+          <Link href="/dev/userprofile" className="dropdown-item">
+            <i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1" />
             <span className="align-middle">Profile</span>
-          </a>
+          </Link>
           <a className="dropdown-item" href="pages-profile-settings.html">
             <span className="badge bg-success-subtle text-success mt-1 float-end">
               New
             </span>
             <i className="mdi mdi-cog-outline text-muted fs-16 align-middle me-1" />{" "}
             <span className="align-middle">Settings</span>
-          </a>
-          <a className="dropdown-item" href="auth-lockscreen-basic.html">
-            <i className="mdi mdi-lock text-muted fs-16 align-middle me-1" />{" "}
-            <span className="align-middle">Lock screen</span>
           </a>
           <a className="dropdown-item" href="auth-logout-basic.html">
             <i className="mdi mdi-logout text-muted fs-16 align-middle me-1" />{" "}
@@ -57,6 +54,6 @@ const Profile = () => {
       </div>
     </div>
   );
-}
+};
 
-export default Profile
+export default Profile;

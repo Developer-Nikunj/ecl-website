@@ -12,7 +12,7 @@ const Sidebar = () => {
       </div>
 
       <div className="container-fluid">
-        <ul className="navbar-nav">
+        <ul className="navbar-nav" id="sidebarAccordion">
           {/* Admin */}
           <li className="nav-item">
             <Link
@@ -27,7 +27,11 @@ const Sidebar = () => {
               <span>Admin</span>
             </Link>
 
-            <div className="collapse menu-dropdown" id="sidebarAdmin">
+            <div
+              className="collapse menu-dropdown"
+              data-bs-parent="#sidebarAccordion"
+              id="sidebarAdmin"
+            >
               <ul className="nav nav-sm flex-column">
                 <li className="nav-item">
                   <Link href="/dev/menu" className="nav-link">
@@ -62,7 +66,11 @@ const Sidebar = () => {
               <span>SEO</span>
             </Link>
 
-            <div className="collapse menu-dropdown" id="sidebarSEO">
+            <div
+              className="collapse menu-dropdown"
+              data-bs-parent="#sidebarAccordion"
+              id="sidebarSEO"
+            >
               <ul className="nav nav-sm flex-column">
                 <li className="nav-item">
                   <Link href="/dev/seo" className="nav-link">
@@ -82,6 +90,7 @@ const Sidebar = () => {
               </ul>
             </div>
           </li>
+
           {/* Banner */}
           <li className="nav-item">
             <Link
@@ -96,7 +105,11 @@ const Sidebar = () => {
               <span>Banner</span>
             </Link>
 
-            <div className="collapse menu-dropdown" id="sidebarBanner">
+            <div
+              className="collapse menu-dropdown"
+              data-bs-parent="#sidebarAccordion"
+              id="sidebarBanner"
+            >
               <ul className="nav nav-sm flex-column">
                 <li className="nav-item">
                   <Link href="/dev/Banner" className="nav-link">
@@ -116,6 +129,7 @@ const Sidebar = () => {
               </ul>
             </div>
           </li>
+
           {/* Footer */}
           <li className="nav-item">
             <Link
@@ -130,7 +144,11 @@ const Sidebar = () => {
               <span>Footer</span>
             </Link>
 
-            <div className="collapse menu-dropdown" id="sidebarFooter">
+            <div
+              className="collapse menu-dropdown"
+              data-bs-parent="#sidebarAccordion"
+              id="sidebarFooter"
+            >
               <ul className="nav nav-sm flex-column">
                 <li className="nav-item">
                   <Link href="/dev/Footer" className="nav-link">
@@ -145,6 +163,45 @@ const Sidebar = () => {
                 <li className="nav-item">
                   <Link href="/dev/Footer" className="nav-link">
                     Footer
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          {/* Header */}
+          <li className="nav-item">
+            <Link
+              className="nav-link menu-link"
+              href="#sidebarHeader"
+              data-bs-toggle="collapse"
+              role="button"
+              aria-expanded="false"
+              aria-controls="sidebarHeader"
+            >
+              <i className="ri-bar-chart-line" />
+              <span>Header</span>
+            </Link>
+
+            <div
+              className="collapse menu-dropdown"
+              data-bs-parent="#sidebarAccordion"
+              id="sidebarHeader"
+            >
+              <ul className="nav nav-sm flex-column">
+                <li className="nav-item">
+                  <Link href="/dev/header" className="nav-link">
+                    Header
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/dev/header" className="nav-link">
+                    Header
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/dev/header" className="nav-link">
+                    Header
                   </Link>
                 </li>
               </ul>

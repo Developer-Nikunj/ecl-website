@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "@/database/db";
 
-export const footerModel = sequelize.define(
+export const Footer = sequelize.define(
   "footer",
   {
     id: {
@@ -12,7 +12,7 @@ export const footerModel = sequelize.define(
       allowNull: false,
     },
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     active: {
@@ -23,4 +23,4 @@ export const footerModel = sequelize.define(
   { tableName: "footer", freezeTableName: true, timestamps: true }
 );
 
-await footerModel.sync();
+await Footer.sync();

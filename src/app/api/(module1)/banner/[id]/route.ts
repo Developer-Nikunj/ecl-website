@@ -1,0 +1,131 @@
+import { NextRequest, NextResponse } from "next/server";
+import { testConnection } from "@/database/db";
+import { bannerModel } from "@/models/banner.model";
+import { verifyAdmin } from "@/utils/authorizations/validateToken";
+import { saveImage } from "@/utils/uploads/saveImage";
+import { logsEntry } from "@/utils/logsEntry/logsEntry";
+
+/**
+ * GET Banner by ID
+ */
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  await testConnection();
+
+  const banner = await bannerModel.findByPk(params.id);
+  if (!banner) {
+    return NextResponse.json(
+      { status: 0, message: "Banner not found" },
+      { status: 404 }
+    );
+  }
+
+  return NextResponse.json({ status: 1, data: banner });
+}
+
+/**
+ * UPDATE Banner
+ */
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  await testConnection();
+
+  const auth = await verifyAdmin(request, "putbanner");
+  if (!auth.valid) {
+    return NextResponse.json(
+      { message: auth.message },
+      { status: auth.status }
+    );
+  }
+
+  const banner = await bannerModel.findByPk(params.id);
+  if (!banner) {
+    return NextResponse.json(
+      { status: 0, message: "Banner not found" },
+      { status: 404 }
+    );
+  }
+
+  const formData = await request.formData();
+  const image = formData.get("img") as File | null;
+
+  let imgPath = banner.img;
+
+  if (image) {
+    imgPath = await saveImage(image, "banner");
+  }
+
+  await banner.update({
+    img: imgPath,
+    name: formData.get("name"),
+    description: formData.get("description"),
+    active: formData.get("active") === "true",
+  });
+
+  await logsEntry({
+    userId: auth.user?.id.toString(),
+    email: auth.user?.email,
+    role: auth.user?.role,
+    action: "BANNER_UPDATED",
+    ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+    requestMethod: request.method,
+    endPoint: request.nextUrl.pathname,
+    status: 200,
+    userAgent: request.headers.get("user-agent") || "unknown",
+  });
+
+  return NextResponse.json({
+    status: 1,
+    message: "Banner updated successfully",
+    data: banner,
+  });
+}
+
+/**
+ * DELETE Banner
+ */
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  await testConnection();
+
+  const auth = await verifyAdmin(request, "deletebanner");
+  if (!auth.valid) {
+    return NextResponse.json(
+      { message: auth.message },
+      { status: auth.status }
+    );
+  }
+
+  const banner = await bannerModel.findByPk(params.id);
+  if (!banner) {
+    return NextResponse.json(
+      { status: 0, message: "Banner not found" },
+      { status: 404 }
+    );
+  }
+
+  await banner.destroy();
+
+  await logsEntry({
+    userId: auth.user?.id.toString(),
+    email: auth.user?.email,
+    role: auth.user?.role,
+    action: "BANNER_DELETED",
+    ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+    requestMethod: request.method,
+    endPoint: request.nextUrl.pathname,
+    status: 200,
+    userAgent: request.headers.get("user-agent") || "unknown",
+  });
+
+  return NextResponse.json({
+    status: 1,
+    message: "Banner deleted successfully",
+  });
+}

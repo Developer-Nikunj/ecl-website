@@ -28,7 +28,7 @@ export const testimonialModel = sequelize.define(
       defaultValue: true,
     },
   },
-  { tableName: "footer", freezeTableName: true, timestamps: true }
+  { tableName: "testimonial", freezeTableName: true, timestamps: true }
 );
 
 await testimonialModel.sync();

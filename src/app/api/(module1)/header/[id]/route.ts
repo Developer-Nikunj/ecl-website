@@ -15,13 +15,14 @@ const updateSchema = z.object({
 /* ---------------- GET BY ID ---------------- */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await testConnection();
-
-    const header = await headerModel.findByPk(params.id);
-
+    const { id } = await context.params;
+    const header = await headerModel.findByPk(Number(id), {
+      attributes: ["id", "name", "active"],
+    });
     if (!header) {
       return NextResponse.json({
         status: 0,
@@ -45,11 +46,11 @@ export async function GET(
 /* ---------------- UPDATE ---------------- */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await testConnection();
-
+    const { id } = await context.params;
     const auth = await verifyAdmin(request, "putheader");
     if (!auth.valid) {
       return NextResponse.json(
@@ -60,7 +61,7 @@ export async function PUT(
 
     const body = updateSchema.parse(await request.json());
 
-    const header = await headerModel.findByPk(params.id);
+    const header = await headerModel.findByPk(Number(id));
     if (!header) {
       return NextResponse.json({
         status: 0,
@@ -98,11 +99,11 @@ export async function PUT(
 /* ---------------- DELETE ---------------- */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await testConnection();
-
+const { id } = await context.params;
     const auth = await verifyAdmin(request, "deleteheader");
     if (!auth.valid) {
       return NextResponse.json(
@@ -111,7 +112,7 @@ export async function DELETE(
       );
     }
 
-    const header = await headerModel.findByPk(params.id);
+    const header = await headerModel.findByPk(Number(id));
     if (!header) {
       return NextResponse.json({
         status: 0,

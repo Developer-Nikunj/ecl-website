@@ -12,7 +12,7 @@ export const headerModel = sequelize.define(
       allowNull: false,
     },
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     active: {

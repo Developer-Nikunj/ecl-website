@@ -14,7 +14,7 @@ import {
 
 import PermissionGate from "@/components/admin/PermissionGate"
 
-const FooterManagementComponent = () => {
+const TestimonialPage = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -39,7 +39,6 @@ const FooterManagementComponent = () => {
       active: false,
     },
   ];
-
 
   return (
     <div>
@@ -74,83 +73,83 @@ const FooterManagementComponent = () => {
         <button className="btn btn-primary px-4">Apply</button>
       </div>
       {/* <PermissionGate permission="postrole"> */}
-        <div className="d-flex justify-content-end mb-3">
-          <button className="btn btn-sm btn-success" onClick={()=>setShowCreateModal(true)}>Create Footer</button>
-        </div>
+      <div className="d-flex justify-content-end mb-3">
+        <button className="btn btn-sm btn-success">Create Footer</button>
+      </div>
       {/* </PermissionGate> */}
       {/* <PermissionGate permission="getrole"> */}
-        <div className="table-responsive">
-          <table className="table table-bordered table-hover align-middle mb-0">
-            <thead className="table-light">
-              <tr>
-                <th>SNo.</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
+      <div className="table-responsive">
+        <table className="table table-bordered table-hover align-middle mb-0">
+          <thead className="table-light">
+            <tr>
+              <th>SNo.</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
 
-            <tbody>
-              {roles.length > 0 &&
-                roles.map((item, index) => (
-                  <tr key={item.id}>
-                    <td>{index + 1}</td>
+          <tbody>
+            {roles.length > 0 &&
+              roles.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{index + 1}</td>
 
-                    {/* name is HTML */}
-                    <td dangerouslySetInnerHTML={{ __html: item.name }} />
+                  {/* name is HTML */}
+                  <td dangerouslySetInnerHTML={{ __html: item.name }} />
 
-                    <td>{item.description}</td>
+                  <td>{item.description}</td>
 
-                    <td>
-                      <span>{item.active ? "Active" : "Inactive"}</span>
-                    </td>
+                  <td>
+                    <span>{item.active ? "Active" : "Inactive"}</span>
+                  </td>
 
-                    <td>
-                      <div className="d-flex gap-2">
-                        {/* <PermissionGate permission="putfooter"> */}
-                          <button
-                            className="btn btn-sm btn-primary"
-                            onClick={() => setShowEditModal(true)}
-                          >
-                            Edit
-                          </button>
-                        {/* </PermissionGate> */}
+                  <td>
+                    <div className="d-flex gap-2">
+                      {/* <PermissionGate permission="putfooter"> */}
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => setShowEditModal(true)}
+                      >
+                        Edit
+                      </button>
+                      {/* </PermissionGate> */}
 
-                        {/* <PermissionGate permission="deletefooter"> */}
-                          <button
-                            className="btn btn-sm btn-danger"
-                            onClick={() => setShowDeleteModal((prev) => !prev)}
-                          >
-                            Delete
-                          </button>
-                        {/* </PermissionGate> */}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-          <div className="d-flex justify-content-between align-items-center mt-3">
-            <button
-              className="btn btn-sm text-white"
-              style={{
-                background: "linear-gradient(135deg, #667eea, #764ba2)",
-              }}
-            >
-              Previous
-            </button>
+                      {/* <PermissionGate permission="deletefooter"> */}
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => setShowDeleteModal((prev) => !prev)}
+                      >
+                        Delete
+                      </button>
+                      {/* </PermissionGate> */}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <button
+            className="btn btn-sm text-white"
+            style={{
+              background: "linear-gradient(135deg, #667eea, #764ba2)",
+            }}
+          >
+            Previous
+          </button>
 
-            <button
-              className="btn btn-sm text-white"
-              style={{
-                background: "linear-gradient(135deg, #43cea2, #185a9d)",
-              }}
-            >
-              Next
-            </button>
-          </div>
+          <button
+            className="btn btn-sm text-white"
+            style={{
+              background: "linear-gradient(135deg, #43cea2, #185a9d)",
+            }}
+          >
+            Next
+          </button>
         </div>
+      </div>
       {/* </PermissionGate> */}
 
       {showCreateModal && (
@@ -357,4 +356,4 @@ const FooterManagementComponent = () => {
   );
 };
 
-export default FooterManagementComponent;
+export default TestimonialPage;

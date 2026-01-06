@@ -101,7 +101,7 @@ const Sidebar = () => {
               aria-expanded="false"
               aria-controls="sidebarBanner"
             >
-              <i className="ri-add-line me-2" />
+              <i className="ri-user-voice-line" />
               <span>Banner</span>
             </Link>
 
@@ -130,7 +130,7 @@ const Sidebar = () => {
               aria-expanded="false"
               aria-controls="sidebarFooter"
             >
-              <i className="ri-check-line" />
+              <i className="ri-file-list-2-line" />
               <span>Footer</span>
             </Link>
 
@@ -159,7 +159,7 @@ const Sidebar = () => {
               aria-expanded="false"
               aria-controls="sidebarHeader"
             >
-              <i className="ri-bar-chart-line" />
+              <i className="ri-layout-top-line" />
               <span>Header</span>
             </Link>
 
@@ -172,6 +172,35 @@ const Sidebar = () => {
                 <li className="nav-item">
                   <Link href="/dev/header" className="nav-link">
                     Header
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          {/* Testimonial */}
+          <li className="nav-item">
+            <Link
+              className="nav-link menu-link"
+              href="#sidebarTestimonial"
+              data-bs-toggle="collapse"
+              role="button"
+              aria-expanded="false"
+              aria-controls="sidebarTestimonial"
+            >
+              <i className="ri-chat-quote-line" />
+              <span>Testimonial</span>
+            </Link>
+
+            <div
+              className="collapse menu-dropdown"
+              data-bs-parent="#sidebarAccordion"
+              id="sidebarTestimonial"
+            >
+              <ul className="nav nav-sm flex-column">
+                <li className="nav-item">
+                  <Link href="/dev/testimonial" className="nav-link">
+                    Testimonial
                   </Link>
                 </li>
               </ul>

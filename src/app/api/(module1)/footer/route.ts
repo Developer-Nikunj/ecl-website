@@ -29,6 +29,13 @@ export async function POST(request: NextRequest) {
       active: data.active ?? true,
     });
 
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
+
     await logsEntry({
       userId: auth.user?.id.toString(),
       email: auth.user?.email,
@@ -58,17 +65,33 @@ export async function POST(request: NextRequest) {
 /**
  * GET ALL Footers
  */
-export async function GET() {
+
+export async function GET(request: NextRequest) {
   try {
     await testConnection();
 
+    const { searchParams } = new URL(request.url);
+
+    const limit = Number(searchParams.get("limit")) || 10;
+    const offset = Number(searchParams.get("offset")) || 0;
+
     const footers = await Footer.findAll({
       order: [["createdAt", "DESC"]],
+      limit,
+      offset,
+      attributes: ["id", "name", "active"],
     });
+
+    const total = await Footer.count();
 
     return NextResponse.json({
       status: 1,
       data: footers,
+      meta: {
+        total,
+        limit,
+        offset,
+      },
     });
   } catch (error) {
     return NextResponse.json(
@@ -77,3 +100,4 @@ export async function GET() {
     );
   }
 }
+

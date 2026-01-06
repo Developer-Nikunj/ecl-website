@@ -10,13 +10,15 @@ import "@/models";
  * GET Footer by ID
  */
 export async function GET(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await testConnection();
+    const { id } = await context.params;
 
-    const footer = await Footer.findByPk(params.id);
+    const footer = await Footer.findByPk(Number(id),{attributes:["id","name","active"]});
+
 
     if (!footer) {
       return NextResponse.json(
@@ -39,11 +41,11 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await testConnection();
-
+    const { id } = await context.params;
     const auth = await verifyAdmin(request, "putfooter");
     if (!auth.valid) {
       return NextResponse.json(
@@ -55,7 +57,7 @@ export async function PUT(
     const body = await request.json();
     const data = footerSchema.parse(body);
 
-    const footer = await Footer.findByPk(params.id);
+    const footer = await Footer.findByPk(Number(id));
     if (!footer) {
       return NextResponse.json(
         { status: 0, message: "Footer not found" },
@@ -64,6 +66,13 @@ export async function PUT(
     }
 
     await footer.update(data);
+
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
 
     await logsEntry({
       userId: auth.user?.id.toString(),
@@ -95,11 +104,11 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await testConnection();
-
+    const { id } = await context.params;
     const auth = await verifyAdmin(request, "deletefooter");
     if (!auth.valid) {
       return NextResponse.json(
@@ -108,7 +117,7 @@ export async function DELETE(
       );
     }
 
-    const footer = await Footer.findByPk(params.id);
+    const footer = await Footer.findByPk(Number(id));
     if (!footer) {
       return NextResponse.json(
         { status: 0, message: "Footer not found" },
@@ -117,6 +126,13 @@ export async function DELETE(
     }
 
     await footer.destroy();
+
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
 
     await logsEntry({
       userId: auth.user?.id.toString(),

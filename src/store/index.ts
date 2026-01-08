@@ -5,6 +5,7 @@ import userReducer from "./slices/module1/user/user.slices"
 import menuReducer from "./slices/module1/menu/menu.slices"
 import footerReducer from "./slices/module1/footer/footer.slices"
 import headerReducer from "./slices/module1/header/header.slices"
+import bannerReducer from "./slices/module1/banner/banner.slices"
 import { injectStore } from "@/lib/axios";
 
 
@@ -16,6 +17,7 @@ export const store = configureStore({
     menu: menuReducer,
     footer: footerReducer,
     header: headerReducer,
+    banner: bannerReducer,
   },
 });
 

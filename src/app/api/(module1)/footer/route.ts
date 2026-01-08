@@ -4,6 +4,7 @@ import { Footer } from "@/models/footer.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { footerSchema } from "@/utils/validators/footerValidator";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
+import { Op } from "sequelize";
 import "@/models";
 
 /**
@@ -66,6 +67,7 @@ export async function POST(request: NextRequest) {
  * GET ALL Footers
  */
 
+
 export async function GET(request: NextRequest) {
   try {
     await testConnection();
@@ -74,15 +76,35 @@ export async function GET(request: NextRequest) {
 
     const limit = Number(searchParams.get("limit")) || 10;
     const offset = Number(searchParams.get("offset")) || 0;
+    const startDate = searchParams.get("startDate");
+    const endDate = searchParams.get("endDate");
+
+    const where: any = {};
+
+    // Date filter
+    if (startDate && endDate) {
+      where.createdAt = {
+        [Op.between]: [new Date(startDate), new Date(endDate)],
+      };
+    } else if (startDate) {
+      where.createdAt = {
+        [Op.gte]: new Date(startDate),
+      };
+    } else if (endDate) {
+      where.createdAt = {
+        [Op.lte]: new Date(endDate),
+      };
+    }
 
     const footers = await Footer.findAll({
+      where,
       order: [["createdAt", "DESC"]],
       limit,
       offset,
       attributes: ["id", "name", "active"],
     });
 
-    const total = await Footer.count();
+    const total = await Footer.count({ where });
 
     return NextResponse.json({
       status: 1,
@@ -94,10 +116,12 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { status: 0, message: "Internal Server Error" },
       { status: 500 }
     );
   }
 }
+
 

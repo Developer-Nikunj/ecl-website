@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-export async function saveImage(file: File, folder = "banner") {
+export async function saveImage(file: File, folder = "common") {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 

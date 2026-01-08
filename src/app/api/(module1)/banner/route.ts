@@ -5,6 +5,7 @@ import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { saveImage } from "@/utils/uploads/saveImage";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 import "@/models";
+import { Op } from "sequelize";
 
 /**
  * CREATE Banner
@@ -44,6 +45,13 @@ export async function POST(request: NextRequest) {
       active,
     });
 
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
+
     await logsEntry({
       userId: auth.user?.id.toString(),
       email: auth.user?.email,
@@ -59,7 +67,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       status: 1,
       message: "Banner created successfully",
-      data: banner,
+      // data: banner,
     });
   } catch (error) {
     console.error(error);
@@ -73,12 +81,49 @@ export async function POST(request: NextRequest) {
 /**
  * GET ALL Banners
  */
-export async function GET() {
+
+export async function GET(req: NextRequest) {
   await testConnection();
 
+  const { searchParams } = new URL(req.url);
+
+  const startDate = searchParams.get("startDate");
+  const endDate = searchParams.get("endDate");
+  const limit = Number(searchParams.get("limit")) || 10;
+  const offset = Number(searchParams.get("offset")) || 0;
+
+  const where: any = {};
+
+  // Date filter
+  if (startDate && endDate) {
+    where.createdAt = {
+      [Op.between]: [new Date(startDate), new Date(endDate)],
+    };
+  } else if (startDate) {
+    where.createdAt = {
+      [Op.gte]: new Date(startDate),
+    };
+  } else if (endDate) {
+    where.createdAt = {
+      [Op.lte]: new Date(endDate),
+    };
+  }
+
   const banners = await bannerModel.findAll({
+    where,
     order: [["createdAt", "DESC"]],
+    limit,
+    offset,
   });
 
-  return NextResponse.json({ status: 1, data: banners });
+  return NextResponse.json({
+    status: 1,
+    data: banners,
+    meta: {
+      limit,
+      offset,
+      count: banners.length,
+    },
+  });
 }
+

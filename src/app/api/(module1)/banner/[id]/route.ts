@@ -10,11 +10,15 @@ import { logsEntry } from "@/utils/logsEntry/logsEntry";
  */
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await testConnection();
-
-  const banner = await bannerModel.findByPk(params.id);
+  const { id } = await context.params;
+  const banner = await bannerModel.findByPk(Number(id), {
+    attributes: {
+      exclude: ["createdAt", "updatedAt"],
+    },
+  });
   if (!banner) {
     return NextResponse.json(
       { status: 0, message: "Banner not found" },
@@ -30,10 +34,10 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await testConnection();
-
+ const { id } = await context.params;
   const auth = await verifyAdmin(request, "putbanner");
   if (!auth.valid) {
     return NextResponse.json(
@@ -42,7 +46,7 @@ export async function PUT(
     );
   }
 
-  const banner = await bannerModel.findByPk(params.id);
+  const banner = await bannerModel.findByPk(Number(id));
   if (!banner) {
     return NextResponse.json(
       { status: 0, message: "Banner not found" },
@@ -66,6 +70,13 @@ export async function PUT(
     active: formData.get("active") === "true",
   });
 
+  if (auth.user == null) {
+    return NextResponse.json(
+      { message: auth.message },
+      { status: auth.status }
+    );
+  }
+
   await logsEntry({
     userId: auth.user?.id.toString(),
     email: auth.user?.email,
@@ -81,7 +92,7 @@ export async function PUT(
   return NextResponse.json({
     status: 1,
     message: "Banner updated successfully",
-    data: banner,
+    // data: banner,
   });
 }
 
@@ -90,10 +101,10 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await testConnection();
-
+  const { id } = await context.params;
   const auth = await verifyAdmin(request, "deletebanner");
   if (!auth.valid) {
     return NextResponse.json(
@@ -102,7 +113,7 @@ export async function DELETE(
     );
   }
 
-  const banner = await bannerModel.findByPk(params.id);
+  const banner = await bannerModel.findByPk(Number(id));
   if (!banner) {
     return NextResponse.json(
       { status: 0, message: "Banner not found" },
@@ -111,6 +122,13 @@ export async function DELETE(
   }
 
   await banner.destroy();
+
+  if (auth.user == null) {
+    return NextResponse.json(
+      { message: auth.message },
+      { status: auth.status }
+    );
+  }
 
   await logsEntry({
     userId: auth.user?.id.toString(),

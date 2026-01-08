@@ -21,7 +21,6 @@ export const testimonialModel = sequelize.define(
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     active: {
       type: DataTypes.BOOLEAN,

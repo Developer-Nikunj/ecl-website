@@ -21,6 +21,8 @@ export interface updateFooterArgs {
 export interface getFooterPayload {
   limit?: number;
   offset?: number;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface FooterItem {

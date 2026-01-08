@@ -5,40 +5,145 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  createRole,
-  getallRoles,
-  deleteRole,
-  getRoleById,
-  updateRole,
-} from "@/store/slices/module1/roles/roles.thunk";
+  createFooter,
+  updateFooter,
+  deleteFooter,
+  getFooter,
+  getAllFooter,
+} from "@/store/slices/module1/footer/footer.thunk";
 
-import PermissionGate from "@/components/admin/PermissionGate"
+import PermissionGate from "@/components/admin/PermissionGate";
+import { toast } from "react-toastify";
 
 const FooterManagementComponent = () => {
+  const dispatch = useAppDispatch();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [createFooterEntry, setCreateFooterEntry] = useState({
+    name: "",
+    active: true,
+  });
+  const [updateFooterEntry, setUpdateFooterEntry] = useState({
+    name: "",
+    active: true,
+  });
+  const [filters, setFilters] = useState({
+    startDate: "",
+    endDate: "",
+    limit: 10,
+    offset: 0,
+  });
+  const [selectDeleteId, setselectDeleteId] = useState<number | null>(null);
+  const [selectUpdateId, setselectUpdateId] = useState<number | null>(null);
 
-  const roles = [
-    {
-      id: 1,
-      name: "<footer>About Us</footer>",
-      description: "Company introduction section",
+  const { items, total, limit, offset, single, loading, error } =
+    useAppSelector((state) => state.footer);
+
+  console.log("items", items);
+
+  const fetchFooter = async () => {
+    await dispatch(
+      getAllFooter({
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        limit: filters.limit,
+        offset: filters.offset,
+      })
+    );
+  };
+
+  const handleCreate = async () => {
+    if (!createFooterEntry.name) {
+      toast.warn("Footer content required!!");
+    }
+    const res = await dispatch(
+      createFooter({
+        name: createFooterEntry.name,
+        active: createFooterEntry.active,
+      })
+    );
+    if (createFooter.fulfilled.match(res)) {
+      setShowCreateModal(false);
+      fetchFooter();
+    }
+    setCreateFooterEntry({
+      name: "",
       active: true,
-    },
-    {
-      id: 2,
-      name: "<footer>Quick Links</footer>",
-      description: "Important navigation links",
-      active: true,
-    },
-    {
-      id: 3,
-      name: "<footer>Contact Info</footer>",
-      description: "Phone, email, address",
-      active: false,
-    },
-  ];
+    });
+  };
+
+  const handleDelete = async () => {
+    if (!selectDeleteId) return;
+
+    const res = await dispatch(deleteFooter(selectDeleteId));
+
+    if (deleteFooter.fulfilled.match(res)) {
+      setShowDeleteModal(false);
+      setselectDeleteId(null);
+
+      await dispatch(
+        getAllFooter({
+          limit: filters.limit,
+          offset: filters.offset,
+          startDate: filters.startDate || undefined,
+          endDate: filters.endDate || undefined,
+        })
+      );
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!selectUpdateId) return;
+
+    const res = await dispatch(
+      updateFooter({
+        id: selectUpdateId,
+        data: {
+          name: updateFooterEntry.name,
+          active: updateFooterEntry.active,
+        },
+      })
+    );
+
+    if (updateFooter.fulfilled.match(res)) {
+      setShowEditModal(false);
+      setUpdateFooterEntry({
+        name: "",
+        active: true,
+      });
+      await dispatch(
+        getAllFooter({
+          limit: filters.limit,
+          offset: filters.offset,
+          startDate: filters.startDate || undefined,
+          endDate: filters.endDate || undefined,
+        })
+      );
+    }
+  };
+
+  const applyFilter = ()=>fetchFooter();
+
+  const handlePrevious = ()=>{
+    setFilters((prev)=>({
+      ...prev,
+      offset:Math.max(prev.offset - prev.limit,0)
+    }))
+  }
+
+  const handleNext = ()=>{
+    if(filters.offset + filters.limit < total){
+      setFilters((prev)=>({
+        ...prev,
+        offset:prev.offset + prev.limit,
+      }))
+    }
+  }
+
+  useEffect(() => {
+    fetchFooter();
+  }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
 
 
   return (
@@ -50,7 +155,14 @@ const FooterManagementComponent = () => {
             Total Rows
           </label>
 
-          <select id="totalRows" className="form-select">
+          <select
+            id="totalRows"
+            className="form-select"
+            value={filters.limit}
+            onChange={(e) => {
+              setFilters({ ...filters, limit: Number(e.target.value) });
+            }}
+          >
             <option value={10}>10</option>
             <option value={25}>25</option>
             <option value={50}>50</option>
@@ -61,96 +173,126 @@ const FooterManagementComponent = () => {
         {/* Start Date */}
         <div>
           <label className="form-label mb-1">Start Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.startDate}
+            onChange={(e) => {
+              setFilters({ ...filters, startDate: e.target.value });
+            }}
+          />
         </div>
 
         {/* End Date */}
         <div>
           <label className="form-label mb-1">End Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.endDate}
+            onChange={(e) => {
+              setFilters({ ...filters, endDate: e.target.value });
+            }}
+          />
         </div>
 
         {/* Apply Button */}
-        <button className="btn btn-primary px-4">Apply</button>
+        <button className="btn btn-primary px-4" onClick={() => applyFilter()}>
+          Apply
+        </button>
       </div>
+
       {/* <PermissionGate permission="postrole"> */}
-        <div className="d-flex justify-content-end mb-3">
-          <button className="btn btn-sm btn-success" onClick={()=>setShowCreateModal(true)}>Create Footer</button>
-        </div>
+      <div className="d-flex justify-content-end mb-3">
+        <button
+          className="btn btn-sm btn-success"
+          onClick={() => setShowCreateModal((prev) => !prev)}
+        >
+          Create Footer
+        </button>
+      </div>
+
       {/* </PermissionGate> */}
       {/* <PermissionGate permission="getrole"> */}
-        <div className="table-responsive">
-          <table className="table table-bordered table-hover align-middle mb-0">
-            <thead className="table-light">
-              <tr>
-                <th>SNo.</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
+      <div className="table-responsive">
+        <table className="table table-bordered table-hover align-middle mb-0">
+          <thead className="table-light">
+            <tr>
+              <th>SNo.</th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
 
-            <tbody>
-              {roles.length > 0 &&
-                roles.map((item, index) => (
-                  <tr key={item.id}>
-                    <td>{index + 1}</td>
+          <tbody>
+            {items.length > 0 &&
+              items.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{index + 1}</td>
 
-                    {/* name is HTML */}
-                    <td dangerouslySetInnerHTML={{ __html: item.name }} />
+                  {/* name is HTML */}
+                  <td dangerouslySetInnerHTML={{ __html: item.name }} />
 
-                    <td>{item.description}</td>
+                  <td>
+                    <span>{item.active ? "Active" : "Inactive"}</span>
+                  </td>
 
-                    <td>
-                      <span>{item.active ? "Active" : "Inactive"}</span>
-                    </td>
+                  <td>
+                    <div className="d-flex gap-2">
+                      {/* <PermissionGate permission="putfooter"> */}
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => {
+                          setselectUpdateId(item.id);
+                          setUpdateFooterEntry({
+                            name: item.name,
+                            active: item.active,
+                          });
+                          setShowEditModal(true);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      {/* </PermissionGate> */}
 
-                    <td>
-                      <div className="d-flex gap-2">
-                        {/* <PermissionGate permission="putfooter"> */}
-                          <button
-                            className="btn btn-sm btn-primary"
-                            onClick={() => setShowEditModal(true)}
-                          >
-                            Edit
-                          </button>
-                        {/* </PermissionGate> */}
+                      {/* <PermissionGate permission="deletefooter"> */}
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => {
+                          setselectDeleteId(item.id);
+                          setShowDeleteModal((prev) => !prev);
+                        }}
+                      >
+                        Delete
+                      </button>
+                      {/* </PermissionGate> */}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <button
+            className="btn btn-sm text-white"
+            style={{
+              background: "linear-gradient(135deg, #667eea, #764ba2)",
+            }}
+          >
+            Previous
+          </button>
 
-                        {/* <PermissionGate permission="deletefooter"> */}
-                          <button
-                            className="btn btn-sm btn-danger"
-                            onClick={() => setShowDeleteModal((prev) => !prev)}
-                          >
-                            Delete
-                          </button>
-                        {/* </PermissionGate> */}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-          <div className="d-flex justify-content-between align-items-center mt-3">
-            <button
-              className="btn btn-sm text-white"
-              style={{
-                background: "linear-gradient(135deg, #667eea, #764ba2)",
-              }}
-            >
-              Previous
-            </button>
-
-            <button
-              className="btn btn-sm text-white"
-              style={{
-                background: "linear-gradient(135deg, #43cea2, #185a9d)",
-              }}
-            >
-              Next
-            </button>
-          </div>
+          <button
+            className="btn btn-sm text-white"
+            style={{
+              background: "linear-gradient(135deg, #43cea2, #185a9d)",
+            }}
+          >
+            Next
+          </button>
         </div>
+      </div>
       {/* </PermissionGate> */}
 
       {showCreateModal && (
@@ -167,7 +309,7 @@ const FooterManagementComponent = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Create Role</h5>
+                  <h5 className="modal-title">Create Footer</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -178,31 +320,45 @@ const FooterManagementComponent = () => {
                 <div className="modal-body">
                   <form>
                     <div className="mb-3">
-                      <label className="form-label">Role Name</label>
+                      <label className="form-label">Footer Content</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter Role name"
+                        placeholder="Enter Footer content"
+                        value={createFooterEntry.name}
+                        onChange={(e) => {
+                          setCreateFooterEntry({
+                            ...createFooterEntry,
+                            name: e.target.value,
+                          });
+                        }}
                       />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Description</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter menu description"
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label className="form-label">Role Status</label>
-                      <select
-                        className="form-select mb-3"
-                        aria-label="Default select example"
-                      >
-                        <option selected>Status</option>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                      </select>
+                      <label className="form-label d-block">
+                        Footer Status
+                      </label>
+
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="footerStatus"
+                          checked={createFooterEntry.active}
+                          onChange={(e) =>
+                            setCreateFooterEntry((prev) => ({
+                              ...prev,
+                              active: e.target.checked,
+                            }))
+                          }
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="footerStatus"
+                        >
+                          Active
+                        </label>
+                      </div>
                     </div>
                   </form>
                 </div>
@@ -214,7 +370,12 @@ const FooterManagementComponent = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => handleCreate()}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -238,7 +399,7 @@ const FooterManagementComponent = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Edit Role</h5>
+                  <h5 className="modal-title">Edit Footer</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -249,34 +410,45 @@ const FooterManagementComponent = () => {
                 <div className="modal-body">
                   <form>
                     <div className="mb-3">
-                      <label className="form-label">Role Name</label>
+                      <label className="form-label">Footer Content</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter menu name"
+                        placeholder="Enter footer content"
+                        value={updateFooterEntry.name}
+                        onChange={(e) => {
+                          setUpdateFooterEntry((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Description</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter menu description"
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="roleStatus" className="form-label">
-                        Role Status
+                      <label className="form-label d-block">
+                        Footer Status
                       </label>
-                      <select
-                        id="roleStatus"
-                        className="form-select mb-3"
-                        aria-label="Role Status"
-                      >
-                        <option value="">Select Status</option>
-                        <option value={1}>Active</option>
-                        <option value={0}>Inactive</option>
-                      </select>
+
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="footerStatus"
+                          checked={updateFooterEntry.active}
+                          onChange={(e) =>
+                            setUpdateFooterEntry((prev) => ({
+                              ...prev,
+                              active: e.target.checked,
+                            }))
+                          }
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="footerStatus"
+                        >
+                          Active
+                        </label>
+                      </div>
                     </div>
                   </form>
                 </div>
@@ -288,7 +460,12 @@ const FooterManagementComponent = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={handleUpdate}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -329,7 +506,7 @@ const FooterManagementComponent = () => {
 
                 <div className="modal-body text-center">
                   <p className="mb-1 fw-semibold">
-                    Are you sure you want to delete this role?
+                    Are you sure you want to delete this Footer?
                   </p>
                   <small className="text-muted">
                     This action cannot be undone.
@@ -343,7 +520,12 @@ const FooterManagementComponent = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-danger">Delete</button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDelete()}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

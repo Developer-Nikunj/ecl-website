@@ -439,8 +439,6 @@ const HeaderManagementComponent = () => {
 
                 <div className="modal-body">
                   <form>
-                    <div className="mb-3">
-                      <label className="form-label">Header Content</label>
                       <div className="mb-3">
                         <label className="form-label">Header Content</label>
                         <ReactQuill
@@ -497,7 +495,6 @@ const HeaderManagementComponent = () => {
                           }));
                         }}
                       /> */}
-                    </div>
                     <div className="mb-3">
                       <label className="form-label d-block">
                         Header Status

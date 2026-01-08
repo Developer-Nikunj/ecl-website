@@ -22,6 +22,8 @@
     export interface getHeaderPayload {
       limit?: number;
       offset?: number;
+      startDate?: string;
+      endDate?: string;
     }
 
     export interface HeaderItem {

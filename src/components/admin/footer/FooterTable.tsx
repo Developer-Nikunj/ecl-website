@@ -14,6 +14,8 @@ import {
 
 import PermissionGate from "@/components/admin/PermissionGate";
 import { toast } from "react-toastify";
+import ReactQuill from "@/components/RichEditor";
+import DOMPurify from "dompurify";
 
 const FooterManagementComponent = () => {
   const dispatch = useAppDispatch();
@@ -321,18 +323,47 @@ const FooterManagementComponent = () => {
                   <form>
                     <div className="mb-3">
                       <label className="form-label">Footer Content</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter Footer content"
+                      <ReactQuill
+                        theme="snow"
                         value={createFooterEntry.name}
-                        onChange={(e) => {
+                        onChange={(value) =>
                           setCreateFooterEntry({
                             ...createFooterEntry,
-                            name: e.target.value,
-                          });
+                            name: value,
+                          })
+                        }
+                        modules={{
+                          toolbar: [
+                            [{ header: [1, 2, 3, 4, 5, false] }],
+                            [{ font: [] }],
+                            [{ size: ["small", false, "large", "huge"] }],
+
+                            ["bold", "italic", "underline", "strike"],
+                            [{ color: [] }, { background: [] }],
+
+                            [{ script: "sub" }, { script: "super" }],
+                            [{ list: "ordered" }, { list: "bullet" }],
+                            [{ indent: "-1" }, { indent: "+1" }],
+                            [{ align: [] }],
+
+                            ["blockquote", "code-block"],
+                            ["link", "image"],
+
+                            ["clean"],
+                          ],
                         }}
+                        className="bg-white"
                       />
+
+                      <div className="card mt-3">
+                        <div className="card-header fw-bold">Preview</div>
+                        <div
+                          className="card-body"
+                          dangerouslySetInnerHTML={{
+                            __html: createFooterEntry.name,
+                          }}
+                        />
+                      </div>
                     </div>
                     <div className="mb-3">
                       <label className="form-label d-block">
@@ -411,18 +442,62 @@ const FooterManagementComponent = () => {
                   <form>
                     <div className="mb-3">
                       <label className="form-label">Footer Content</label>
-                      <input
+                      <div className="mb-3">
+                        {/* <label className="form-label">Footer Content</label> */}
+                        <ReactQuill
+                          theme="snow"
+                          value={updateFooterEntry.name}
+                          onChange={(value) => {
+                            setUpdateFooterEntry((prev) => ({
+                              ...prev,
+                              name: value,
+                            }));
+                          }}
+                          modules={{
+                            toolbar: [
+                              [{ header: [1, 2, 3, 4, 5, false] }],
+                              [{ font: [] }],
+                              [{ size: ["small", false, "large", "huge"] }],
+
+                              ["bold", "italic", "underline", "strike"],
+                              [{ color: [] }, { background: [] }],
+
+                              [{ script: "sub" }, { script: "super" }],
+                              [{ list: "ordered" }, { list: "bullet" }],
+                              [{ indent: "-1" }, { indent: "+1" }],
+                              [{ align: [] }],
+
+                              ["blockquote", "code-block"],
+                              ["link", "image"],
+
+                              ["clean"],
+                            ],
+                          }}
+                          className="bg-white"
+                        />
+
+                        <div className="card mt-3">
+                          <div className="card-header fw-bold">Preview</div>
+                          <div
+                            className="card-body"
+                            dangerouslySetInnerHTML={{
+                              __html: updateFooterEntry.name,
+                            }}
+                          />
+                        </div>
+                      </div>
+                      {/* <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter footer content"
-                        value={updateFooterEntry.name}
+                        placeholder="Enter Header content"
+                        value={updateHeaderEntry.name}
                         onChange={(e) => {
-                          setUpdateFooterEntry((prev) => ({
+                          setUpdateHeaderEntry((prev) => ({
                             ...prev,
                             name: e.target.value,
                           }));
                         }}
-                      />
+                      /> */}
                     </div>
                     <div className="mb-3">
                       <label className="form-label d-block">

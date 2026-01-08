@@ -38,18 +38,28 @@ export async function POST(req: NextRequest) {
 
     const data = await testimonialModel.create(body);
 
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
+
     await logsEntry({
-      userId: auth.user?.id.toString(),
-      email: auth.user?.email,
-      role: auth.user?.role,
+      userId: auth.user.id.toString(),
+      email: auth.user.email,
+      role: auth.user.role,
       action: "TESTIMONIAL_CREATED",
+      ipAddress: req.headers.get("x-forwarded-for") || "unknown",
       requestMethod: req.method,
-      endPoint: req.nextUrl.pathname,
+      endPoint: req.nextUrl.pathname.toString(),
       status: 200,
+      userAgent: req.headers.get("user-agent") || "unknown",
     });
 
     return NextResponse.json({ status: 1, data });
-  } catch (e) {
+  } catch (err) {
+    console.log("err",err);
     return NextResponse.json({ status: 0, message: "Create failed" });
   }
 }
@@ -89,6 +99,25 @@ export async function PUT(req: NextRequest) {
 
     await testimonial.update(body);
 
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
+
+    await logsEntry({
+      userId: auth.user.id.toString(),
+      email: auth.user.email,
+      role: auth.user.role,
+      action: "TESTIMONIAL_UPDATED",
+      ipAddress: req.headers.get("x-forwarded-for") || "unknown",
+      requestMethod: req.method,
+      endPoint: req.nextUrl.pathname.toString(),
+      status: 200,
+      userAgent: req.headers.get("user-agent") || "unknown",
+    });
+
     return NextResponse.json({ status: 1, message: "Updated successfully" });
   } catch {
     return NextResponse.json({ status: 0, message: "Update failed" });
@@ -117,7 +146,24 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ status: 0, message: "Not found" });
 
     await testimonial.destroy();
+    if (auth.user == null) {
+      return NextResponse.json(
+        { message: auth.message },
+        { status: auth.status }
+      );
+    }
 
+    await logsEntry({
+      userId: auth.user.id.toString(),
+      email: auth.user.email,
+      role: auth.user.role,
+      action: "TESTIMONIAL_DELETED",
+      ipAddress: req.headers.get("x-forwarded-for") || "unknown",
+      requestMethod: req.method,
+      endPoint: req.nextUrl.pathname.toString(),
+      status: 200,
+      userAgent: req.headers.get("user-agent") || "unknown",
+    });
     return NextResponse.json({ status: 1, message: "Deleted successfully" });
   } catch {
     return NextResponse.json({ status: 0, message: "Delete failed" });

@@ -11,12 +11,148 @@ import {
   updatetestimonial,
 } from "@/store/slices/module1/testimonial/testimonial.thunk";
 
-import PermissionGate from "@/components/admin/PermissionGate"
+import PermissionGate from "@/components/admin/PermissionGate";
 
 const TestimonialPage = () => {
+  const dispatch = useAppDispatch();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [createTestimonialEntry, setCreateTestimonialEntry] = useState({
+    name: "",
+    description: "",
+    img: "",
+    active: true,
+  });
+  const [updateTestimonialEntry, setUpdateTestimonialEntry] = useState({
+    name: "",
+    description: "",
+    img: "",
+    active: true,
+  });
+  const [filters, setFilters] = useState({
+    startDate: "",
+    endDate: "",
+    limit: 10,
+    offset: 0,
+  });
+  const [selectedUpTestimonialId, setSelectedUpTestimonialId] = useState<
+    number | null
+  >(null);
+  const [selectedDlTestimonialId, setSelectedDlTestimonialId] = useState<
+    number | null
+  >(null);
+  const { list, loading, error, total, limit, offset } = useAppSelector(
+    (state) => state.testimonial
+  );
+  console.log("total", list,total);
+
+  const fetchTestimonial = async () => {
+    await dispatch(
+      getAlltestimonial({
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        limit: filters.limit,
+        offset: filters.offset,
+      })
+    );
+  };
+  const handleCreate = async () => {
+    const formData = new FormData();
+    formData.append("name", createTestimonialEntry.name);
+    formData.append("description", createTestimonialEntry.description);
+    formData.append("img", createTestimonialEntry.img); // File object
+    formData.append("active", createTestimonialEntry.active ? "true" : "false");
+    const res = await dispatch(createtestimonial(formData));
+
+    if (createtestimonial.fulfilled.match(res)) {
+      setShowCreateModal(false);
+      fetchTestimonial();
+    }
+
+    setCreateTestimonialEntry({
+      name: "",
+      description: "",
+      active: false,
+      img: "",
+    });
+  };
+  const applyFilter = () => {
+    fetchTestimonial();
+  };
+  const handlePrevious = () => {
+    setFilters((prev) => ({
+      ...prev,
+      offset: Math.max(prev.offset - prev.limit, 0),
+    }));
+  };
+  const handleNext = () => {
+    if (filters.offset + filters.limit < total) {
+      setFilters((prev) => ({
+        ...prev,
+        offset: prev.offset + prev.limit,
+      }));
+    }
+  };
+  const handleDelete = async () => {
+    if (!selectedDlTestimonialId) return;
+
+    const res = await dispatch(deletetestimonial(selectedDlTestimonialId));
+
+    if (deletetestimonial.fulfilled.match(res)) {
+      setShowDeleteModal(false);
+      setSelectedDlTestimonialId(null);
+    }
+
+    await dispatch(
+      getAlltestimonial({
+        limit: filters.limit,
+        offset: filters.offset,
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+      })
+    );
+  };
+  const handleUpdate = async () => {
+    if (!selectedUpTestimonialId) return;
+
+    const formData = new FormData();
+    formData.append("name", updateTestimonialEntry.name);
+    formData.append("description", updateTestimonialEntry.description);
+    formData.append("img", updateTestimonialEntry.img); // File object
+    formData.append("active", updateTestimonialEntry.active ? "true" : "false");
+
+    const res = await dispatch(
+      updatetestimonial({
+        id: selectedUpTestimonialId,
+        data: formData,
+      })
+    );
+
+    if (updatetestimonial.fulfilled.match(res)) {
+      setShowEditModal(false);
+      setUpdateTestimonialEntry({
+        name: "",
+        description: "",
+        img: "",
+        active: true,
+      });
+
+      await dispatch(
+        getAlltestimonial({
+          limit: filters.limit,
+          offset: filters.offset,
+          startDate: filters.startDate || undefined,
+          endDate: filters.endDate || undefined,
+        })
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetchTestimonial();
+  }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
 
   const roles = [
     {
@@ -48,7 +184,14 @@ const TestimonialPage = () => {
             Total Rows
           </label>
 
-          <select id="totalRows" className="form-select">
+          <select
+            id="totalRows"
+            className="form-select"
+            value={filters.limit}
+            onChange={(e) => {
+              setFilters({ ...filters, limit: Number(e.target.value) });
+            }}
+          >
             <option value={10}>10</option>
             <option value={25}>25</option>
             <option value={50}>50</option>
@@ -59,17 +202,33 @@ const TestimonialPage = () => {
         {/* Start Date */}
         <div>
           <label className="form-label mb-1">Start Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.startDate}
+            onChange={(e) => {
+              setFilters({ ...filters, startDate: e.target.value });
+            }}
+          />
         </div>
 
         {/* End Date */}
         <div>
           <label className="form-label mb-1">End Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.endDate}
+            onChange={(e) => {
+              setFilters({ ...filters, endDate: e.target.value });
+            }}
+          />
         </div>
 
         {/* Apply Button */}
-        <button className="btn btn-primary px-4">Apply</button>
+        <button className="btn btn-primary px-4" onClick={() => applyFilter()}>
+          Apply
+        </button>
       </div>
       {/* <PermissionGate permission="postrole"> */}
       <div className="d-flex justify-content-end mb-3">
@@ -96,16 +255,31 @@ const TestimonialPage = () => {
           </thead>
 
           <tbody>
-            {roles.length > 0 &&
-              roles.map((item, index) => (
+            {list.length > 0 &&
+              list.map((item, index) => (
                 <tr key={item.id}>
-                  <td>{index + 1}</td>
+                  <td>{filters.offset + index + 1}</td>
 
-                  {/* name is HTML */}
-                  <td dangerouslySetInnerHTML={{ __html: item.name }} />
+                  <td>{item.name}</td>
 
-                  <td>{item.description}</td>
-                  <td>{"Image"}</td>
+                  <td>
+                    {item.description.length > 50
+                      ? item.description.slice(0, 40) + "..."
+                      : item.description}
+                  </td>
+                  <td>
+                    <img
+                      src={`${item.img}`}
+                      alt="preview"
+                      style={{
+                        width: "90px",
+                        height: "90px",
+                        objectFit: "cover",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </td>
 
                   <td>
                     <span>{item.active ? "Active" : "Inactive"}</span>
@@ -116,7 +290,17 @@ const TestimonialPage = () => {
                       {/* <PermissionGate permission="putfooter"> */}
                       <button
                         className="btn btn-sm btn-primary"
-                        onClick={() => setShowEditModal(true)}
+                        onClick={() => {
+                          setShowEditModal(true);
+                          setUpdateTestimonialEntry({
+                            name: item.name,
+                            description: item.description,
+                            active: item.active ? true : false,
+                            img: item.img,
+                          });
+                          setSelectedUpTestimonialId(item.id);
+                          setShowEditModal(true);
+                        }}
                       >
                         Edit
                       </button>
@@ -125,7 +309,10 @@ const TestimonialPage = () => {
                       {/* <PermissionGate permission="deletefooter"> */}
                       <button
                         className="btn btn-sm btn-danger"
-                        onClick={() => setShowDeleteModal((prev) => !prev)}
+                        onClick={() => {
+                          setSelectedDlTestimonialId(item.id);
+                          setShowDeleteModal((prev) => !prev);
+                        }}
                       >
                         Delete
                       </button>
@@ -142,6 +329,8 @@ const TestimonialPage = () => {
             style={{
               background: "linear-gradient(135deg, #667eea, #764ba2)",
             }}
+            onClick={handlePrevious}
+            disabled={filters.offset === 0}
           >
             Previous
           </button>
@@ -151,6 +340,8 @@ const TestimonialPage = () => {
             style={{
               background: "linear-gradient(135deg, #43cea2, #185a9d)",
             }}
+            onClick={handleNext}
+            disabled={filters.offset + filters.limit >= total}
           >
             Next
           </button>
@@ -188,6 +379,13 @@ const TestimonialPage = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Testimonial name"
+                        value={createTestimonialEntry.name}
+                        onChange={(e) => {
+                          setCreateTestimonialEntry({
+                            ...createTestimonialEntry,
+                            name: e.target.value,
+                          });
+                        }}
                       />
                     </div>
                     <div className="mb-3">
@@ -198,11 +396,28 @@ const TestimonialPage = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Testimonial description"
+                        value={createTestimonialEntry.description}
+                        onChange={(e) => {
+                          setCreateTestimonialEntry({
+                            ...createTestimonialEntry,
+                            description: e.target.value,
+                          });
+                        }}
                       />
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Testimonial Image</label>
-                      <input type="file" id="input" accept="image/*" />
+                      <input
+                        type="file"
+                        id="input"
+                        accept="image/*"
+                        onChange={(e) => {
+                          setCreateTestimonialEntry({
+                            ...createTestimonialEntry,
+                            img: e.target.files?.[0],
+                          });
+                        }}
+                      />
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Testimonial Status</label>
@@ -211,7 +426,13 @@ const TestimonialPage = () => {
                           className="form-check-input"
                           type="checkbox"
                           id="TestimonialStatus"
-                          checked={true}
+                          checked={createTestimonialEntry.active}
+                          onChange={(e) => {
+                            setCreateTestimonialEntry((prev) => ({
+                              ...prev,
+                              active: e.target.checked,
+                            }));
+                          }}
                         />
                         <label
                           className="form-check-label"
@@ -231,7 +452,12 @@ const TestimonialPage = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => handleCreate()}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -271,6 +497,13 @@ const TestimonialPage = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Testimonial name"
+                        value={updateTestimonialEntry?.name || ""}
+                        onChange={(e) => {
+                          setUpdateTestimonialEntry((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="mb-3">
@@ -281,11 +514,27 @@ const TestimonialPage = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Testimonial description"
+                        value={updateTestimonialEntry?.description || ""}
+                        onChange={(e) => {
+                          setUpdateTestimonialEntry((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Testimonial Image</label>
-                      <input type="file" id="input" accept="image/*" />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          setUpdateTestimonialEntry({
+                            ...updateTestimonialEntry,
+                            img: e.target.files?.[0],
+                          });
+                        }}
+                      />
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Testimonial Status</label>
@@ -294,7 +543,13 @@ const TestimonialPage = () => {
                           className="form-check-input"
                           type="checkbox"
                           id="TestimonialStatus"
-                          checked={true}
+                          checked={updateTestimonialEntry.active}
+                          onChange={(e) => {
+                            setUpdateTestimonialEntry((prev) => ({
+                              ...prev,
+                              active: e.target.checked,
+                            }));
+                          }}
                         />
                         <label
                           className="form-check-label"
@@ -314,7 +569,14 @@ const TestimonialPage = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => {
+                      handleUpdate();
+                    }}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -355,7 +617,7 @@ const TestimonialPage = () => {
 
                 <div className="modal-body text-center">
                   <p className="mb-1 fw-semibold">
-                    Are you sure you want to delete this Testimonial  ?
+                    Are you sure you want to delete this Testimonial ?
                   </p>
                   <small className="text-muted">
                     This action cannot be undone.
@@ -369,7 +631,12 @@ const TestimonialPage = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-danger">Delete</button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDelete()}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

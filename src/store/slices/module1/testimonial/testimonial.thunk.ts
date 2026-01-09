@@ -100,16 +100,28 @@ export const getAlltestimonial = createAsyncThunk<
   testimonialAllResponse,
   gettestimonialPayload,
   { rejectValue: string }
->("testimonial/getAll", async ({ limit = 10, offset = 0 }, { rejectWithValue }) => {
-  try {
-    const res = await api.get<testimonialAllResponse>(
-      `/testimonial?limit=${limit}&offset=${offset}`
-    );
-    if (res.data.status === 0) return rejectWithValue(res.data.message);
-    return res.data;
-  } catch (error) {
-    const err = error as AxiosError<{ message: string }>;
-    const message = err.response?.data?.message || "testimonial fetch all failed";
-    return rejectWithValue(message);
+>(
+  "testimonial/getAll",
+  async (
+    { limit = 10, offset = 0, startDate, endDate },
+    { rejectWithValue }
+  ) => {
+    try {
+      let url = `/testimonial?limit=${limit}&offset=${offset}`;
+
+      if (startDate) url += `&startDate=${startDate}`;
+      if (endDate) url += `&endDate=${endDate}`;
+
+      const res = await api.get<testimonialAllResponse>(
+        url
+      );
+      if (res.data.status === 0) return rejectWithValue(res.data.message);
+      return res.data;
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+      const message =
+        err.response?.data?.message || "testimonial fetch all failed";
+      return rejectWithValue(message);
+    }
   }
-});
+);

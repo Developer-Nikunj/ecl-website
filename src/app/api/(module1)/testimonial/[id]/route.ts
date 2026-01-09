@@ -5,6 +5,18 @@ import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 import { saveImage } from "@/utils/uploads/saveImage";
 import z from "zod";
+import fs from "fs";
+import path from "path";
+
+function deleteImage(filePath: string | null) {
+  if (!filePath) return;
+
+  const absolutePath = path.join(process.cwd(), "public", filePath);
+
+  if (fs.existsSync(absolutePath)) {
+    fs.unlinkSync(absolutePath);
+  }
+}
 
 /**
  * GET Testimonial by ID
@@ -56,11 +68,15 @@ export async function PUT(
   }
 
   const formData = await request.formData();
-  const image = formData.get("img") as File | null;
+  const image = formData.get("img");
 
   let imgPath = testimonial.img;
 
-  if (image) {
+  if (image instanceof File && image.size > 0) {
+    // 🔥 delete old image FIRST
+    deleteImage(testimonial.img);
+
+    // 🔥 save new image
     imgPath = await saveImage(image, "testimonial");
   }
 

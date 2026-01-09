@@ -138,24 +138,36 @@
     });
 
     // -------------------- GET ALL --------------------
-    export const getAllHeader = createAsyncThunk<
-      HeaderAllResponse,
-      getHeaderPayload,
-      { rejectValue: string }
-    >("header/getAll", async (payload, { rejectWithValue }) => {
-      try {
-        const res = await api.get<HeaderAllResponse>(
-          `/header?limit=${payload.limit ?? 10}&offset=${payload.offset ?? 0}`
-        );
-        if (res.data.status === 0) {
-          toast.error(res.data.message);
-          return rejectWithValue(res.data.message);
-        }
-        return res.data;
-      } catch (error) {
-        const err = error as AxiosError<{ message: string }>;
-        const message = err.response?.data?.message || "Header fetch failed";
-        toast.error(message);
-        return rejectWithValue(message);
+export const getAllHeader = createAsyncThunk<
+  HeaderAllResponse,
+  getHeaderPayload,
+  { rejectValue: string }
+>(
+  "header/getAll",
+  async (
+    { limit = 10, offset = 0, startDate, endDate },
+    { rejectWithValue }
+  ) => {
+    try {
+      let url = `/header?limit=${limit}&offset=${offset}`;
+
+      if (startDate) url += `&startDate=${startDate}`;
+      if (endDate) url += `&endDate=${endDate}`;
+
+      const res = await api.get<HeaderAllResponse>(url);
+
+      if (res.data.status === 0) {
+        toast.error(res.data.message);
+        return rejectWithValue(res.data.message);
       }
-    });
+
+      return res.data;
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+      const message = err.response?.data?.message || "Header fetch failed";
+      toast.error(message);
+      return rejectWithValue(message);
+    }
+  }
+);
+

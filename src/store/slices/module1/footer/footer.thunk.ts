@@ -130,16 +130,25 @@ export const getAllFooter = createAsyncThunk<
   FooterAllResponse,
   getFooterPayload,
   { rejectValue: string }
->("footer/getAll", async ({ limit = 10, offset = 0 }, { rejectWithValue }) => {
-  try {
-    const res = await api.get<FooterAllResponse>(
-      `/footer?limit=${limit}&offset=${offset}`
-    );
-    if (res.data.status === 0) return rejectWithValue(res.data.message);
-    return res.data;
-  } catch (error) {
-    const err = error as AxiosError<{ message: string }>;
-    const message = err.response?.data?.message || "Footer fetch all failed";
-    return rejectWithValue(message);
+>(
+  "footer/getAll",
+  async (
+    { limit = 10, offset = 0, startDate, endDate },
+    { rejectWithValue }
+  ) => {
+    try {
+      let url = `/footer?limit=${limit}&offset=${offset}`;
+       if (startDate) url += `&startDate=${startDate}`;
+       if (endDate) url += `&endDate=${endDate}`;
+      const res = await api.get<FooterAllResponse>(
+        url
+      );
+      if (res.data.status === 0) return rejectWithValue(res.data.message);
+      return res.data;
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+      const message = err.response?.data?.message || "Footer fetch all failed";
+      return rejectWithValue(message);
+    }
   }
-});
+);

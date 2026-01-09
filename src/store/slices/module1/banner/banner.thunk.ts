@@ -82,21 +82,31 @@ export const deleteBanner = createAsyncThunk<
 });
 
 
-// GET ALL BannerS WITH PAGINATION
 export const getAllBanner = createAsyncThunk<
   bannerAllResponse,
   getBannerPayload,
   { rejectValue: string }
->("Banner/getAll", async ({ limit = 10, offset = 0 }, { rejectWithValue }) => {
-  try {
-    const res = await api.get<bannerAllResponse>(
-      `/banner?limit=${limit}&offset=${offset}`
-    );
-    if (res.data.status === 0) return rejectWithValue(res.data.message);
-    return res.data;
-  } catch (error) {
-    const err = error as AxiosError<{ message: string }>;
-    const message = err.response?.data?.message || "Banner fetch all failed";
-    return rejectWithValue(message);
+>(
+  "Banner/getAll",
+  async (
+    { limit = 10, offset = 0, startDate, endDate },
+    { rejectWithValue }
+  ) => {
+    try {
+      let url = `/banner?limit=${limit}&offset=${offset}`;
+
+      if (startDate) url += `&startDate=${startDate}`;
+      if (endDate) url += `&endDate=${endDate}`;
+
+      const res = await api.get<bannerAllResponse>(url);
+
+      if (res.data.status === 0) return rejectWithValue(res.data.message);
+
+      return res.data;
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+      const message = err.response?.data?.message || "Banner fetch all failed";
+      return rejectWithValue(message);
+    }
   }
-});
+);

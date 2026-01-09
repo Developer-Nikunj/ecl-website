@@ -94,22 +94,17 @@ export async function GET(req: NextRequest) {
 
   const where: any = {};
 
-  // Date filter
   if (startDate && endDate) {
     where.createdAt = {
       [Op.between]: [new Date(startDate), new Date(endDate)],
     };
   } else if (startDate) {
-    where.createdAt = {
-      [Op.gte]: new Date(startDate),
-    };
+    where.createdAt = { [Op.gte]: new Date(startDate) };
   } else if (endDate) {
-    where.createdAt = {
-      [Op.lte]: new Date(endDate),
-    };
+    where.createdAt = { [Op.lte]: new Date(endDate) };
   }
 
-  const banners = await bannerModel.findAll({
+  const { rows, count } = await bannerModel.findAndCountAll({
     where,
     order: [["createdAt", "DESC"]],
     limit,
@@ -118,12 +113,13 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     status: 1,
-    data: banners,
+    data: rows,
     meta: {
       limit,
       offset,
-      count: banners.length,
+      total: count, // 🔥 REAL total from DB
     },
   });
 }
+
 

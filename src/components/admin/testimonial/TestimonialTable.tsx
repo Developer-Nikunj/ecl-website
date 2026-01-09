@@ -5,12 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  createRole,
-  getallRoles,
-  deleteRole,
-  getRoleById,
-  updateRole,
-} from "@/store/slices/module1/roles/roles.thunk";
+  createtestimonial,
+  getAlltestimonial,
+  deletetestimonial,
+  updatetestimonial,
+} from "@/store/slices/module1/testimonial/testimonial.thunk";
 
 import PermissionGate from "@/components/admin/PermissionGate"
 
@@ -74,7 +73,12 @@ const TestimonialPage = () => {
       </div>
       {/* <PermissionGate permission="postrole"> */}
       <div className="d-flex justify-content-end mb-3">
-        <button className="btn btn-sm btn-success">Create Footer</button>
+        <button
+          className="btn btn-sm btn-success"
+          onClick={() => setShowCreateModal((prev) => !prev)}
+        >
+          Create Testimonial
+        </button>
       </div>
       {/* </PermissionGate> */}
       {/* <PermissionGate permission="getrole"> */}
@@ -85,6 +89,7 @@ const TestimonialPage = () => {
               <th>SNo.</th>
               <th>Name</th>
               <th>Description</th>
+              <th>Image</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -100,6 +105,7 @@ const TestimonialPage = () => {
                   <td dangerouslySetInnerHTML={{ __html: item.name }} />
 
                   <td>{item.description}</td>
+                  <td>{"Image"}</td>
 
                   <td>
                     <span>{item.active ? "Active" : "Inactive"}</span>
@@ -166,7 +172,7 @@ const TestimonialPage = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Create Role</h5>
+                  <h5 className="modal-title">Create Testimonial</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -177,31 +183,43 @@ const TestimonialPage = () => {
                 <div className="modal-body">
                   <form>
                     <div className="mb-3">
-                      <label className="form-label">Role Name</label>
+                      <label className="form-label">Testimonial Name</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter Role name"
+                        placeholder="Enter Testimonial name"
                       />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Description</label>
+                      <label className="form-label">
+                        Testimonial Description
+                      </label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter menu description"
+                        placeholder="Enter Testimonial description"
                       />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Status</label>
-                      <select
-                        className="form-select mb-3"
-                        aria-label="Default select example"
-                      >
-                        <option selected>Status</option>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                      </select>
+                      <label className="form-label">Testimonial Image</label>
+                      <input type="file" id="input" accept="image/*" />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Testimonial Status</label>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="TestimonialStatus"
+                          checked={true}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="TestimonialStatus"
+                        >
+                          Active
+                        </label>
+                      </div>
                     </div>
                   </form>
                 </div>
@@ -237,7 +255,7 @@ const TestimonialPage = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Edit Role</h5>
+                  <h5 className="modal-title">Edit Testimonial</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -248,34 +266,43 @@ const TestimonialPage = () => {
                 <div className="modal-body">
                   <form>
                     <div className="mb-3">
-                      <label className="form-label">Role Name</label>
+                      <label className="form-label">Testimonial Name</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter menu name"
+                        placeholder="Enter Testimonial name"
                       />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Description</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter menu description"
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="roleStatus" className="form-label">
-                        Role Status
+                      <label className="form-label">
+                        Testimonial Description
                       </label>
-                      <select
-                        id="roleStatus"
-                        className="form-select mb-3"
-                        aria-label="Role Status"
-                      >
-                        <option value="">Select Status</option>
-                        <option value={1}>Active</option>
-                        <option value={0}>Inactive</option>
-                      </select>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Testimonial description"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Testimonial Image</label>
+                      <input type="file" id="input" accept="image/*" />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Testimonial Status</label>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="TestimonialStatus"
+                          checked={true}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="TestimonialStatus"
+                        >
+                          Active
+                        </label>
+                      </div>
                     </div>
                   </form>
                 </div>
@@ -305,7 +332,7 @@ const TestimonialPage = () => {
             tabIndex={-1}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="deleteRoleTitle"
+            aria-labelledby="deleteTestimonialTitle"
             onClick={() => setShowDeleteModal(false)}
           >
             <div
@@ -328,7 +355,7 @@ const TestimonialPage = () => {
 
                 <div className="modal-body text-center">
                   <p className="mb-1 fw-semibold">
-                    Are you sure you want to delete this role?
+                    Are you sure you want to delete this Testimonial  ?
                   </p>
                   <small className="text-muted">
                     This action cannot be undone.

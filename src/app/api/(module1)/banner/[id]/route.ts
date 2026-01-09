@@ -4,6 +4,18 @@ import { bannerModel } from "@/models/banner.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { saveImage } from "@/utils/uploads/saveImage";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
+import fs from "fs";
+import path from "path";
+
+function deleteImage(filePath: string | null) {
+  if (!filePath) return;
+
+  const absolutePath = path.join(process.cwd(), "public", filePath);
+
+  if (fs.existsSync(absolutePath)) {
+    fs.unlinkSync(absolutePath);
+  }
+}
 
 /**
  * GET Banner by ID
@@ -34,10 +46,12 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  context: { params: { id: string } }
 ) {
   await testConnection();
- const { id } = await context.params;
+
+  const { id } = await context.params;
+
   const auth = await verifyAdmin(request, "putbanner");
   if (!auth.valid) {
     return NextResponse.json(
@@ -55,11 +69,15 @@ export async function PUT(
   }
 
   const formData = await request.formData();
-  const image = formData.get("img") as File | null;
+  const image = formData.get("img");
 
   let imgPath = banner.img;
 
-  if (image) {
+  if (image instanceof File && image.size > 0) {
+    // 🔥 delete old image FIRST
+    deleteImage(banner.img);
+
+    // 🔥 save new image
     imgPath = await saveImage(image, "banner");
   }
 
@@ -67,9 +85,8 @@ export async function PUT(
     img: imgPath,
     name: formData.get("name"),
     description: formData.get("description"),
-    active: formData.get("active") === "true",
+    active: formData.get("active") === "true" || formData.get("active") === "1",
   });
-
   if (auth.user == null) {
     return NextResponse.json(
       { message: auth.message },
@@ -92,7 +109,6 @@ export async function PUT(
   return NextResponse.json({
     status: 1,
     message: "Banner updated successfully",
-    // data: banner,
   });
 }
 

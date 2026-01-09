@@ -5,40 +5,163 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  createRole,
-  getallRoles,
-  deleteRole,
-  getRoleById,
-  updateRole,
-} from "@/store/slices/module1/roles/roles.thunk";
+  createBanner,
+  updateBanner,
+  deleteBanner,
+  getAllBanner,
+} from "@/store/slices/module1/banner/banner.thunk";
 
-import PermissionGate from "@/components/admin/PermissionGate"
+import PermissionGate from "@/components/admin/PermissionGate";
 
 const BannerManagementComponent = () => {
+  const dispatch = useAppDispatch();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const roles = [
-    {
-      id: 1,
-      name: "<footer>About Us</footer>",
-      description: "Company introduction section",
-      active: true,
-    },
-    {
-      id: 2,
-      name: "<footer>Quick Links</footer>",
-      description: "Important navigation links",
-      active: true,
-    },
-    {
-      id: 3,
-      name: "<footer>Contact Info</footer>",
-      description: "Phone, email, address",
+  const [createBannerEntry, setCreateBannerEntry] = useState({
+    name: "",
+    description: "",
+    img: "",
+    active: true,
+  });
+  const [updateBannerEntry, setUpdateBannerEntry] = useState({
+    name: "",
+    description: "",
+    img: "",
+    active: true,
+  });
+  const [filters, setFilters] = useState({
+    startDate: "",
+    endDate: "",
+    limit: 10,
+    offset: 0,
+  });
+  const [selectedUpBannerId, setSelectedUpBannerId] = useState<number | null>(
+    null
+  );
+  const [selectedDlBannerId, setSelectedDlBannerId] = useState<number | null>(
+    null
+  );
+  const { list, loading, error, total, limit, offset } = useAppSelector(
+    (state) => state.banner
+  );
+
+  console.log("total", total);
+
+  const fetchBanner = async () => {
+    await dispatch(
+      getAllBanner({
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        limit: filters.limit,
+        offset: filters.offset,
+      })
+    );
+  };
+
+  const handleCreate = async () => {
+    const formData = new FormData();
+    formData.append("name", createBannerEntry.name);
+    formData.append("description", createBannerEntry.description);
+    formData.append("img", createBannerEntry.img); // File object
+    formData.append("active", createBannerEntry.active ? "true" : "false");
+    const res = await dispatch(createBanner(formData));
+
+    if (createBanner.fulfilled.match(res)) {
+      setShowCreateModal(false);
+      fetchBanner();
+    }
+
+    setCreateBannerEntry({
+      name: "",
+      description: "",
       active: false,
-    },
-  ];
+      img: "",
+    });
+  };
+
+  const applyFilter = () => {
+    fetchBanner();
+  };
+
+  const handlePrevious = () => {
+    setFilters((prev) => ({
+      ...prev,
+      offset: Math.max(prev.offset - prev.limit, 0),
+    }));
+  };
+
+  const handleNext = () => {
+    if (filters.offset + filters.limit < total) {
+      setFilters((prev) => ({
+        ...prev,
+        offset: prev.offset + prev.limit,
+      }));
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedDlBannerId) return;
+
+    const res = await dispatch(deleteBanner(selectedDlBannerId));
+
+    if (deleteBanner.fulfilled.match(res)) {
+      setShowDeleteModal(false);
+      setSelectedDlBannerId(null);
+    }
+
+    await dispatch(
+      getAllBanner({
+        limit: filters.limit,
+        offset: filters.offset,
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+      })
+    );
+  };
+
+  const handleUpdate = async () => {
+    if (!selectedUpBannerId) return;
+
+    const formData = new FormData();
+    formData.append("name", updateBannerEntry.name);
+    formData.append("description", updateBannerEntry.description);
+    formData.append("img", updateBannerEntry.img); // File object
+    formData.append("active", updateBannerEntry.active ? "true" : "false");
+
+    const res = await dispatch(
+      updateBanner({
+        id: selectedUpBannerId,
+        data: formData,
+      })
+    );
+
+    if (updateBanner.fulfilled.match(res)) {
+      setShowEditModal(false);
+      setUpdateBannerEntry({
+        name: "",
+        description: "",
+        img: "",
+        active: true,
+      });
+
+      await dispatch(
+        getAllBanner({
+          limit: filters.limit,
+          offset: filters.offset,
+          startDate: filters.startDate || undefined,
+          endDate: filters.endDate || undefined,
+        })
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetchBanner();
+  }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
+
+
 
   return (
     <div>
@@ -49,7 +172,14 @@ const BannerManagementComponent = () => {
             Total Rows
           </label>
 
-          <select id="totalRows" className="form-select">
+          <select
+            id="totalRows"
+            className="form-select"
+            value={filters.limit}
+            onChange={(e) => {
+              setFilters({ ...filters, limit: Number(e.target.value) });
+            }}
+          >
             <option value={10}>10</option>
             <option value={25}>25</option>
             <option value={50}>50</option>
@@ -60,24 +190,45 @@ const BannerManagementComponent = () => {
         {/* Start Date */}
         <div>
           <label className="form-label mb-1">Start Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.startDate}
+            onChange={(e) => {
+              setFilters({ ...filters, startDate: e.target.value });
+            }}
+          />
         </div>
 
         {/* End Date */}
         <div>
           <label className="form-label mb-1">End Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.endDate}
+            onChange={(e) => {
+              setFilters({ ...filters, endDate: e.target.value });
+            }}
+          />
         </div>
 
         {/* Apply Button */}
-        <button className="btn btn-primary px-4">Apply</button>
+        <button className="btn btn-primary px-4" onClick={() => applyFilter()}>
+          Apply
+        </button>
       </div>
-      {/* <PermissionGate permission="postrole"> */}
+      {/* <PermissionGate permission="postbanner"> */}
       <div className="d-flex justify-content-end mb-3">
-        <button className="btn btn-sm btn-success">Create Footer</button>
+        <button
+          className="btn btn-sm btn-success"
+          onClick={() => setShowCreateModal((prev) => !prev)}
+        >
+          Create Banner
+        </button>
       </div>
       {/* </PermissionGate> */}
-      {/* <PermissionGate permission="getrole"> */}
+      {/* <PermissionGate permission="getbanner"> */}
       <div className="table-responsive">
         <table className="table table-bordered table-hover align-middle mb-0">
           <thead className="table-light">
@@ -85,21 +236,40 @@ const BannerManagementComponent = () => {
               <th>SNo.</th>
               <th>Name</th>
               <th>Description</th>
+              <th>Image</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {roles.length > 0 &&
-              roles.map((item, index) => (
+            {list.length > 0 &&
+              list.map((item, index) => (
                 <tr key={item.id}>
-                  <td>{index + 1}</td>
+                  <td>{filters.offset + index + 1}</td>
 
                   {/* name is HTML */}
-                  <td dangerouslySetInnerHTML={{ __html: item.name }} />
+                  <td>{item.name}</td>
 
-                  <td>{item.description}</td>
+                  <td>
+                    {item.description.length > 50
+                      ? item.description.slice(0, 40) + "..."
+                      : item.description}
+                  </td>
+
+                  <td>
+                    <img
+                      src={`${item.img}`}
+                      alt="preview"
+                      style={{
+                        width: "90px",
+                        height: "90px",
+                        objectFit: "cover",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </td>
 
                   <td>
                     <span>{item.active ? "Active" : "Inactive"}</span>
@@ -107,19 +277,32 @@ const BannerManagementComponent = () => {
 
                   <td>
                     <div className="d-flex gap-2">
-                      {/* <PermissionGate permission="putfooter"> */}
+                      {/* <PermissionGate permission="putbanner"> */}
                       <button
                         className="btn btn-sm btn-primary"
-                        onClick={() => setShowEditModal(true)}
+                        onClick={() => {
+                          setShowEditModal(true);
+                          setUpdateBannerEntry({
+                            name: item.name,
+                            description: item.description,
+                            active: item.active ? true : false,
+                            img: item.img,
+                          });
+                          setSelectedUpBannerId(item.id);
+                          setShowEditModal(true);
+                        }}
                       >
                         Edit
                       </button>
                       {/* </PermissionGate> */}
 
-                      {/* <PermissionGate permission="deletefooter"> */}
+                      {/* <PermissionGate permission="deletebanner"> */}
                       <button
                         className="btn btn-sm btn-danger"
-                        onClick={() => setShowDeleteModal((prev) => !prev)}
+                        onClick={() => {
+                          setSelectedDlBannerId(item.id);
+                          setShowDeleteModal((prev) => !prev);
+                        }}
                       >
                         Delete
                       </button>
@@ -136,6 +319,8 @@ const BannerManagementComponent = () => {
             style={{
               background: "linear-gradient(135deg, #667eea, #764ba2)",
             }}
+            onClick={handlePrevious}
+            disabled={filters.offset === 0}
           >
             Previous
           </button>
@@ -145,6 +330,8 @@ const BannerManagementComponent = () => {
             style={{
               background: "linear-gradient(135deg, #43cea2, #185a9d)",
             }}
+            onClick={handleNext}
+            disabled={filters.offset + filters.limit >= total}
           >
             Next
           </button>
@@ -166,7 +353,7 @@ const BannerManagementComponent = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Create Role</h5>
+                  <h5 className="modal-title">Create Banner</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -177,31 +364,71 @@ const BannerManagementComponent = () => {
                 <div className="modal-body">
                   <form>
                     <div className="mb-3">
-                      <label className="form-label">Role Name</label>
+                      <label className="form-label">Banner Name</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter Role name"
+                        placeholder="Enter Banner name"
+                        value={createBannerEntry.name}
+                        onChange={(e) => {
+                          setCreateBannerEntry({
+                            ...createBannerEntry,
+                            name: e.target.value,
+                          });
+                        }}
                       />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Description</label>
+                      <label className="form-label">Banner Description</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter menu description"
+                        placeholder="Enter Banner description"
+                        value={createBannerEntry.description}
+                        onChange={(e) => {
+                          setCreateBannerEntry({
+                            ...createBannerEntry,
+                            description: e.target.value,
+                          });
+                        }}
                       />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Status</label>
-                      <select
-                        className="form-select mb-3"
-                        aria-label="Default select example"
-                      >
-                        <option selected>Status</option>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                      </select>
+                      <label className="form-label">Banner Image</label>
+                      <input
+                        type="file"
+                        id="input"
+                        accept="image/*"
+                        onChange={(e) => {
+                          setCreateBannerEntry({
+                            ...createBannerEntry,
+                            img: e.target.files?.[0],
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Banner Status</label>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="footerStatus"
+                          checked={createBannerEntry.active}
+                          onChange={(e) => {
+                            setCreateBannerEntry((prev) => ({
+                              ...prev,
+                              active: e.target.checked,
+                            }));
+                          }}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="footerStatus"
+                        >
+                          Active
+                        </label>
+                      </div>
                     </div>
                   </form>
                 </div>
@@ -213,7 +440,12 @@ const BannerManagementComponent = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => handleCreate()}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -237,7 +469,7 @@ const BannerManagementComponent = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Edit Role</h5>
+                  <h5 className="modal-title">Edit Banner</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -248,34 +480,70 @@ const BannerManagementComponent = () => {
                 <div className="modal-body">
                   <form>
                     <div className="mb-3">
-                      <label className="form-label">Role Name</label>
+                      <label className="form-label">Banner Name</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter menu name"
+                        placeholder="Enter banner name"
+                        value={updateBannerEntry?.name || ""}
+                        onChange={(e) => {
+                          setUpdateBannerEntry((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Description</label>
+                      <label className="form-label">Banner Description</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter menu description"
+                        placeholder="Enter banner description"
+                        value={updateBannerEntry?.description || ""}
+                        onChange={(e) => {
+                          setUpdateBannerEntry((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="roleStatus" className="form-label">
-                        Role Status
-                      </label>
-                      <select
-                        id="roleStatus"
-                        className="form-select mb-3"
-                        aria-label="Role Status"
-                      >
-                        <option value="">Select Status</option>
-                        <option value={1}>Active</option>
-                        <option value={0}>Inactive</option>
-                      </select>
+                      <label className="form-label">Banner Image</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          setUpdateBannerEntry({
+                            ...updateBannerEntry,
+                            img: e.target.files?.[0],
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Banner Status</label>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="footerStatus"
+                          checked={updateBannerEntry.active}
+                          onChange={(e) => {
+                            setUpdateBannerEntry((prev) => ({
+                              ...prev,
+                              active: e.target.checked,
+                            }));
+                          }}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="footerStatus"
+                        >
+                          Active
+                        </label>
+                      </div>
                     </div>
                   </form>
                 </div>
@@ -287,7 +555,14 @@ const BannerManagementComponent = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => {
+                      handleUpdate();
+                    }}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -305,7 +580,7 @@ const BannerManagementComponent = () => {
             tabIndex={-1}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="deleteRoleTitle"
+            aria-labelledby="deleteBannerTitle"
             onClick={() => setShowDeleteModal(false)}
           >
             <div
@@ -315,7 +590,7 @@ const BannerManagementComponent = () => {
             >
               <div className="modal-content rounded-3 shadow">
                 <div className="modal-header border-0">
-                  <h5 className="modal-title" id="deleteRoleTitle">
+                  <h5 className="modal-title" id="deleteBannerTitle">
                     Confirm Deletion
                   </h5>
                   <button
@@ -328,7 +603,7 @@ const BannerManagementComponent = () => {
 
                 <div className="modal-body text-center">
                   <p className="mb-1 fw-semibold">
-                    Are you sure you want to delete this role?
+                    Are you sure you want to delete this Banner?
                   </p>
                   <small className="text-muted">
                     This action cannot be undone.
@@ -338,11 +613,18 @@ const BannerManagementComponent = () => {
                 <div className="modal-footer border-0 d-flex justify-content-end gap-2">
                   <button
                     className="btn btn-sm btn-light"
-                    onClick={() => setShowDeleteModal(false)}
+                    onClick={() => {
+                      setShowDeleteModal(false);
+                    }}
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-danger">Delete</button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDelete()}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

@@ -7,16 +7,19 @@ import { logsEntry } from "@/utils/logsEntry/logsEntry";
 import "@/models";
 
 /**
- * GET SINGLE Service
+ * GET SINGLE Seo
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await testConnection();
 
-    const service = await Service.findByPk(params.id);
+    const { id } = await context.params;
+
+
+    const service = await Service.findByPk(id);
     if (!service) {
       return NextResponse.json(
         { message: "Service not found" },
@@ -37,14 +40,18 @@ export async function GET(
 /**
  * UPDATE Service
  */
+import { Op } from "sequelize";
+
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request, "updateService");
+    const { id } = await context.params;
+
+    const auth = await verifyAdmin(request, "updateSeo");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },
@@ -55,34 +62,32 @@ export async function PUT(
     const body = await request.json();
     const data = seoSchema.partial().parse(body);
 
-    const service = await Service.findByPk(params.id);
+    const service = await Service.findByPk(id);
     if (!service) {
       return NextResponse.json(
         { message: "Service not found" },
-        { status: 404 }
+        { status: 400 }
       );
+    }
+
+    // ✅ SLUG UNIQUENESS CHECK (THE MISSING PIECE)
+    if (data.slug) {
+      const slugExists = await Service.findOne({
+        where: {
+          slug: data.slug,
+          id: { [Op.ne]: id }, // exclude current record
+        },
+      });
+
+      if (slugExists) {
+        return NextResponse.json(
+          { message: "Slug already exists" },
+          { status: 409 }
+        );
+      }
     }
 
     await service.update(data);
-
-    if (auth.user == null) {
-      return NextResponse.json(
-        { message: auth.message },
-        { status: auth.status }
-      );
-    }
-
-    await logsEntry({
-      userId: auth.user?.id.toString(),
-      email: auth.user?.email,
-      role: auth.user?.role,
-      action: "SERVICE_UPDATED",
-      ipAddress: request.headers.get("x-forwarded-for") || "unknown",
-      requestMethod: request.method,
-      endPoint: request.nextUrl.pathname,
-      status: 200,
-      userAgent: request.headers.get("user-agent") || "unknown",
-    });
 
     return NextResponse.json({
       status: 1,
@@ -98,17 +103,20 @@ export async function PUT(
   }
 }
 
+
 /**
  * DELETE Service
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request, "deleteService");
+    const { id } = await context.params;
+
+    const auth = await verifyAdmin(request, "deleteSeo");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },
@@ -116,7 +124,7 @@ export async function DELETE(
       );
     }
 
-    const service = await Service.findByPk(params.id);
+    const service = await Service.findByPk(id);
     if (!service) {
       return NextResponse.json(
         { message: "Service not found" },

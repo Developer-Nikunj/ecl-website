@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request, "createService");
+    const auth = await verifyAdmin(request, "createSeo");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },
@@ -68,17 +68,44 @@ export async function GET(request: NextRequest) {
     await testConnection();
 
     const { searchParams } = new URL(request.url);
+
     const search = searchParams.get("search") || "";
     const limit = Number(searchParams.get("limit")) || 10;
     const offset = Number(searchParams.get("offset")) || 0;
 
+    const startDate = searchParams.get("startDate");
+    const endDate = searchParams.get("endDate");
+
+    const whereCondition: any = {
+      title: { [Op.like]: `%${search}%` },
+    };
+
+    // ✅ Date filter
+    if (startDate && endDate) {
+      whereCondition.createdAt = {
+        [Op.between]: [
+          new Date(`${startDate}T00:00:00.000Z`),
+          new Date(`${endDate}T23:59:59.999Z`),
+        ],
+      };
+    } else if (startDate) {
+      whereCondition.createdAt = {
+        [Op.gte]: new Date(`${startDate}T00:00:00.000Z`),
+      };
+    } else if (endDate) {
+      whereCondition.createdAt = {
+        [Op.lte]: new Date(`${endDate}T23:59:59.999Z`),
+      };
+    }
+
     const services = await Service.findAndCountAll({
-      where: {
-        title: { [Op.like]: `%${search}%` },
-      },
+      where: whereCondition,
       limit,
       offset,
       order: [["createdAt", "DESC"]],
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
     });
 
     return NextResponse.json({
@@ -86,6 +113,8 @@ export async function GET(request: NextRequest) {
       message: "Seos fetched successfully",
       data: services.rows,
       total: services.count,
+      limit: limit,
+      offset: offset,
     });
   } catch (error) {
     console.error(error);
@@ -95,3 +124,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+

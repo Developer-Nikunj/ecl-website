@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import ProfilePage from "@/components/admin/userProfile";
+import SeoPage from "@/components/admin/seo/seoTable";
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
                     <div className="d-flex align-items-lg-center flex-lg-row flex-column">
                       <div className="flex-grow-1">
                         <h4 className="fs-16 mb-1">Good Morning, Anna!</h4>
-                        {/* <ProfilePage /> */}
+                        <SeoPage />
                       </div>
                     </div>
                   </div>

@@ -6,9 +6,10 @@ import { seoSchema } from "@/utils/validators/seoValidator";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 import { Op } from "sequelize";
 import "@/models";
+import { saveImage } from "@/utils/uploads/saveImage";
 
 /**
- * CREATE Service
+ * CREATE Seo
  */
 export async function POST(request: NextRequest) {
   try {
@@ -22,8 +23,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
-    const data = seoSchema.parse(body);
+    const formData = await request.formData();
+    const ogImageFile = formData.get("ogImage") as File | null;
+    let ogImagePath: string | null = null;
+
+    if (ogImageFile) {
+      ogImagePath = await saveImage(ogImageFile, "seo");
+    }
+
+    const payload = {
+      slug: formData.get("slug"),
+      pageUrl: formData.get("pageUrl"),
+      title: formData.get("title"),
+      description: formData.get("description"),
+      category: formData.get("category"),
+      status: Number(formData.get("status")) || 1,
+
+      metaTitle: formData.get("metaTitle"),
+      metaDescription: formData.get("metaDescription"),
+      metaKeywords: formData.get("metaKeywords"),
+      robots: formData.get("robots"),
+      canonicalUrl: formData.get("canonicalUrl"),
+
+      ogTitle: formData.get("ogTitle"),
+      ogDescription: formData.get("ogDescription"),
+      ogImage: ogImagePath,
+
+      schema: formData.get("schema")
+        ? JSON.parse(formData.get("schema") as string)
+        : null,
+    };
+
+    const data = seoSchema.parse(payload);
 
     const service = await Service.create(data);
 
@@ -124,4 +155,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

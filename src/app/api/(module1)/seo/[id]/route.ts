@@ -6,6 +6,8 @@ import { seoSchema } from "@/utils/validators/seoValidator";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 import "@/models";
 
+import { saveImage } from "@/utils/uploads/saveImage";
+
 /**
  * GET SINGLE Seo
  */
@@ -17,7 +19,6 @@ export async function GET(
     await testConnection();
 
     const { id } = await context.params;
-
 
     const service = await Service.findByPk(id);
     if (!service) {
@@ -60,7 +61,6 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const data = seoSchema.partial().parse(body);
 
     const service = await Service.findByPk(id);
     if (!service) {
@@ -69,6 +69,42 @@ export async function PUT(
         { status: 400 }
       );
     }
+
+    const formData = await request.formData();
+    const ogImageFile = formData.get("ogImage") as File | null;
+    let ogImagePath = service?.ogImage; 
+
+    if (ogImageFile && ogImageFile.size > 0) {
+      ogImagePath = await saveImage(ogImageFile, "seo");
+      // 🔥 optional: delete old image here
+    }
+
+     const payload = {
+       slug: formData.get("slug"),
+       pageUrl: formData.get("pageUrl"),
+       title: formData.get("title"),
+       description: formData.get("description") ,
+       category: formData.get("category"),
+       status: formData.get("status")
+         ? Number(formData.get("status"))
+         : 1,
+
+       metaTitle: formData.get("metaTitle"),
+       metaDescription: formData.get("metaDescription"),
+       metaKeywords: formData.get("metaKeywords"),
+       robots: formData.get("robots"),
+       canonicalUrl: formData.get("canonicalUrl"),
+
+       ogTitle: formData.get("ogTitle"),
+       ogDescription: formData.get("ogDescription"),
+       ogImage: ogImagePath,
+
+       schema: formData.get("schema")
+         ?? JSON.parse(formData.get("schema") as string)
+     };
+
+     const data = seoSchema.partial().parse(payload);
+
 
     // ✅ SLUG UNIQUENESS CHECK (THE MISSING PIECE)
     if (data.slug) {
@@ -102,7 +138,6 @@ export async function PUT(
     );
   }
 }
-
 
 /**
  * DELETE Service

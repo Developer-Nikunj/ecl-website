@@ -7,6 +7,7 @@ interface UserAttributes {
   token?: string;
   email: string;
   password: string;
+  img: string;
   otp?: string;
   role: string;
   actions?: any[];
@@ -27,6 +28,7 @@ export class User
   declare name: string;
   declare token: string;
   declare email: string;
+  declare img: string;
   declare password: string;
   declare otp?: string;
   declare role: string;
@@ -48,6 +50,10 @@ export const userModel = User.init(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    img: {
+      type: DataTypes.STRING,
+      defaultValue: "assets/backend/images/users/avatar-1.jpg",
     },
     password: {
       type: DataTypes.STRING,

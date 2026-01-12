@@ -28,6 +28,7 @@ interface UserState {
   selectedUser: User | null;
   userMenus: UserMenu[];
   meta: Meta | null;
+
 }
 
 const initialState: UserState = {

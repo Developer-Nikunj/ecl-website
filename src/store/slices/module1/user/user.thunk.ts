@@ -1,4 +1,4 @@
-// roles.thunk.ts
+// user.thunk.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/lib/axios";
 import { toast } from "react-toastify";
@@ -170,3 +170,4 @@ export const getUserMenus = createAsyncThunk<
     );
   }
 });
+

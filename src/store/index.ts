@@ -8,6 +8,7 @@ import headerReducer from "./slices/module1/header/header.slices"
 import bannerReducer from "./slices/module1/banner/banner.slices"
 import testimonialReducer from "./slices/module1/testimonial/testimonial.slices"
 import seoReducer from "./slices/module1/seo/seo.slices"
+import profileReducer from "./slices/module1/profile/profile.slices"
 import { injectStore } from "@/lib/axios";
 
 
@@ -22,6 +23,7 @@ export const store = configureStore({
     banner: bannerReducer,
     testimonial: testimonialReducer,
     seo: seoReducer,
+    profile: profileReducer,
   },
 });
 

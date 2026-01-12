@@ -71,7 +71,7 @@ const SeoTable = () => {
     offset: 0,
   });
 
-  const { list, selected, loading, error, total } = useAppSelector(
+  const { list, selected, loading, error, total,limit,offset } = useAppSelector(
     (state) => state.seo
   );
 
@@ -304,7 +304,9 @@ const SeoTable = () => {
         </div>
 
         {/* Apply Button */}
-        <button className="btn btn-primary px-4">Apply</button>
+        <button className="btn btn-primary px-4" onClick={() => applyFilter()}>
+          Apply
+        </button>
       </div>
       {/* <PermissionGate permission="postrole"> */}
       <div className="d-flex justify-content-end mb-3">
@@ -335,7 +337,7 @@ const SeoTable = () => {
             {list.length > 0 &&
               list.map((item, index) => (
                 <tr key={item.id}>
-                  <td>{index + 1}</td>
+                  <td>{filters.offset + index + 1}</td>
                   <td>{item.slug}</td>
                   <td>{item.title}</td>
                   <td>{item.metaTitle}</td>
@@ -347,7 +349,6 @@ const SeoTable = () => {
                       {/* <PermissionGate permission="putrole"> */}
                       <button
                         className="btn btn-sm btn-primary"
-                        
                         onClick={() => {
                           setSelectedSeoId(item.id);
                           setShowEditModal(true);
@@ -377,7 +378,7 @@ const SeoTable = () => {
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() => {
-                          console.log("selectedSeoId",item.id);
+                          console.log("selectedSeoId", item.id);
                           setSelectedSeoId(item.id);
                           setShowDeleteModal((prev) => !prev);
                         }}
@@ -397,6 +398,8 @@ const SeoTable = () => {
             style={{
               background: "linear-gradient(135deg, #667eea, #764ba2)",
             }}
+            onClick={handlePrevious}
+            disabled={filters.offset === 0}
           >
             Previous
           </button>
@@ -406,6 +409,8 @@ const SeoTable = () => {
             style={{
               background: "linear-gradient(135deg, #43cea2, #185a9d)",
             }}
+            onClick={handleNext}
+            disabled={filters.offset + filters.limit >= total}
           >
             Next
           </button>
@@ -1104,7 +1109,12 @@ const SeoTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-danger">Delete</button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDelete()}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

@@ -96,18 +96,22 @@ export const updateSeo = createAsyncThunk<
 });
 
 export const getAllSeo = createAsyncThunk<
-  { data: []; total: number },
+  { data: seoItem[]; total: number; limit: number; offset: number },
   GetSeoParams,
   { rejectValue: string }
 >("seo/getAll", async (params, { rejectWithValue }) => {
   try {
     const res = await api.get("/seo", { params });
 
-    if (res.data.status === 0) return rejectWithValue(res.data.message);
-    console.log(res.data.data);
+    if (res.data.status === 0) {
+      return rejectWithValue(res.data.message);
+    }
+
     return {
       data: res.data.data,
       total: res.data.total,
+      limit: params.limit ?? 10,
+      offset: params.offset ?? 0,
     };
   } catch (error) {
     const err = error as AxiosError<{ message: string }>;
@@ -116,6 +120,7 @@ export const getAllSeo = createAsyncThunk<
     return rejectWithValue(message);
   }
 });
+
 
 export const getSeoById = createAsyncThunk<
   SeoResponse,

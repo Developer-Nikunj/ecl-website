@@ -119,7 +119,7 @@ export async function PUT(
       schema:
         formData.get("schema") ?? JSON.parse(formData.get("schema") as string),
     };
-    console.log("started-------------------------------------", payload);
+    // console.log("started-------------------------------------", payload);
 
     const data = seoSchema.partial().parse(payload);
 

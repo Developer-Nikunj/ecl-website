@@ -58,6 +58,7 @@ const TestimonialPage = () => {
       })
     );
   };
+
   const handleCreate = async () => {
     const formData = new FormData();
     formData.append("name", createTestimonialEntry.name);
@@ -154,26 +155,7 @@ const TestimonialPage = () => {
     fetchTestimonial();
   }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
 
-  const roles = [
-    {
-      id: 1,
-      name: "<footer>About Us</footer>",
-      description: "Company introduction section",
-      active: true,
-    },
-    {
-      id: 2,
-      name: "<footer>Quick Links</footer>",
-      description: "Important navigation links",
-      active: true,
-    },
-    {
-      id: 3,
-      name: "<footer>Contact Info</footer>",
-      description: "Phone, email, address",
-      active: false,
-    },
-  ];
+
 
   return (
     <div>

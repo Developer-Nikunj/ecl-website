@@ -14,6 +14,8 @@ interface SeoState {
   loading: boolean;
   error: string | null;
   total: number;
+  limit: number;
+  offset: number;
 }
 
 const initialState: SeoState = {
@@ -22,6 +24,8 @@ const initialState: SeoState = {
   loading: false,
   error: null,
   total: 0,
+  limit: 10,
+  offset: 0
 };
 
 const seoSlice = createSlice({
@@ -82,6 +86,8 @@ const seoSlice = createSlice({
         state.loading = false;
         state.list = action.payload.data;
         state.total = action.payload.total;
+        state.limit = action.payload.limit;
+        state.offset = action.payload.offset;
       })
       .addCase(getAllSeo.rejected, (state, action) => {
         state.loading = false;

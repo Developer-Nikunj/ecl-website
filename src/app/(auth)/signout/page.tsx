@@ -9,6 +9,7 @@ import {
   registerUser,
 } from "@/store/slices/module1/auth/auth.thunk";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const Page = () => {
   const dispatch = useAppDispatch();
@@ -81,13 +82,13 @@ const Page = () => {
                 <div className="col-lg-12">
                   <div className="text-center mt-sm-5 mb-4 text-white-50">
                     <div>
-                      <a href="index.html" className="d-inline-block auth-logo">
+                      <Link href="/" className="d-inline-block auth-logo">
                         <img
-                          src="assets/backend/images/logo-light.png"
-                          alt=""
+                          src="/assets/backend/images/logo-light.png"
+                          alt="Logo"
                           height={20}
                         />
-                      </a>
+                      </Link>
                     </div>
                     <p className="mt-3 fs-15 fw-medium">
                       {/* Premium Admin &amp; Dashboard Template */}

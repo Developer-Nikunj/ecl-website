@@ -103,6 +103,7 @@ export async function POST(request: NextRequest) {
       status: 1,
       token: accessToken,
       permissions: permissions,
+      email: existuser.email,
       message: "Login successfully",
     });
     response.cookies.set({

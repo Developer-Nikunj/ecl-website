@@ -52,5 +52,5 @@ export async function POST(request: NextRequest) {
       expiresIn: "20m",
     }
   );
-  return NextResponse.json({ token: accessToken, status: 1 });
+  return NextResponse.json({ token: accessToken, status: 1,email: existuser.email, });
 }

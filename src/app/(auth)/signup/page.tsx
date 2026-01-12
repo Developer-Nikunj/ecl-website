@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { registerUser } from "@/store/slices/module1/auth/auth.thunk";
-import { toast } from "react-toastify";
+import { toast } from "react-toastify";import Link from "next/link";
+
 
 const Page = () => {
   const dispatch = useAppDispatch();
@@ -99,13 +100,13 @@ const Page = () => {
                 <div className="col-lg-12">
                   <div className="text-center mt-sm-5 mb-4 text-white-50">
                     <div>
-                      <a href="index.html" className="d-inline-block auth-logo">
+                      <Link href="/dev" className="d-inline-block auth-logo">
                         <img
                           src="assets/backend/images/logo-light.png"
                           alt=""
                           height={20}
                         />
-                      </a>
+                      </Link>
                     </div>
                     <p className="mt-3 fs-15 fw-medium">
                       {/* Premium Admin &amp; Dashboard Template */}
@@ -176,7 +177,6 @@ const Page = () => {
                                 id="password-input"
                                 aria-describedby="passwordInput"
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                
                                 onChange={(e) => setPassword(e.target.value)}
                               />
                               <button

@@ -9,6 +9,7 @@ interface AuthState {
   status: boolean | null;
   loading: boolean;
   error: string | null;
+  email:string | null;
 }
 
 const initialState: AuthState = {
@@ -17,6 +18,7 @@ const initialState: AuthState = {
   status: null,
   loading: false,
   error: null,
+  email: null,
 };
 
 interface AuthPayload {
@@ -30,6 +32,7 @@ const authSlice = createSlice({
   reducers: {
     setAuth(state, action: PayloadAction<AuthPayload>) {
       state.token = action.payload.token;
+      state.email = action.payload.email;
       state.status = action.payload.status;
       state.isAuthenticated = true;
       state.loading = false;
@@ -41,6 +44,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.loading = false;
       state.error = null;
+      state.email = null;
     },
   },
   extraReducers: (builder) => {
@@ -51,8 +55,9 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log("FULFILLED PAYLOAD:", action.payload);
+        // console.log("FULFILLED PAYLOAD:", action.payload);
         state.token = action.payload.token;
+        state.email = action.payload.email;
         state.status = action.payload.status;
         state.isAuthenticated = true;
         state.loading = false;

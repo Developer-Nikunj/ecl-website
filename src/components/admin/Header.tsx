@@ -44,38 +44,38 @@ const Header = () => {
             <div className="d-flex">
               {/* LOGO */}
               <div className="navbar-brand-box horizontal-logo">
-                <a href="index.html" className="logo logo-dark">
+                <Link href="/dev" className="logo logo-dark">
                   <span className="logo-sm">
                     <img
                       src="/assets/backend/images/logo-ecl.png"
-                      alt=""
+                      alt="Logo"
                       height={42}
                     />
                   </span>
                   <span className="logo-lg">
                     <img
                       src="/assets/backend/images/logo-ecl.png"
-                      alt=""
+                      alt="Logo"
                       height={47}
                     />
                   </span>
-                </a>
-                <a href="index.html" className="logo logo-light">
+                </Link>
+                <Link href="/dev" className="logo logo-light">
                   <span className="logo-sm">
                     <img
                       src="/assets/backend/images/logo-ecl.png"
-                      alt=""
+                      alt="Logo"
                       height={42}
                     />
                   </span>
                   <span className="logo-lg">
                     <img
                       src="/assets/backend/images/logo-ecl.png"
-                      alt=""
+                      alt="Logo"
                       height={47}
                     />
                   </span>
-                </a>
+                </Link>
               </div>
               <button
                 type="button"
@@ -117,18 +117,18 @@ const Header = () => {
                       </h6>
                     </div>
                     <div className="dropdown-item bg-transparent text-wrap">
-                      <a
-                        href="index.html"
+                      <Link
+                        href="/dev"
                         className="btn btn-soft-secondary btn-sm rounded-pill"
                       >
                         how to setup <i className="mdi mdi-magnify ms-1" />
-                      </a>
-                      <a
-                        href="index.html"
+                      </Link>
+                      <Link
+                        href="/dev"
                         className="btn btn-soft-secondary btn-sm rounded-pill"
                       >
                         buttons <i className="mdi mdi-magnify ms-1" />
-                      </a>
+                      </Link>
                     </div>
                     {/* item*/}
                     <div className="dropdown-header mt-2">
@@ -891,7 +891,7 @@ const Header = () => {
         {/* LOGO */}
         <div className="navbar-brand-box">
           {/* Dark Logo*/}
-          <a href="index.html" className="logo logo-dark">
+          <Link href="/dev" className="logo logo-dark">
             <span className="logo-sm">
               <img
                 src="/assets/backend/images/logo-ecl.png"
@@ -906,9 +906,9 @@ const Header = () => {
                 height={47}
               />
             </span>
-          </a>
+          </Link>
           {/* Light Logo*/}
-          <a href="index.html" className="logo logo-light">
+          <Link href="/dev" className="logo logo-light">
             <span className="logo-sm">
               <img
                 src="/assets/backend/images/logo-ecl.png"
@@ -923,7 +923,7 @@ const Header = () => {
                 height={47}
               />
             </span>
-          </a>
+          </Link>
           <button
             type="button"
             className="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"

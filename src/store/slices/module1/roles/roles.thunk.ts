@@ -93,7 +93,7 @@ export const getallRoles = createAsyncThunk<
         return rejectWithValue(res.data.message);
       }
 
-      toast.success(res.data.message);
+      // toast.success(res.data.message);
       return res.data;
     } catch (err: any) {
       const message = err.response?.data?.message || "Roles Fetching failed";

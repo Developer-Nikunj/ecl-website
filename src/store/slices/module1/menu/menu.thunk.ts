@@ -63,7 +63,7 @@ export const getAllMenus = createAsyncThunk<
       toast.error("Failed to fetch menus");
       return rejectWithValue("Failed to fetch menus");
     }
-  toast.success("successfull to fetch menus");
+  // toast.success("successfull to fetch menus");
     return res.data.data; // ✅ only array goes to store
   } catch (error) {
     const err = error as AxiosError<{ message: string }>;

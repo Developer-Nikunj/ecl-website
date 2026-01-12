@@ -218,7 +218,7 @@ const BannerManagementComponent = () => {
           Apply
         </button>
       </div>
-      {/* <PermissionGate permission="postbanner"> */}
+      <PermissionGate permission="postbanner">
       <div className="d-flex justify-content-end mb-3">
         <button
           className="btn btn-sm btn-success"
@@ -227,8 +227,8 @@ const BannerManagementComponent = () => {
           Create Banner
         </button>
       </div>
-      {/* </PermissionGate> */}
-      {/* <PermissionGate permission="getbanner"> */}
+      </PermissionGate>
+      <PermissionGate permission="getbanner">
       <div className="table-responsive">
         <table className="table table-bordered table-hover align-middle mb-0">
           <thead className="table-light">
@@ -277,7 +277,7 @@ const BannerManagementComponent = () => {
 
                   <td>
                     <div className="d-flex gap-2">
-                      {/* <PermissionGate permission="putbanner"> */}
+                      <PermissionGate permission="putbanner">
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => {
@@ -294,9 +294,9 @@ const BannerManagementComponent = () => {
                       >
                         Edit
                       </button>
-                      {/* </PermissionGate> */}
+                      </PermissionGate>
 
-                      {/* <PermissionGate permission="deletebanner"> */}
+                      <PermissionGate permission="deletebanner">
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() => {
@@ -306,7 +306,7 @@ const BannerManagementComponent = () => {
                       >
                         Delete
                       </button>
-                      {/* </PermissionGate> */}
+                      </PermissionGate>
                     </div>
                   </td>
                 </tr>
@@ -337,7 +337,7 @@ const BannerManagementComponent = () => {
           </button>
         </div>
       </div>
-      {/* </PermissionGate> */}
+      </PermissionGate>
 
       {showCreateModal && (
         <>

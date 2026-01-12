@@ -204,98 +204,97 @@ const FooterManagementComponent = () => {
         </button>
       </div>
 
-      {/* <PermissionGate permission="postrole"> */}
-      <div className="d-flex justify-content-end mb-3">
-        <button
-          className="btn btn-sm btn-success"
-          onClick={() => setShowCreateModal((prev) => !prev)}
-        >
-          Create Footer
-        </button>
-      </div>
-
-      {/* </PermissionGate> */}
-      {/* <PermissionGate permission="getrole"> */}
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle mb-0">
-          <thead className="table-light">
-            <tr>
-              <th>SNo.</th>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {items.length > 0 &&
-              items.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{index + 1}</td>
-
-                  {/* name is HTML */}
-                  <td dangerouslySetInnerHTML={{ __html: item.name }} />
-
-                  <td>
-                    <span>{item.active ? "Active" : "Inactive"}</span>
-                  </td>
-
-                  <td>
-                    <div className="d-flex gap-2">
-                      {/* <PermissionGate permission="putfooter"> */}
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => {
-                          setselectUpdateId(item.id);
-                          setUpdateFooterEntry({
-                            name: item.name,
-                            active: item.active,
-                          });
-                          setShowEditModal(true);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      {/* </PermissionGate> */}
-
-                      {/* <PermissionGate permission="deletefooter"> */}
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => {
-                          setselectDeleteId(item.id);
-                          setShowDeleteModal((prev) => !prev);
-                        }}
-                      >
-                        Delete
-                      </button>
-                      {/* </PermissionGate> */}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        <div className="d-flex justify-content-between align-items-center mt-3">
+      <PermissionGate permission="postfooter">
+        <div className="d-flex justify-content-end mb-3">
           <button
-            className="btn btn-sm text-white"
-            style={{
-              background: "linear-gradient(135deg, #667eea, #764ba2)",
-            }}
+            className="btn btn-sm btn-success"
+            onClick={() => setShowCreateModal((prev) => !prev)}
           >
-            Previous
-          </button>
-
-          <button
-            className="btn btn-sm text-white"
-            style={{
-              background: "linear-gradient(135deg, #43cea2, #185a9d)",
-            }}
-          >
-            Next
+            Create Footer
           </button>
         </div>
-      </div>
-      {/* </PermissionGate> */}
+      </PermissionGate>
+      <PermissionGate permission="getfooter">
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover align-middle mb-0">
+            <thead className="table-light">
+              <tr>
+                <th>SNo.</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {items.length > 0 &&
+                items.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{index + 1}</td>
+
+                    {/* name is HTML */}
+                    <td dangerouslySetInnerHTML={{ __html: item.name }} />
+
+                    <td>
+                      <span>{item.active ? "Active" : "Inactive"}</span>
+                    </td>
+
+                    <td>
+                      <div className="d-flex gap-2">
+                        <PermissionGate permission="putfooter">
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => {
+                              setselectUpdateId(item.id);
+                              setUpdateFooterEntry({
+                                name: item.name,
+                                active: item.active,
+                              });
+                              setShowEditModal(true);
+                            }}
+                          >
+                            Edit
+                          </button>
+                        </PermissionGate>
+
+                        <PermissionGate permission="deletefooter">
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => {
+                              setselectDeleteId(item.id);
+                              setShowDeleteModal((prev) => !prev);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </PermissionGate>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #667eea, #764ba2)",
+              }}
+            >
+              Previous
+            </button>
+
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #43cea2, #185a9d)",
+              }}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </PermissionGate>
 
       {showCreateModal && (
         <>

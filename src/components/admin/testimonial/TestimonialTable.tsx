@@ -212,7 +212,7 @@ const TestimonialPage = () => {
           Apply
         </button>
       </div>
-      {/* <PermissionGate permission="postrole"> */}
+      <PermissionGate permission="posttestimonial">
       <div className="d-flex justify-content-end mb-3">
         <button
           className="btn btn-sm btn-success"
@@ -221,8 +221,8 @@ const TestimonialPage = () => {
           Create Testimonial
         </button>
       </div>
-      {/* </PermissionGate> */}
-      {/* <PermissionGate permission="getrole"> */}
+      </PermissionGate>
+      <PermissionGate permission="gettestimonial">
       <div className="table-responsive">
         <table className="table table-bordered table-hover align-middle mb-0">
           <thead className="table-light">
@@ -269,7 +269,7 @@ const TestimonialPage = () => {
 
                   <td>
                     <div className="d-flex gap-2">
-                      {/* <PermissionGate permission="putfooter"> */}
+                      <PermissionGate permission="puttestimonial">
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => {
@@ -286,9 +286,9 @@ const TestimonialPage = () => {
                       >
                         Edit
                       </button>
-                      {/* </PermissionGate> */}
+                      </PermissionGate>
 
-                      {/* <PermissionGate permission="deletefooter"> */}
+                      <PermissionGate permission="deletetestimonial">
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() => {
@@ -298,7 +298,7 @@ const TestimonialPage = () => {
                       >
                         Delete
                       </button>
-                      {/* </PermissionGate> */}
+                      </PermissionGate>
                     </div>
                   </td>
                 </tr>
@@ -329,7 +329,7 @@ const TestimonialPage = () => {
           </button>
         </div>
       </div>
-      {/* </PermissionGate> */}
+      </PermissionGate>
 
       {showCreateModal && (
         <>

@@ -204,7 +204,7 @@ const HeaderManagementComponent = () => {
           Apply
         </button>
       </div>
-      {/* <PermissionGate permission="postrole"> */}
+      <PermissionGate permission="postheader">
       <div className="d-flex justify-content-end mb-3">
         <button
           className="btn btn-sm btn-success"
@@ -213,8 +213,8 @@ const HeaderManagementComponent = () => {
           Create Header
         </button>
       </div>
-      {/* </PermissionGate> */}
-      {/* <PermissionGate permission="getrole"> */}
+      </PermissionGate>
+      <PermissionGate permission="getheader">
       <div className="table-responsive">
         <table className="table table-bordered table-hover align-middle mb-0">
           <thead className="table-light">
@@ -241,7 +241,7 @@ const HeaderManagementComponent = () => {
 
                   <td>
                     <div className="d-flex gap-2">
-                      {/* <PermissionGate permission="putheader"> */}
+                      <PermissionGate permission="putheader">
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => {
@@ -255,9 +255,9 @@ const HeaderManagementComponent = () => {
                       >
                         Edit
                       </button>
-                      {/* </PermissionGate> */}
+                      </PermissionGate>
 
-                      {/* <PermissionGate permission="deleteheader"> */}
+                      <PermissionGate permission="deleteheader">
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() => {
@@ -267,7 +267,7 @@ const HeaderManagementComponent = () => {
                       >
                         Delete
                       </button>
-                      {/* </PermissionGate> */}
+                      </PermissionGate>
                     </div>
                   </td>
                 </tr>
@@ -294,7 +294,7 @@ const HeaderManagementComponent = () => {
           </button>
         </div>
       </div>
-      {/* </PermissionGate> */}
+      </PermissionGate>
 
       {showCreateModal && (
         <>

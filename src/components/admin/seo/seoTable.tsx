@@ -308,7 +308,7 @@ const SeoTable = () => {
           Apply
         </button>
       </div>
-      {/* <PermissionGate permission="postrole"> */}
+      <PermissionGate permission="postseo">
       <div className="d-flex justify-content-end mb-3">
         <button
           onClick={() => setShowCreateModal((prev) => !prev)}
@@ -317,8 +317,8 @@ const SeoTable = () => {
           Create Seo
         </button>
       </div>
-      {/* </PermissionGate> */}
-      {/* <PermissionGate permission="getrole"> */}
+      </PermissionGate>
+      <PermissionGate permission="getseo">
       <div className="table-responsive">
         <table className="table table-bordered table-hover align-middle mb-0">
           <thead className="table-light">
@@ -346,7 +346,7 @@ const SeoTable = () => {
 
                   <td>
                     <div className="d-flex gap-2">
-                      {/* <PermissionGate permission="putrole"> */}
+                      <PermissionGate permission="putseo">
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => {
@@ -373,8 +373,8 @@ const SeoTable = () => {
                       >
                         Edit
                       </button>
-                      {/* </PermissionGate> */}
-                      {/* <PermissionGate permission="deleterole"> */}
+                      </PermissionGate>
+                      <PermissionGate permission="deleteseo">
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() => {
@@ -385,7 +385,7 @@ const SeoTable = () => {
                       >
                         Delete
                       </button>
-                      {/* </PermissionGate> */}
+                      </PermissionGate>
                     </div>
                   </td>
                 </tr>
@@ -416,7 +416,7 @@ const SeoTable = () => {
           </button>
         </div>
       </div>
-      {/* </PermissionGate> */}
+      </PermissionGate>
 
       {showCreateModal && (
         <>

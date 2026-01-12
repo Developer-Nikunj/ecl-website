@@ -37,13 +37,12 @@ const Profile = () => {
             <i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1" />
             <span className="align-middle">Profile</span>
           </Link>
-          <a className="dropdown-item" href="pages-profile-settings.html">
-            <span className="badge bg-success-subtle text-success mt-1 float-end">
-              New
+          <Link href="/dev/setting" className="dropdown-item">
+            <i className="ri-user-settings-line align-middle fs-18 text-muted me-2" />
+            <span className="align-middle" data-key="t-logout">
+              Setting
             </span>
-            <i className="mdi mdi-cog-outline text-muted fs-16 align-middle me-1" />{" "}
-            <span className="align-middle">Settings</span>
-          </a>
+          </Link>
           <Link href="/signout" className="dropdown-item">
             <i className="mdi mdi-logout text-muted fs-16 align-middle me-1" />
             <span className="align-middle" data-key="t-logout">

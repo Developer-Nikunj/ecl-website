@@ -4,57 +4,253 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  createSeo,
+  updateSeo,
+  getAllSeo,
+  getSeoById,
+  deleteSeo,
+} from "@/store/slices/module1/seo/seo.thunk";
 
-
-import PermissionGate from "@/components/admin/PermissionGate"
+import PermissionGate from "@/components/admin/PermissionGate";
 
 const SeoTable = () => {
+  const dispatch = useAppDispatch();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [createRoleEntry, setCreateRoleEntry] = useState({
-    name: "",
+  const [createSeoEntry, setCreateSeoEntry] = useState({
+    slug: "",
+    pageUrl: "",
+    title: "",
     description: "",
-    status: "",
+    category: "",
+    active: true,
+
+    // SEO Meta
+    metaTitle: "",
+    metaDescription: "",
+    metaKeywords: "",
+    robots: "index, follow",
+    canonicalUrl: "",
+
+    // Open Graph
+    ogTitle: "",
+    ogDescription: "",
+
+    // Schema
+    schema: "",
   });
+  const [ogImage, setOgImage] = useState<File | null>(null);
+  const [ogImagePreview, setOgImagePreview] = useState<File | null>(null);
+  const [selectedSeoId, setSelectedSeoId] = useState<number | null>(null);
+  const [editSeoEntry, setEditSeoEntry] = useState({
+    slug: "",
+    pageUrl: "",
+    title: "",
+    description: "",
+    category: "",
+    active: 1,
+
+    metaTitle: "",
+    metaDescription: "",
+    metaKeywords: "",
+    robots: "index, follow",
+    canonicalUrl: "",
+
+    ogTitle: "",
+    ogDescription: "",
+
+    schema: "",
+  });
+
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
     limit: 10,
     offset: 0,
   });
- 
 
-const seoData = [
-  {
-    id: 1,
-    slug: "web-design-and-development",
-    title: "Web Design & Development",
-    metaTitle: "Web Design & Development Services | Expert Code Lab",
-    category: "Web Development",
-    status: 1,
-    createdAt: "2025-01-10",
-  },
-  {
-    id: 2,
-    slug: "digital-marketing",
-    title: "Digital Marketing Services",
-    metaTitle: "Digital Marketing Company | Expert Code Lab",
-    category: "Digital Marketing",
-    status: 1,
-    createdAt: "2025-01-12",
-  },
-  {
-    id: 3,
-    slug: "ui-ux-design",
-    title: "UI / UX Design Services",
-    metaTitle: "UI UX Design Services | Expert Code Lab",
-    category: "Design",
-    status: 0,
-    createdAt: "2025-01-15",
-  },
-];
+  const { list, selected, loading, error, total } = useAppSelector(
+    (state) => state.seo
+  );
 
+  console.log("list",list);
+
+  const fetchSeo = async () => {
+    await dispatch(
+      getAllSeo({
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        limit: filters.limit,
+        offset: filters.offset,
+      })
+    );
+  };
+
+  const handleCreate = async () => {
+    const formData = new FormData();
+
+    /* ---------- CORE ---------- */
+    formData.append("slug", createSeoEntry.slug);
+    formData.append("pageUrl", createSeoEntry.pageUrl);
+    formData.append("title", createSeoEntry.title);
+    formData.append("description", createSeoEntry.description);
+    formData.append("category", createSeoEntry.category);
+    formData.append("active", createSeoEntry.active.toString());
+
+    /* ---------- SEO META ---------- */
+    formData.append("metaTitle", createSeoEntry.metaTitle);
+    formData.append("metaDescription", createSeoEntry.metaDescription);
+    formData.append("metaKeywords", createSeoEntry.metaKeywords);
+    formData.append("robots", createSeoEntry.robots);
+    formData.append("canonicalUrl", createSeoEntry.canonicalUrl);
+
+    /* ---------- OPEN GRAPH ---------- */
+    formData.append("ogTitle", createSeoEntry.ogTitle);
+    formData.append("ogDescription", createSeoEntry.ogDescription);
+
+    /* ---------- SCHEMA ---------- */
+    if (createSeoEntry.schema) {
+      formData.append("schema", createSeoEntry.schema);
+    }
+
+    /* ---------- IMAGE ---------- */
+    if (ogImage) {
+      formData.append("ogImage", ogImage);
+    }
+
+    const res = await dispatch(createSeo(formData));
+
+    if (createSeo.fulfilled.match(res)) {
+      setShowCreateModal(false);
+      fetchSeo();
+
+      /* ---------- RESET FORM ---------- */
+      setCreateSeoEntry({
+        slug: "",
+        pageUrl: "",
+        title: "",
+        description: "",
+        category: "",
+        active: true,
+
+        metaTitle: "",
+        metaDescription: "",
+        metaKeywords: "",
+        robots: "index, follow",
+        canonicalUrl: "",
+
+        ogTitle: "",
+        ogDescription: "",
+
+        schema: "",
+      });
+
+      setOgImage(null);
+    }
+  };
+
+  const applyFilter = () => {
+    fetchSeo();
+  };
+
+  const handlePrevious = () => {
+    setFilters((prev) => ({
+      ...prev,
+      offset: Math.max(prev.offset - prev.limit, 0),
+    }));
+  };
+
+  const handleNext = () => {
+    if (filters.offset + filters.limit < total) {
+      setFilters((prev) => ({
+        ...prev,
+        offset: prev.offset + prev.limit,
+      }));
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedSeoId) return;
+
+    const res = await dispatch(deleteSeo(selectedSeoId));
+
+    if (deleteSeo.fulfilled.match(res)) {
+      setShowDeleteModal(false);
+      setSelectedSeoId(null);
+    }
+
+    await dispatch(
+      getAllSeo({
+        limit: filters.limit,
+        offset: filters.offset,
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+      })
+    );
+  };
+
+  const handleUpdate = async () => {
+    if (!selected?.id) return;
+
+    const formData = new FormData();
+
+    /* ---------- CORE ---------- */
+    formData.append("slug", editSeoEntry.slug);
+    formData.append("pageUrl", editSeoEntry.pageUrl);
+    formData.append("title", editSeoEntry.title);
+    formData.append("description", editSeoEntry.description);
+    formData.append("category", editSeoEntry.category);
+    formData.append("active", editSeoEntry.active.toString());
+
+    /* ---------- SEO META ---------- */
+    formData.append("metaTitle", editSeoEntry.metaTitle);
+    formData.append("metaDescription", editSeoEntry.metaDescription);
+    formData.append("metaKeywords", editSeoEntry.metaKeywords);
+    formData.append("robots", editSeoEntry.robots);
+    formData.append("canonicalUrl", editSeoEntry.canonicalUrl);
+
+    /* ---------- OPEN GRAPH ---------- */
+    formData.append("ogTitle", editSeoEntry.ogTitle);
+    formData.append("ogDescription", editSeoEntry.ogDescription);
+
+    /* ---------- SCHEMA ---------- */
+    if (editSeoEntry.schema) {
+      formData.append("schema", editSeoEntry.schema);
+    }
+
+    /* ---------- IMAGE (OPTIONAL) ---------- */
+    if (ogImage) {
+      formData.append("ogImage", ogImage);
+    }
+
+    const res = await dispatch(
+      updateSeo({
+        id: selected.id,
+        data: formData,
+      })
+    );
+
+    if (updateSeo.fulfilled.match(res)) {
+      setShowEditModal(false);
+      fetchSeo();
+      setOgImage(null);
+    }
+
+    await dispatch(
+      getAllSeo({
+        limit: filters.limit,
+        offset: filters.offset,
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+      })
+    );
+  };
+
+  useEffect(() => {
+    fetchSeo();
+  }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
 
 
   return (
@@ -136,8 +332,8 @@ const seoData = [
           </thead>
 
           <tbody>
-            {seoData.length > 0 &&
-              seoData.map((item, index) => (
+            {list.length > 0 &&
+              list.map((item, index) => (
                 <tr key={item.id}>
                   <td>{index + 1}</td>
                   <td>{item.slug}</td>
@@ -227,6 +423,13 @@ const seoData = [
                         type="text"
                         className="form-control"
                         placeholder="ui-ux-design"
+                        value={createSeoEntry.slug}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            slug: e.target.value,
+                          });
+                        }}
                       />
                     </div>
 
@@ -237,6 +440,13 @@ const seoData = [
                         type="text"
                         className="form-control"
                         placeholder="/services/ui-ux-design"
+                        value={createSeoEntry.pageUrl}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            pageUrl: e.target.value,
+                          });
+                        }}
                       />
                     </div>
 
@@ -247,6 +457,13 @@ const seoData = [
                         type="text"
                         className="form-control"
                         placeholder="UI UX Design Services"
+                        value={createSeoEntry.title}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            title: e.target.value,
+                          });
+                        }}
                       />
                     </div>
 
@@ -257,6 +474,13 @@ const seoData = [
                         className="form-control"
                         rows={3}
                         placeholder="Seo description"
+                        value={createSeoEntry.description}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            description: e.target.value,
+                          });
+                        }}
                       />
                     </div>
 
@@ -267,16 +491,39 @@ const seoData = [
                         type="text"
                         className="form-control"
                         placeholder="Design"
+                        value={createSeoEntry.category}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            category: e.target.value,
+                          });
+                        }}
                       />
                     </div>
 
                     {/* Status */}
                     <div className="mb-3">
-                      <label className="form-label">Status</label>
-                      <select className="form-select">
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                      </select>
+                      <label className="form-label">Seo Status</label>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="footerStatus"
+                          checked={createSeoEntry.active}
+                          onChange={(e) => {
+                            setCreateSeoEntry({
+                              ...createSeoEntry,
+                              active: e.target.checked,
+                            });
+                          }}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="footerStatus"
+                        >
+                          Active
+                        </label>
+                      </div>
                     </div>
 
                     <hr />
@@ -290,6 +537,13 @@ const seoData = [
                         type="text"
                         className="form-control"
                         placeholder="Best UI UX Design Company"
+                        value={createSeoEntry.metaTitle}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            metaTitle: e.target.value,
+                          });
+                        }}
                       />
                     </div>
 
@@ -300,6 +554,13 @@ const seoData = [
                         className="form-control"
                         rows={2}
                         placeholder="SEO meta description"
+                        value={createSeoEntry.metaDescription}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            metaDescription: e.target.value,
+                          });
+                        }}
                       />
                     </div>
 
@@ -310,6 +571,13 @@ const seoData = [
                         type="text"
                         className="form-control"
                         placeholder="ui ux, design, web design"
+                        value={createSeoEntry.metaKeywords}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            metaKeywords: e.target.value,
+                          });
+                        }}
                       />
                     </div>
 
@@ -320,6 +588,13 @@ const seoData = [
                         type="text"
                         className="form-control"
                         placeholder="https://example.com/services/ui-ux-design"
+                        value={createSeoEntry.canonicalUrl}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            canonicalUrl: e.target.value,
+                          });
+                        }}
                       />
                     </div>
 
@@ -334,6 +609,13 @@ const seoData = [
                         type="text"
                         className="form-control"
                         placeholder="UI UX Design Services"
+                        value={createSeoEntry.ogTitle}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            ogTitle: e.target.value,
+                          });
+                        }}
                       />
                     </div>
 
@@ -344,6 +626,13 @@ const seoData = [
                         className="form-control"
                         rows={2}
                         placeholder="OG description"
+                        value={createSeoEntry.ogDescription}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            ogDescription: e.target.value,
+                          });
+                        }}
                       />
                     </div>
 
@@ -358,17 +647,17 @@ const seoData = [
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) {
-                            // setOgImage(file);
+                            setOgImage(file);
                             // setOgImagePreview(URL.createObjectURL(file));
                           }
                         }}
                       />
 
                       {/* Preview */}
-                      {true && (
+                      {/* {true && (
                         <div className="mt-2">
                           <img
-                            // src={ogImagePreview}
+                            src={ogImagePreview}
                             alt="OG Preview"
                             style={{
                               maxWidth: "100%",
@@ -379,7 +668,7 @@ const seoData = [
                             }}
                           />
                         </div>
-                      )}
+                      )} */}
                     </div>
 
                     <hr />
@@ -391,6 +680,13 @@ const seoData = [
                         className="form-control"
                         rows={4}
                         placeholder='{"@context":"https://schema.org"}'
+                        value={createSeoEntry.schema}
+                        onChange={(e) => {
+                          setCreateSeoEntry({
+                            ...createSeoEntry,
+                            schema: e.target.value,
+                          });
+                        }}
                       />
                     </div>
                   </form>
@@ -403,7 +699,7 @@ const seoData = [
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button className="btn btn-sm btn-success"onClick={()=>handleCreate()}>Save</button>
                 </div>
               </div>
             </div>

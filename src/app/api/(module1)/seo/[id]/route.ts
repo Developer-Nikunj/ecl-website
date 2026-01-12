@@ -8,6 +8,19 @@ import "@/models";
 
 import { saveImage } from "@/utils/uploads/saveImage";
 
+import fs from "fs";
+import path from "path";
+
+function deleteImage(filePath: string | null) {
+  if (!filePath) return;
+
+  const absolutePath = path.join(process.cwd(), "public", filePath);
+
+  if (fs.existsSync(absolutePath)) {
+    fs.unlinkSync(absolutePath);
+  }
+}
+
 /**
  * GET SINGLE Seo
  */
@@ -72,39 +85,36 @@ export async function PUT(
 
     const formData = await request.formData();
     const ogImageFile = formData.get("ogImage") as File | null;
-    let ogImagePath = service?.ogImage; 
+    let ogImagePath = service?.ogImage;
 
     if (ogImageFile && ogImageFile.size > 0) {
       ogImagePath = await saveImage(ogImageFile, "seo");
-      // 🔥 optional: delete old image here
+      deleteImage(service.ogImage);
     }
 
-     const payload = {
-       slug: formData.get("slug"),
-       pageUrl: formData.get("pageUrl"),
-       title: formData.get("title"),
-       description: formData.get("description") ,
-       category: formData.get("category"),
-       status: formData.get("status")
-         ? Number(formData.get("status"))
-         : 1,
+    const payload = {
+      slug: formData.get("slug"),
+      pageUrl: formData.get("pageUrl"),
+      title: formData.get("title"),
+      description: formData.get("description"),
+      category: formData.get("category"),
+      status: formData.get("status") ? Number(formData.get("status")) : 1,
 
-       metaTitle: formData.get("metaTitle"),
-       metaDescription: formData.get("metaDescription"),
-       metaKeywords: formData.get("metaKeywords"),
-       robots: formData.get("robots"),
-       canonicalUrl: formData.get("canonicalUrl"),
+      metaTitle: formData.get("metaTitle"),
+      metaDescription: formData.get("metaDescription"),
+      metaKeywords: formData.get("metaKeywords"),
+      robots: formData.get("robots"),
+      canonicalUrl: formData.get("canonicalUrl"),
 
-       ogTitle: formData.get("ogTitle"),
-       ogDescription: formData.get("ogDescription"),
-       ogImage: ogImagePath,
+      ogTitle: formData.get("ogTitle"),
+      ogDescription: formData.get("ogDescription"),
+      ogImage: ogImagePath,
 
-       schema: formData.get("schema")
-         ?? JSON.parse(formData.get("schema") as string)
-     };
+      schema:
+        formData.get("schema") ?? JSON.parse(formData.get("schema") as string),
+    };
 
-     const data = seoSchema.partial().parse(payload);
-
+    const data = seoSchema.partial().parse(payload);
 
     // ✅ SLUG UNIQUENESS CHECK (THE MISSING PIECE)
     if (data.slug) {
@@ -163,7 +173,7 @@ export async function DELETE(
     if (!service) {
       return NextResponse.json(
         { message: "Service not found" },
-        { status: 404 }
+        { status: 400 }
       );
     }
 

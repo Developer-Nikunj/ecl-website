@@ -8,7 +8,7 @@ import { testConnection } from "@/database/db";
 export async function GET(request: NextRequest) {
   await testConnection();
 
-  const auth = await verifyAdmin(request,"getpermission");
+  const auth = await verifyAdmin(request, "getpermission");
   if (!auth.valid) {
     return NextResponse.json(
       { message: auth.message },
@@ -59,6 +59,12 @@ export async function GET(request: NextRequest) {
     return acc;
   }, []);
 
+  if (grouped.length == 0) {
+    return NextResponse.json({
+      status: 0,
+      message: "User menus Not Present",
+    });
+  }
   return NextResponse.json({
     status: 1,
     message: "User menus fetched successfully",

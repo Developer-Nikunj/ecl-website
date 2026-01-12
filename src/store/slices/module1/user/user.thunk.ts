@@ -157,7 +157,7 @@ export const getUserMenus = createAsyncThunk<
     const res = await api.get(`/users/userPermissions?userId=${userId}`, {
       withCredentials: true,
     });
-    console.log("res", res);
+    // console.log("res", res);
     if (res.data.status === 0) {
       toast.error(res.data.message);
       return rejectWithValue(res.data.message);

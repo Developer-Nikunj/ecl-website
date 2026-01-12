@@ -805,7 +805,7 @@ const Header = () => {
                 </button>
                 <div className="dropdown-menu dropdown-menu-end">
                   {/* item*/}
-                  <h6 className="dropdown-header">Welcome Anna!</h6>
+                  {/* <h6 className="dropdown-header">Welcome Anna!</h6> */}
                   <Link href="/dev/userprofile" className="dropdown-item">
                     <i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1" />
                     <span className="align-middle">Profile</span>

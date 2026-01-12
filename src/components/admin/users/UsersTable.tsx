@@ -10,8 +10,8 @@ import {
   getUserMenus,
 } from "@/store/slices/module1/user/user.thunk";
 import { getAllMenus } from "@/store/slices/module1/menu/menu.thunk";
-import {userCreateAdmin} from "@/store/slices/module1/profile/profile.thunk"
-import {getallRoles} from "@/store/slices/module1/roles/roles.thunk"
+import { userCreateAdmin } from "@/store/slices/module1/profile/profile.thunk";
+import { getallRoles } from "@/store/slices/module1/roles/roles.thunk";
 
 import PermissionGate from "@/components/admin/PermissionGate";
 
@@ -30,11 +30,17 @@ const UsersTable = () => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [showPermisionModal, setShowPermisionModal] = useState(false);
   const [selectedMenuIds, setSelectedMenuIds] = useState<number[]>([]);
+
   const [selectEditUserId, setSelectEditUserId] = useState<number>();
+
   const [selectedEditMenuIds, setSelectedEditMenuIds] = useState<number[]>([]);
-  const [createUser,setCreateUser] = useState({
-    name:"",email:"",role:"",password:""
-  })
+
+  const [createUser, setCreateUser] = useState({
+    name: "",
+    email: "",
+    role: "",
+    password: "",
+  });
 
   const dispatch = useAppDispatch();
   const {
@@ -52,11 +58,9 @@ const UsersTable = () => {
     error: menuError,
   } = useAppSelector((state) => state.menu);
 
-  const { roles} = useAppSelector(
-    (state) => state.role
-  );
-  
-  // console.log("roles", roles);
+  const { roles } = useAppSelector((state) => state.role);
+
+  // console.log("userMenus", userMenus);
 
   const fetchUsers = async () => {
     await dispatch(
@@ -128,8 +132,8 @@ const UsersTable = () => {
   };
   const grantPermisionSubmitForEdit = async () => {
     // console.log("all ids there");
-    console.log("all ids there selectedEditMenuIds", selectedEditMenuIds);
-    console.log("all ids there selectEditUserId", [selectEditUserId]);
+    // console.log("all ids there selectedEditMenuIds", selectedEditMenuIds);
+    // console.log("all ids there selectEditUserId", [selectEditUserId]);
     await dispatch(
       grantPermision2({
         userId: [selectEditUserId],
@@ -160,13 +164,12 @@ const UsersTable = () => {
     );
   };
 
-  const createUserByAdmin = async()=>{
-    
-      await dispatch(userCreateAdmin(createUser));
-      setShowCreateModal(false);
-      fetchUsers();
-      setCreateUser({email:"",name:"",role:"",password:""});
-  }
+  const createUserByAdmin = async () => {
+    await dispatch(userCreateAdmin(createUser));
+    setShowCreateModal(false);
+    fetchUsers();
+    setCreateUser({ email: "", name: "", role: "", password: "" });
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -174,23 +177,35 @@ const UsersTable = () => {
     fetchRoles();
   }, [dispatch, filters]);
 
-  useEffect(() => {
-    if (typeof selectEditUserId === "number") {
-      console.log("Selected user updated:", selectEditUserId);
-      dispatch(getUserMenus(selectEditUserId));
-    }
-  }, [selectEditUserId]);
-
-  useEffect(() => {
-    if (userMenus?.data?.length > 0) {
-      const ExistMenuIDS = Array.from(
-        new Set(userMenus.data.flatMap((m) => m.menus.map((menu) => menu.id)))
+  const newFunction1 = async (id: number) => {
+    console.log("Selected user updated:", id);
+    const res = await dispatch(getUserMenus(id));
+    console.log(res?.payload?.data);
+    if (res?.payload?.data.length > 0) {
+      let ExistMenuIDS = Array.from(
+        new Set(
+          res?.payload?.data.flatMap((m) => m.menus.map((menu) => menu.id))
+        )
       );
-
       console.log("Correct menu IDs:", ExistMenuIDS);
-      setSelectedEditMenuIds(ExistMenuIDS);
+      await setSelectedEditMenuIds(ExistMenuIDS);
     }
-  }, [userMenus]);
+  };
+
+  // useEffect(() => {
+  //   newFunction1();
+  // }, [selectEditUserId]);
+
+  // useEffect(() => {
+  //   if (userMenus?.data?.length > 0) {
+  //     const ExistMenuIDS = Array.from(
+  //       new Set(userMenus.data.flatMap((m) => m.menus.map((menu) => menu.id)))
+  //     );
+
+  //     console.log("Correct menu IDs:", ExistMenuIDS);
+  //     setSelectedEditMenuIds(ExistMenuIDS);
+  //   }
+  // }, [userMenus]);
 
   return (
     <div>
@@ -342,9 +357,11 @@ const UsersTable = () => {
                         <PermissionGate permission="putpermission">
                           <button
                             className="btn btn-sm btn-primary"
-                            onClick={() => {
-                              setShowEditModal((prev) => !prev);
+                            onClick={async () => {
                               setSelectEditUserId(item.id);
+                              setShowEditModal((prev) => !prev);
+                              setShowEditModal(true);
+                              newFunction1(item.id);
                             }}
                           >
                             <i className="ri-edit-line me-1" />
@@ -525,7 +542,10 @@ const UsersTable = () => {
           <div
             className="modal fade show d-block"
             tabIndex={-1}
-            onClick={() => setShowEditModal(false)} // 👈 outside click
+            onClick={() => {
+              setShowEditModal(false);
+              setSelectEditUserId(undefined);
+            }} // 👈 outside click
           >
             <div
               className="modal-dialog modal-fullscreen"
@@ -537,7 +557,10 @@ const UsersTable = () => {
                   <button
                     type="button"
                     className="btn-close"
-                    onClick={() => setShowEditModal(false)}
+                    onClick={() => {
+                      setShowEditModal(false);
+                      setSelectEditUserId(undefined);
+                    }}
                   />
                 </div>
 
@@ -596,6 +619,8 @@ const UsersTable = () => {
                     className="btn btn-sm btn-secondary"
                     onClick={() => {
                       setShowEditModal(false);
+
+                      setSelectEditUserId(undefined);
                       setSelectedEditMenuIds([]);
                     }}
                   >

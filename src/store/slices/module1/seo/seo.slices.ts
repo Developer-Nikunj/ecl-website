@@ -5,11 +5,12 @@ import {
   getAllSeo,
   getSeoById,
   deleteSeo,
+  seoItem,
 } from "./seo.thunk";
 
 interface SeoState {
-  list: [];
-  selected: never | null;
+  list: seoItem[];
+  selected: null;
   loading: boolean;
   error: string | null;
   total: number;

@@ -73,7 +73,6 @@ export async function PUT(
       );
     }
 
-    const body = await request.json();
 
     const service = await Service.findByPk(id);
     if (!service) {
@@ -83,14 +82,21 @@ export async function PUT(
       );
     }
 
-    const formData = await request.formData();
+    const formData = await request.formData();    
     const ogImageFile = formData.get("ogImage") as File | null;
     let ogImagePath = service?.ogImage;
+    
+
 
     if (ogImageFile && ogImageFile.size > 0) {
       ogImagePath = await saveImage(ogImageFile, "seo");
       deleteImage(service.ogImage);
     }
+
+    const statusRaw = formData.get("status");
+
+    const status = statusRaw === null ? 1 : statusRaw === "true" ? 1 : 0;
+
 
     const payload = {
       slug: formData.get("slug"),
@@ -98,7 +104,7 @@ export async function PUT(
       title: formData.get("title"),
       description: formData.get("description"),
       category: formData.get("category"),
-      status: formData.get("status") ? Number(formData.get("status")) : 1,
+      status: status,
 
       metaTitle: formData.get("metaTitle"),
       metaDescription: formData.get("metaDescription"),
@@ -113,6 +119,7 @@ export async function PUT(
       schema:
         formData.get("schema") ?? JSON.parse(formData.get("schema") as string),
     };
+    console.log("started-------------------------------------", payload);
 
     const data = seoSchema.partial().parse(payload);
 

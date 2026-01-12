@@ -25,7 +25,7 @@ const SeoTable = () => {
     title: "",
     description: "",
     category: "",
-    active: true,
+    status: true,
 
     // SEO Meta
     metaTitle: "",
@@ -50,7 +50,7 @@ const SeoTable = () => {
     title: "",
     description: "",
     category: "",
-    active: 1,
+    status: true,
 
     metaTitle: "",
     metaDescription: "",
@@ -75,7 +75,7 @@ const SeoTable = () => {
     (state) => state.seo
   );
 
-  console.log("list",list);
+  console.log("list", list);
 
   const fetchSeo = async () => {
     await dispatch(
@@ -97,7 +97,7 @@ const SeoTable = () => {
     formData.append("title", createSeoEntry.title);
     formData.append("description", createSeoEntry.description);
     formData.append("category", createSeoEntry.category);
-    formData.append("active", createSeoEntry.active.toString());
+    formData.append("status", createSeoEntry.status.toString());
 
     /* ---------- SEO META ---------- */
     formData.append("metaTitle", createSeoEntry.metaTitle);
@@ -112,7 +112,7 @@ const SeoTable = () => {
 
     /* ---------- SCHEMA ---------- */
     if (createSeoEntry.schema) {
-      formData.append("schema", createSeoEntry.schema);
+      formData.append("schema", JSON.stringify(editSeoEntry.schema));
     }
 
     /* ---------- IMAGE ---------- */
@@ -133,7 +133,7 @@ const SeoTable = () => {
         title: "",
         description: "",
         category: "",
-        active: true,
+        status: true,
 
         metaTitle: "",
         metaDescription: "",
@@ -192,7 +192,8 @@ const SeoTable = () => {
   };
 
   const handleUpdate = async () => {
-    if (!selected?.id) return;
+    console.log("selectedSeoId", selectedSeoId);
+    if (!selectedSeoId) return;
 
     const formData = new FormData();
 
@@ -202,7 +203,7 @@ const SeoTable = () => {
     formData.append("title", editSeoEntry.title);
     formData.append("description", editSeoEntry.description);
     formData.append("category", editSeoEntry.category);
-    formData.append("active", editSeoEntry.active.toString());
+    formData.append("status", editSeoEntry.status.toString());
 
     /* ---------- SEO META ---------- */
     formData.append("metaTitle", editSeoEntry.metaTitle);
@@ -217,7 +218,7 @@ const SeoTable = () => {
 
     /* ---------- SCHEMA ---------- */
     if (editSeoEntry.schema) {
-      formData.append("schema", editSeoEntry.schema);
+      formData.append("schema", JSON.stringify(editSeoEntry.schema));
     }
 
     /* ---------- IMAGE (OPTIONAL) ---------- */
@@ -227,7 +228,7 @@ const SeoTable = () => {
 
     const res = await dispatch(
       updateSeo({
-        id: selected.id,
+        id: selectedSeoId,
         data: formData,
       })
     );
@@ -251,7 +252,6 @@ const SeoTable = () => {
   useEffect(() => {
     fetchSeo();
   }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
-
 
   return (
     <div>
@@ -340,15 +340,34 @@ const SeoTable = () => {
                   <td>{item.title}</td>
                   <td>{item.metaTitle}</td>
                   <td>{item.category}</td>
-                  <td>{item.status == 1 ? "Active" : "InActive"}</td>
+                  <td>{item.status == true ? "Active" : "InActive"}</td>
 
                   <td>
                     <div className="d-flex gap-2">
                       {/* <PermissionGate permission="putrole"> */}
                       <button
                         className="btn btn-sm btn-primary"
+                        
                         onClick={() => {
+                          setSelectedSeoId(item.id);
                           setShowEditModal(true);
+                          setEditSeoEntry({
+                            slug: item.slug,
+                            pageUrl: item.pageUrl,
+                            title: item.title,
+                            description: item.description,
+                            category: item.category,
+                            status: item.status ? true : false,
+                            metaTitle: item.metaTitle,
+                            metaDescription: item.metaDescription,
+                            metaKeywords: item.metaKeywords,
+                            robots: item.robots,
+                            canonicalUrl: item.canonicalUrl,
+                            ogTitle: item.ogTitle,
+                            ogDescription: item.ogDescription,
+                            schema: item.schema,
+                          });
+                          // setOgImage(item.ogImage);
                         }}
                       >
                         Edit
@@ -358,6 +377,8 @@ const SeoTable = () => {
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() => {
+                          console.log("selectedSeoId",item.id);
+                          setSelectedSeoId(item.id);
                           setShowDeleteModal((prev) => !prev);
                         }}
                       >
@@ -509,11 +530,11 @@ const SeoTable = () => {
                           className="form-check-input"
                           type="checkbox"
                           id="footerStatus"
-                          checked={createSeoEntry.active}
+                          checked={createSeoEntry.status}
                           onChange={(e) => {
                             setCreateSeoEntry({
                               ...createSeoEntry,
-                              active: e.target.checked,
+                              status: e.target.checked,
                             });
                           }}
                         />
@@ -699,7 +720,12 @@ const SeoTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success"onClick={()=>handleCreate()}>Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => handleCreate()}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -740,6 +766,13 @@ const SeoTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="ui-ux-design"
+                        value={editSeoEntry.slug}
+                        onChange={(e) => {
+                          setEditSeoEntry((prev) => ({
+                            ...prev,
+                            slug: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
 
@@ -750,6 +783,13 @@ const SeoTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="/services/ui-ux-design"
+                        value={editSeoEntry.pageUrl}
+                        onChange={(e) => {
+                          setEditSeoEntry((prev) => ({
+                            ...prev,
+                            pageUrl: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
 
@@ -760,6 +800,13 @@ const SeoTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="UI UX Design Services"
+                        value={editSeoEntry.title}
+                        onChange={(e) => {
+                          setEditSeoEntry((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
 
@@ -770,6 +817,13 @@ const SeoTable = () => {
                         className="form-control"
                         rows={3}
                         placeholder="Seo description"
+                        value={editSeoEntry.description}
+                        onChange={(e) => {
+                          setEditSeoEntry((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
 
@@ -780,16 +834,39 @@ const SeoTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Design"
+                        value={editSeoEntry.category}
+                        onChange={(e) => {
+                          setEditSeoEntry((prev) => ({
+                            ...prev,
+                            category: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
 
                     {/* Status */}
                     <div className="mb-3">
-                      <label className="form-label">Status</label>
-                      <select className="form-select">
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                      </select>
+                      <label className="form-label">Seo Status</label>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="footerStatus"
+                          checked={editSeoEntry.status}
+                          onChange={(e) => {
+                            setEditSeoEntry((prev) => ({
+                              ...prev,
+                              status: e.target.checked,
+                            }));
+                          }}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="footerStatus"
+                        >
+                          Active
+                        </label>
+                      </div>
                     </div>
 
                     <hr />
@@ -803,6 +880,13 @@ const SeoTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Best UI UX Design Company"
+                        value={editSeoEntry.metaTitle}
+                        onChange={(e) => {
+                          setEditSeoEntry((prev) => ({
+                            ...prev,
+                            metaTitle: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
 
@@ -813,6 +897,13 @@ const SeoTable = () => {
                         className="form-control"
                         rows={2}
                         placeholder="SEO meta description"
+                        value={editSeoEntry.metaDescription}
+                        onChange={(e) => {
+                          setEditSeoEntry((prev) => ({
+                            ...prev,
+                            metaDescription: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
 
@@ -823,6 +914,13 @@ const SeoTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="ui ux, design, web design"
+                        value={editSeoEntry.metaKeywords}
+                        onChange={(e) => {
+                          setEditSeoEntry((prev) => ({
+                            ...prev,
+                            metaKeywords: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
 
@@ -833,6 +931,13 @@ const SeoTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="https://example.com/services/ui-ux-design"
+                        value={editSeoEntry.canonicalUrl}
+                        onChange={(e) => {
+                          setEditSeoEntry((prev) => ({
+                            ...prev,
+                            canonicalUrl: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
 
@@ -847,6 +952,13 @@ const SeoTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="UI UX Design Services"
+                        value={editSeoEntry.ogTitle}
+                        onChange={(e) => {
+                          setEditSeoEntry((prev) => ({
+                            ...prev,
+                            ogTitle: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
 
@@ -857,6 +969,13 @@ const SeoTable = () => {
                         className="form-control"
                         rows={2}
                         placeholder="OG description"
+                        value={editSeoEntry.ogDescription}
+                        onChange={(e) => {
+                          setEditSeoEntry((prev) => ({
+                            ...prev,
+                            ogDescription: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
 
@@ -871,14 +990,14 @@ const SeoTable = () => {
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) {
-                            // setOgImage(file);
+                            setOgImage(file);
                             // setOgImagePreview(URL.createObjectURL(file));
                           }
                         }}
                       />
 
                       {/* Preview */}
-                      {true && (
+                      {/* {true && (
                         <div className="mt-2">
                           <img
                             // src={ogImagePreview}
@@ -892,7 +1011,7 @@ const SeoTable = () => {
                             }}
                           />
                         </div>
-                      )}
+                      )} */}
                     </div>
 
                     <hr />
@@ -904,6 +1023,13 @@ const SeoTable = () => {
                         className="form-control"
                         rows={4}
                         placeholder='{"@context":"https://schema.org"}'
+                        value={JSON.stringify(editSeoEntry.schema, null, 2)}
+                        onChange={(e) =>
+                          setEditSeoEntry({
+                            ...editSeoEntry,
+                            schema: JSON.parse(e.target.value),
+                          })
+                        }
                       />
                     </div>
                   </form>
@@ -916,7 +1042,14 @@ const SeoTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => {
+                      handleUpdate();
+                    }}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>

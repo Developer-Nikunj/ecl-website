@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 export interface SeoResponse {
   status: number;
   message: string;
-  data: never;
+  data: [];
 }
 
 export type SeoPayload = FormData;
@@ -22,6 +22,25 @@ export interface GetSeoParams {
   offset?: number;
   startDate?: string;
   endDate?: string;
+}
+
+export interface seoItem {
+  id: number;
+  slug: string;
+  pageUrl: string;
+  title: string;
+  description: string;
+  category: string;
+  status: boolean;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeywords: string;
+  robots: string;
+  canonicalUrl: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  schema: string;
 }
 
 export const createSeo = createAsyncThunk<
@@ -59,7 +78,12 @@ export const updateSeo = createAsyncThunk<
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    if (res.data.status === 0) return rejectWithValue(res.data.message);
+    console.log("res", res);
+
+    if (res.data.status === 0) {
+      toast.warn("Seo Update Failed");
+      return rejectWithValue(res.data.message);
+    }
 
     toast.success(res.data.message);
     return res.data;
@@ -72,7 +96,7 @@ export const updateSeo = createAsyncThunk<
 });
 
 export const getAllSeo = createAsyncThunk<
-  { data: never[]; total: number },
+  { data: []; total: number },
   GetSeoParams,
   { rejectValue: string }
 >("seo/getAll", async (params, { rejectWithValue }) => {

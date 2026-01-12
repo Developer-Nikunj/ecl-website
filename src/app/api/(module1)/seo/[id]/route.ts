@@ -65,7 +65,7 @@ export async function PUT(
 
     const { id } = await context.params;
 
-    const auth = await verifyAdmin(request, "updateSeo");
+    const auth = await verifyAdmin(request, "putSeo");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },

@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request,"updatemenu");
+    const auth = await verifyAdmin(request,"putmenu");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },

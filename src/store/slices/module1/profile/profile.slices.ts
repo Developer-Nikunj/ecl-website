@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getUserProfile, userdata, userActivityData } from "./profile.thunk"; // adjust path
-
+import {
+  getUserProfile,
+  userdata,
+  userActivityData,
+  userCreateAdmin,
+} from "./profile.thunk";
 
 interface UserState {
   profile: userdata | null;
@@ -28,22 +32,33 @@ const profileSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      /* FETCH PROFILE */
+      /* ---------------- FETCH PROFILE ---------------- */
       .addCase(getUserProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        getUserProfile.fulfilled,
-        (state, action: PayloadAction<any>) => {
-          state.loading = false;
-          state.profile = action.payload.data;
-          state.activity = action.payload.userActivity;
-        }
-      )
+      .addCase(getUserProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.profile = action.payload.data;
+        state.activity = action.payload.userActivity;
+      })
       .addCase(getUserProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to load profile";
+      })
+
+      /* ---------------- CREATE USER (ADMIN) ---------------- */
+      .addCase(userCreateAdmin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userCreateAdmin.fulfilled, (state) => {
+        state.loading = false;
+        // ❌ do NOT overwrite profile here
+      })
+      .addCase(userCreateAdmin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to create user";
       });
   },
 });

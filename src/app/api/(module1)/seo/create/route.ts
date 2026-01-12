@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request, "createSeo");
+    const auth = await verifyAdmin(request, "postSeo");
 
     if (!auth.valid) {
       return NextResponse.json({ message: auth.message }, { status: 401 });

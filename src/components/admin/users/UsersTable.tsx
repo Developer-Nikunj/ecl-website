@@ -10,6 +10,8 @@ import {
   getUserMenus,
 } from "@/store/slices/module1/user/user.thunk";
 import { getAllMenus } from "@/store/slices/module1/menu/menu.thunk";
+import {userCreateAdmin} from "@/store/slices/module1/profile/profile.thunk"
+import {getallRoles} from "@/store/slices/module1/roles/roles.thunk"
 
 import PermissionGate from "@/components/admin/PermissionGate";
 
@@ -30,6 +32,9 @@ const UsersTable = () => {
   const [selectedMenuIds, setSelectedMenuIds] = useState<number[]>([]);
   const [selectEditUserId, setSelectEditUserId] = useState<number>();
   const [selectedEditMenuIds, setSelectedEditMenuIds] = useState<number[]>([]);
+  const [createUser,setCreateUser] = useState({
+    name:"",email:"",role:"",password:""
+  })
 
   const dispatch = useAppDispatch();
   const {
@@ -47,11 +52,25 @@ const UsersTable = () => {
     error: menuError,
   } = useAppSelector((state) => state.menu);
 
-  // console.log("userMenus", userMenus);
+  const { roles} = useAppSelector(
+    (state) => state.role
+  );
+  
+  console.log("roles", roles);
 
   const fetchUsers = async () => {
     await dispatch(
       getallUsers({
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        limit: filters.limit,
+        offset: filters.offset,
+      })
+    );
+  };
+  const fetchRoles = async () => {
+    await dispatch(
+      getallRoles({
         startDate: filters.startDate || undefined,
         endDate: filters.endDate || undefined,
         limit: filters.limit,
@@ -112,7 +131,10 @@ const UsersTable = () => {
     console.log("all ids there selectedEditMenuIds", selectedEditMenuIds);
     console.log("all ids there selectEditUserId", [selectEditUserId]);
     await dispatch(
-      grantPermision2({ userId: [selectEditUserId], menuId: selectedEditMenuIds })
+      grantPermision2({
+        userId: [selectEditUserId],
+        menuId: selectedEditMenuIds,
+      })
     );
     setShowPermisionModal(false);
     setSelectEditUserId(undefined);
@@ -138,9 +160,18 @@ const UsersTable = () => {
     );
   };
 
+  const createUserByAdmin = async()=>{
+    
+      await dispatch(userCreateAdmin(createUser));
+      setShowCreateModal(false);
+      fetchUsers();
+      setCreateUser({email:"",name:"",role:"",password:""});
+  }
+
   useEffect(() => {
     fetchUsers();
     fetchMenus();
+    fetchRoles();
   }, [dispatch, filters]);
 
   useEffect(() => {
@@ -403,6 +434,13 @@ const UsersTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter user name"
+                        value={createUser.name}
+                        onChange={(e) => {
+                          setCreateUser({
+                            ...createUser,
+                            name: e.target.value,
+                          });
+                        }}
                       />
                     </div>
                     <div className="mb-3">
@@ -411,6 +449,13 @@ const UsersTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter user email"
+                        value={createUser.email}
+                        onChange={(e) => {
+                          setCreateUser({
+                            ...createUser,
+                            email: e.target.value,
+                          });
+                        }}
                       />
                     </div>
                     <div className="mb-3">
@@ -419,19 +464,34 @@ const UsersTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter user password"
+                        value={createUser.password}
+                        onChange={(e) => {
+                          setCreateUser({
+                            ...createUser,
+                            password: e.target.value,
+                          });
+                        }}
                       />
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Role</label>
                       <select
                         className="form-select"
-                        aria-label="Disabled select example"
-                        // disabled
+                        aria-label="Select Role"
+                        value={createUser.role}
+                        onChange={(e) =>
+                          setCreateUser((prev) => ({
+                            ...prev,
+                            role: e.target.value,
+                          }))
+                        }
                       >
-                        <option selected>Select Role</option>
-                        <option value="1">Admin</option>
-                        <option value="2">User</option>
-                        <option value="3">Operator</option>
+                        <option value="">Select Role</option>
+                        {roles.map((role) => (
+                          <option key={role.id} value={role.name}>
+                            {role.name}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </form>
@@ -444,7 +504,12 @@ const UsersTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => createUserByAdmin()}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>

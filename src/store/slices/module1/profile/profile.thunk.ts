@@ -5,11 +5,11 @@ import { toast } from "react-toastify";
 
 
 export interface userdata {
-  id: number;
-  name: string;
-  email: string;
-  img: string;
-  role: string;
+  id:number,
+  name:string,
+  email:string,
+  img:string,
+  role:string,
 }
 
 export interface userActivityData {
@@ -36,8 +36,6 @@ export const getUserProfile = createAsyncThunk<
       withCredentials: true,
     });
 
-    console.log("res", res);
-
     if (res.data.status === 0) {
       toast.error(res.data.message);
       return rejectWithValue(res.data.message);
@@ -49,6 +47,44 @@ export const getUserProfile = createAsyncThunk<
   } catch (err: any) {
     const message =
       err.response?.data?.message || "Failed to fetch user profile";
+    toast.error(message);
+    return rejectWithValue(message);
+  }
+});
+
+
+
+export interface userCreateResponse {
+  message: string;
+  status: number;
+  data: userdata;
+}
+export interface userCreatePayload {
+  name: string;
+  email: string;
+  role: string;
+  password: string;
+}
+
+export const userCreateAdmin = createAsyncThunk<
+  userCreateResponse,
+  userCreatePayload,
+  { rejectValue: string }
+>("user/createAdmin", async (payload, { rejectWithValue }) => {
+  try {
+    const res = await api.post("/users/admin", payload, {
+      withCredentials: true,
+    });
+
+    if (res.data.status === 0) {
+      toast.error(res.data.message);
+      return rejectWithValue(res.data.message);
+    }
+
+    // ✅ return exactly what backend sends
+    return res.data;
+  } catch (err: any) {
+    const message = err.response?.data?.message || "Failed to create user";
     toast.error(message);
     return rejectWithValue(message);
   }

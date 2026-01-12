@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
       { status: auth.status }
     );
   }
+  console.log("api check");
   const sessionId = request.cookies.get("sessionId")?.value;
 
   if(auth.user == null) {
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
     userId: auth.user.id.toString(),
     email: auth?.user?.email,
     role: auth?.user?.role,
-    action: "ROLE_CREATED_SUCCESS",
+    action: "LOGOUT_SUCCESS",
     ipAddress: request.headers.get("x-forwarded-for") || "unknown",
     requestMethod: request.method,
     endPoint: request.nextUrl.pathname.toString(),
@@ -42,6 +43,24 @@ export async function POST(request: NextRequest) {
   }
 
   const res = NextResponse.json({ success: true });
-  res.cookies.delete("sessionId");
+
+  const isProd = process.env.NODE_ENV === "production";
+
+  res.cookies.set("sessionId", "", {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+
+  res.cookies.set("permissions", "", {
+    secure: isProd,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+
   return res;
+
 }

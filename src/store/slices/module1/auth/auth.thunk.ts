@@ -121,12 +121,12 @@ interface logoutUserResponse {
 }
 
 export const logoutUser = createAsyncThunk<
-  logoutUserResponse,
+  logoutUserResponse,void,
   { rejectValue: string }
 >("auth/logout", async (_, { rejectWithValue }) => {
   try {
     const res = await api.post(
-      "/auth/verify-email",
+      "/auth/logout",
       { withCredentials: true }
     );
     console.log("res", res);
@@ -134,12 +134,11 @@ export const logoutUser = createAsyncThunk<
       toast.error(String(res.data.message));
       return rejectWithValue(res.data.message);
     }
-    toast.success(String(res.data.message));
+    toast.success("please Sign In");
     return res.data;
-  } catch (err) {
-    toast.error(String(err));
-    return rejectWithValue(
-      err.response?.data?.message || "verify email failed"
-    );
+  } catch (error:any) {
+    const message ="Logout failed";
+    toast.error(message);
+    return rejectWithValue(message);
   }
 });

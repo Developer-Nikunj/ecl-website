@@ -12,6 +12,7 @@ interface UserAttributes {
   role: string;
   actions?: any[];
   emailVerified: boolean;
+  status: boolean;
 }
 
 interface UserCreationAttributes
@@ -34,6 +35,7 @@ export class User
   declare role: string;
   declare actions?: any[];
   declare emailVerified: boolean;
+  declare status: boolean;
 }
 
 export const userModel = User.init(
@@ -71,6 +73,10 @@ export const userModel = User.init(
     emailVerified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
   },
   {

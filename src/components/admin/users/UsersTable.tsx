@@ -56,7 +56,7 @@ const UsersTable = () => {
     (state) => state.role
   );
   
-  console.log("roles", roles);
+  // console.log("roles", roles);
 
   const fetchUsers = async () => {
     await dispatch(
@@ -561,20 +561,6 @@ const UsersTable = () => {
                             <td className="fw-semibold text-capitalize">
                               {item.slug}
                             </td>
-                            {/* <td className=" text-capitalize">
-                              <input
-                                type="checkbox"
-                                className="form-check-input"
-                                checked={isAllChecked(item.slug, item.menus)}
-                                onChange={(e) =>
-                                  handleSelectAllRow(
-                                    item.menus,
-                                    e.target.checked
-                                  )
-                                }
-                              />
-                              <span className="ms-2">All</span>
-                            </td> */}
 
                             {item?.menus.map(
                               (menu: { id: number; menuName: string }) => (

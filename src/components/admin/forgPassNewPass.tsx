@@ -10,40 +10,37 @@ import { useSearchParams } from "next/navigation";
 import axios from "axios";
 
 const page = () => {
-  const dispatch = useAppDispatch();
   const router = useRouter();
-  const [otp, setOtp] = useState({
-    d1: "",
-    d2: "",
-    d3: "",
-    d4: "",
-    d5: "",
-    d6: "",
-  });
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
 
   const handleSubmit = async () => {
-    const finalOTP = Object.values(otp).join("");
-    console.log(finalOTP, email);
-    if (!email) {
-      throw new Error("Email is missing");
-    }
-    
-  if (finalOTP.length !== 6) {
-    alert("Enter complete 6 digit OTP");
-    return;
-  }
+   if (!password || !confirmPassword) {
+     toast.warn("All fields required");
+     return;
+   }
+
+   if (password.length < 6) {
+     toast.warn("Password must be at least 6 characters");
+     return;
+   }
+
+   if (password !== confirmPassword) {
+     toast.warn("Passwords do not match");
+     return;
+   }
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/forpass-verify`,
-        { email, otp: finalOTP }
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/new-password`,
+        { email, password }
       );
-      if(res.data.status == 0) {
+      if (res.data.status == 0) {
         toast.warn(res.data.message);
         return;
       }
-      router.push(`/newPassword?email=${encodeURIComponent(email)}`);
+      router.replace("/signin");
     } catch (error) {
       console.error("SignIn failed", error);
     }
@@ -129,40 +126,40 @@ const page = () => {
                       </div>
                       <div className="p-2 mt-4">
                         <div className="text-muted text-center mb-4 mx-lg-3">
-                          <h4 className="">Verify Your Email</h4>
+                          <h4 className="">Make New Password</h4>
                           <p>
-                            Please enter the 6 digit code sent to{" "}
                             <span className="fw-semibold">{email}</span>
                           </p>
                         </div>
 
                         <div className="text-center">
-                          <div className="d-flex justify-content-center gap-2 mb-4">
-                            {[1, 2, 3, 4, 5, 6].map((i) => (
-                              <input
-                                key={i}
-                                type="text"
-                                maxLength={1}
-                                inputMode="numeric"
-                                className="form-control form-control-lg text-center bg-light"
-                                style={{ width: "50px" }}
-                                value={otp[`d${i}`]}
-                                onChange={(e) =>
-                                  setOtp({
-                                    ...otp,
-                                    [`d${i}`]: e.target.value.replace(/\D/, ""),
-                                  })
-                                }
-                              />
-                            ))}
+                          <div className="mb-3">
+                            <input
+                              type="password"
+                              className="form-control form-control-lg bg-light"
+                              placeholder="Enter new password"
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                            />
+                          </div>
+
+                          <div className="mb-4">
+                            <input
+                              type="password"
+                              className="form-control form-control-lg bg-light"
+                              placeholder="Confirm password"
+                              value={confirmPassword}
+                              onChange={(e) =>
+                                setConfirmPassword(e.target.value)
+                              }
+                            />
                           </div>
 
                           <button
                             className="btn btn-success w-100"
-                            disabled={Object.values(otp).join("").length !== 6}
                             onClick={handleSubmit}
                           >
-                            Verify OTP
+                            Submit
                           </button>
                         </div>
 

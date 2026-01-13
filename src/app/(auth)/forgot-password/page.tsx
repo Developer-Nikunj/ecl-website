@@ -10,6 +10,7 @@ import {
 } from "@/store/slices/module1/auth/auth.thunk";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import axios from "axios";
 
 const Page = () => {
   const dispatch = useAppDispatch();
@@ -27,8 +28,16 @@ const Page = () => {
     }
 
     try {
-    //   await dispatch(forgotPasswordOtp({ email })).unwrap();
-      router.replace("/forgPassVerify"); // ✅ redirect after login
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/forgPass`,
+        { email: email }
+      );
+      console.log("res", res);
+      if (res.data.status == 0) {
+        toast.warn(res.data.message);
+        return;
+      }
+      router.push(`/forgPassVerify?email=${encodeURIComponent(email)}`);
     } catch (err) {
       console.error("SignIn failed", err);
     }
@@ -114,7 +123,7 @@ const Page = () => {
                     <div className="text-center mt-2">
                       <h5 className="text-primary">Welcome Back !</h5>
                       <p className="text-muted">
-                       Forgot passwrord to continue to Expert code Lab.
+                        Forgot passwrord to continue to Expert code Lab.
                       </p>
                     </div>
                     <div className="p-2 mt-4">
@@ -131,7 +140,7 @@ const Page = () => {
                             onChange={(e) => setEmail(e.target.value)}
                           />
                         </div>
-                        
+
                         <div className="mt-4">
                           <button
                             className="btn btn-success w-100"
@@ -140,7 +149,6 @@ const Page = () => {
                             Send OTP
                           </button>
                         </div>
-                       
                       </form>
                     </div>
                   </div>

@@ -142,3 +142,32 @@ export const logoutUser = createAsyncThunk<
     return rejectWithValue(message);
   }
 });
+
+interface forgPassResponse {
+  status:number;
+  message:string;
+}
+interface forgPassPayload {
+  email:string;
+}
+
+export const forgotPasswordOtp = createAsyncThunk<
+  forgPassResponse,
+  forgPassPayload,
+  { rejectValue: string }
+>("auth/forgPass", async(email, { rejectWithValue })=>{
+  try {
+    const res = await api.post("/auth/forgPass", { withCredentials: true });
+    console.log("res", res);
+    if (res.data.status === 0) {
+      toast.error(String(res.data.message));
+      return rejectWithValue(res.data.message);
+    }
+    toast.success(String(res.data.message));
+    return res.data;
+  } catch (error: any) {
+    const message = "Forgot password failed";
+    toast.error(message);
+    return rejectWithValue(message);
+  }
+});

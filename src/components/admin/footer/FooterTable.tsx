@@ -447,7 +447,7 @@ const FooterManagementComponent = () => {
             onClick={() => setShowEditModal(false)} // 👈 outside click
           >
             <div
-              className="modal-dialog modal-dialog-centered modal-md"
+              className="modal-dialog modal-fullscreen"
               onClick={(e) => e.stopPropagation()} // 👈 prevent inner click
             >
               <div className="modal-content">
@@ -461,71 +461,29 @@ const FooterManagementComponent = () => {
                 </div>
 
                 <div className="modal-body">
-                  <form>
-                    <div className="mb-3">
-                      <label className="form-label">Footer Content</label>
-                      <div className="mb-3">
-                        {/* <label className="form-label">Footer Content</label> */}
-                        <ReactQuill
-                          theme="snow"
-                          value={updateFooterEntry.name}
-                          onChange={(value) => {
-                            setUpdateFooterEntry((prev) => ({
-                              ...prev,
-                              name: value,
-                            }));
-                          }}
-                          modules={{
-                            toolbar: [
-                              [{ header: [1, 2, 3, 4, 5, false] }],
-                              [{ font: [] }],
-                              [{ size: ["small", false, "large", "huge"] }],
-
-                              ["bold", "italic", "underline", "strike"],
-                              [{ color: [] }, { background: [] }],
-
-                              [{ script: "sub" }, { script: "super" }],
-                              [{ list: "ordered" }, { list: "bullet" }],
-                              [{ indent: "-1" }, { indent: "+1" }],
-                              [{ align: [] }],
-
-                              ["blockquote", "code-block"],
-                              ["link", "image"],
-
-                              ["clean"],
-                            ],
-                          }}
-                          className="bg-white"
-                        />
-
-                        <div className="card mt-3">
-                          <div className="card-header fw-bold">Preview</div>
-                          <div
-                            className="card-body"
-                            dangerouslySetInnerHTML={{
-                              __html: updateFooterEntry.name,
-                            }}
-                          />
-                        </div>
-                      </div>
-                      {/* <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter Header content"
-                        value={updateHeaderEntry.name}
-                        onChange={(e) => {
-                          setUpdateHeaderEntry((prev) => ({
-                            ...prev,
-                            name: e.target.value,
-                          }));
-                        }}
-                      /> */}
-                    </div>
-                    <div className="mb-3">
-                      <label className="form-label d-block">
-                        Footer Status
+                  <form className="mb-4">
+                    {/* Footer HTML Input */}
+                    <div className="mb-4">
+                      <label className="form-label fw-bold mb-2">
+                        Footer Content (HTML)
                       </label>
+                      <textarea
+                        className="form-control"
+                        rows={10}
+                        placeholder="Paste footer HTML here"
+                        value={updateFooterEntry.name}
+                        onChange={(e) =>
+                          setUpdateFooterEntry({
+                            ...updateFooterEntry,
+                            name: e.target.value,
+                          })
+                        }
+                        style={{ fontFamily: "monospace", fontSize: "0.95rem" }}
+                      />
+                    </div>
 
+                    {/* Footer Status */}
+                    <div className="mb-4">
                       <div className="form-check">
                         <input
                           className="form-check-input"
@@ -540,11 +498,34 @@ const FooterManagementComponent = () => {
                           }
                         />
                         <label
-                          className="form-check-label"
+                          className="form-check-label fw-bold"
                           htmlFor="footerStatus"
                         >
                           Active
                         </label>
+                      </div>
+                    </div>
+
+                    {/* Preview */}
+                    <div className="card">
+                      <div className="card-header fw-bold bg-white border-bottom">
+                        Preview
+                      </div>
+                      <div className="card-body p-0">
+                        <div
+                          style={{
+                            maxHeight: "60vh",
+                            overflowY: "auto",
+                            padding: "1rem",
+                            background: "#fff",
+                            color: "#000",
+                            borderRadius: "0 0 0.25rem 0.25rem",
+                            border: "1px solid #dee2e6",
+                          }}
+                          dangerouslySetInnerHTML={{
+                            __html: updateFooterEntry.name,
+                          }}
+                        />
                       </div>
                     </div>
                   </form>

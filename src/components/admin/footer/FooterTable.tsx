@@ -233,7 +233,20 @@ const FooterManagementComponent = () => {
                     <td>{index + 1}</td>
 
                     {/* name is HTML */}
-                    <td dangerouslySetInnerHTML={{ __html: item.name }} />
+                    <td>
+                      <div
+                        style={{
+                          maxHeight: "150px", // Limit the height
+                          overflowY: "auto", // Scroll when content exceeds
+                          padding: "0.5rem", // Some inner spacing
+                          background: "#f8f9fa", // Light box background
+                          border: "1px solid #dee2e6", // Subtle border
+                          borderRadius: "4px", // Rounded corners
+                          whiteSpace: "normal", // Allow wrapping
+                        }}
+                        dangerouslySetInnerHTML={{ __html: item.name }}
+                      />
+                    </td>
 
                     <td>
                       <span>{item.active ? "Active" : "Inactive"}</span>
@@ -302,15 +315,20 @@ const FooterManagementComponent = () => {
           <div
             className="modal fade show d-block"
             tabIndex={-1}
-            onClick={() => setShowCreateModal(false)} // 👈 outside click
+            style={{ background: "rgba(0,0,0,0.3)" }}
+            onClick={() => setShowCreateModal(false)}
           >
             <div
-              className="modal-dialog modal-dialog-centered modal-md"
-              onClick={(e) => e.stopPropagation()} // 👈 prevent inner click
+              className="modal-dialog modal-fullscreen"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Create Footer</h5>
+              <div
+                className="modal-content shadow-lg"
+                style={{ borderRadius: "0.5rem" }}
+              >
+                {/* Modal Header */}
+                <div className="modal-header bg-white border-bottom">
+                  <h5 className="modal-title fw-bold">Create Footer</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -318,57 +336,37 @@ const FooterManagementComponent = () => {
                   />
                 </div>
 
-                <div className="modal-body">
-                  <form>
-                    <div className="mb-3">
-                      <label className="form-label">Footer Content</label>
-                      <ReactQuill
-                        theme="snow"
+                {/* Modal Body */}
+                <div
+                  className="modal-body p-4"
+                  style={{
+                    maxHeight: "calc(100vh - 120px)",
+                    overflowY: "auto",
+                  }}
+                >
+                  <form className="mb-4">
+                    {/* Footer HTML Input */}
+                    <div className="mb-4">
+                      <label className="form-label fw-bold mb-2">
+                        Footer Content (HTML)
+                      </label>
+                      <textarea
+                        className="form-control"
+                        rows={10}
+                        placeholder="Paste footer HTML here"
                         value={createFooterEntry.name}
-                        onChange={(value) =>
+                        onChange={(e) =>
                           setCreateFooterEntry({
                             ...createFooterEntry,
-                            name: value,
+                            name: e.target.value,
                           })
                         }
-                        modules={{
-                          toolbar: [
-                            [{ header: [1, 2, 3, 4, 5, false] }],
-                            [{ font: [] }],
-                            [{ size: ["small", false, "large", "huge"] }],
-
-                            ["bold", "italic", "underline", "strike"],
-                            [{ color: [] }, { background: [] }],
-
-                            [{ script: "sub" }, { script: "super" }],
-                            [{ list: "ordered" }, { list: "bullet" }],
-                            [{ indent: "-1" }, { indent: "+1" }],
-                            [{ align: [] }],
-
-                            ["blockquote", "code-block"],
-                            ["link", "image"],
-
-                            ["clean"],
-                          ],
-                        }}
-                        className="bg-white"
+                        style={{ fontFamily: "monospace", fontSize: "0.95rem" }}
                       />
-
-                      <div className="card mt-3">
-                        <div className="card-header fw-bold">Preview</div>
-                        <div
-                          className="card-body"
-                          dangerouslySetInnerHTML={{
-                            __html: createFooterEntry.name,
-                          }}
-                        />
-                      </div>
                     </div>
-                    <div className="mb-3">
-                      <label className="form-label d-block">
-                        Footer Status
-                      </label>
 
+                    {/* Footer Status */}
+                    <div className="mb-4">
                       <div className="form-check">
                         <input
                           className="form-check-input"
@@ -383,28 +381,52 @@ const FooterManagementComponent = () => {
                           }
                         />
                         <label
-                          className="form-check-label"
+                          className="form-check-label fw-bold"
                           htmlFor="footerStatus"
                         >
                           Active
                         </label>
                       </div>
                     </div>
+
+                    {/* Preview */}
+                    <div className="card">
+                      <div className="card-header fw-bold bg-white border-bottom">
+                        Preview
+                      </div>
+                      <div className="card-body p-0">
+                        <div
+                          style={{
+                            maxHeight: "60vh",
+                            overflowY: "auto",
+                            padding: "1rem",
+                            background: "#fff",
+                            color: "#000",
+                            borderRadius: "0 0 0.25rem 0.25rem",
+                            border: "1px solid #dee2e6",
+                          }}
+                          dangerouslySetInnerHTML={{
+                            __html: createFooterEntry.name,
+                          }}
+                        />
+                      </div>
+                    </div>
                   </form>
                 </div>
 
-                <div className="modal-footer">
+                {/* Modal Footer */}
+                <div className="modal-footer border-top">
                   <button
-                    className="btn btn-sm btn-secondary"
+                    className="btn btn-outline-secondary btn-lg"
                     onClick={() => setShowCreateModal(false)}
                   >
                     Cancel
                   </button>
                   <button
-                    className="btn btn-sm btn-success"
+                    className="btn btn-primary btn-lg fw-bold"
                     onClick={() => handleCreate()}
                   >
-                    Save
+                    Save Footer
                   </button>
                 </div>
               </div>
@@ -415,6 +437,7 @@ const FooterManagementComponent = () => {
           <div className="modal-backdrop fade show" />
         </>
       )}
+
       {showEditModal && (
         <>
           {/* Modal Wrapper */}

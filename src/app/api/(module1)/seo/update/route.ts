@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { testConnection } from "@/database/db";
-import { seoModel } from "@/models/seo.model";
+import { Service } from "@/models/seo.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 import { z } from "zod";
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = seoSchema.parse(body);
 
-    const updatedSeo = await seoModel.update(validatedData, {
+    const updatedSeo = await Service.update(validatedData, {
       where: {
         id: validatedData.id,
       },

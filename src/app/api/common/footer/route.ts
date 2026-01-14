@@ -7,7 +7,6 @@ import "@/models";
  * GET ALL Footers
  */
 
-
 export async function GET(request: NextRequest) {
   try {
     await testConnection();
@@ -35,10 +34,10 @@ export async function GET(request: NextRequest) {
         [Op.lte]: new Date(endDate),
       };
     } else {
-        where.active = true;
+      where.active = true;
     }
 
-    const footers = await Footer.findAll({
+    const footers = await Footer.findOne({
       where,
       order: [["createdAt", "DESC"]],
       limit,
@@ -65,5 +64,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
-

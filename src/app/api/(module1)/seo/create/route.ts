@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { testConnection } from "@/database/db";
-import { seoModel } from "@/models/seo.model";
+import { Service } from "@/models/seo.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 import { z } from "zod";
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = seoSchema.parse(body);
 
-    const createdSeo = await seoModel.create(validatedData);
+    const createdSeo = await Service.create(validatedData);
 
     if (auth.user == null) {
       return NextResponse.json(

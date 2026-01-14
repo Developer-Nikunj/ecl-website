@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { testConnection } from "@/database/db";
-import { seoModel } from "@/models/seo.model";
+import { Service } from "@/models/seo.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { z } from "zod";
 
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = seoSchema.parse(body);
 
-    const fetchedSeo = await seoModel.findOne({
+    const fetchedSeo = await Service.findOne({
       where: {
         pageUrl: validatedData.pageUrl,
       },

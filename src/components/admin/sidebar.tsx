@@ -48,6 +48,11 @@ const Sidebar = () => {
                     Role
                   </Link>
                 </li>
+                <li className="nav-item">
+                  <Link href="/dev/contact-form" className="nav-link">
+                    Enquiries
+                  </Link>
+                </li>
               </ul>
             </div>
           </li>

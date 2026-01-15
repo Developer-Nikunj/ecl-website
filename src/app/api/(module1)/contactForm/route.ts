@@ -39,20 +39,55 @@ export async function POST(request: NextRequest) {
 }
 
 
+import { Op } from "sequelize";
+
 export async function GET(request: NextRequest) {
   try {
     await testConnection();
 
-    const entries = await contactFormModel.findAll({
+    // 👉 Read query params
+    const { searchParams } = new URL(request.url);
+
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || 10;
+    const offset = (page - 1) * limit;
+
+    const startDate = searchParams.get("startDate"); // yyyy-mm-dd
+    const endDate = searchParams.get("endDate"); // yyyy-mm-dd
+
+    // 👉 Date filter condition
+    const whereCondition: any = {};
+
+    if (startDate && endDate) {
+      whereCondition.createdAt = {
+        [Op.between]: [new Date(startDate), new Date(endDate)],
+      };
+    }
+
+    // 👉 Fetch with pagination + filter
+    const { rows, count } = await contactFormModel.findAndCountAll({
+      where: whereCondition,
       order: [["createdAt", "DESC"]],
+      limit,
+      offset,
     });
 
     return NextResponse.json({
       status: 1,
-      data: entries,
+      data: rows,
+      pagination: {
+        totalRecords: count,
+        currentPage: page,
+        totalPages: Math.ceil(count / limit),
+        limit,
+      },
     });
   } catch (error) {
     console.error("GET /contactForm error:", error);
-    return NextResponse.json({ status: 0, message: "Internal server error" });
+    return NextResponse.json({
+      status: 0,
+      message: "Internal server error",
+    });
   }
 }
+

@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     await testConnection();
 
-    const { name, email, phone, message, noteByAdmin, status } =
+    const { name, email, phone, message} =
       await request.json();
 
     if (!name || !email) {
@@ -22,14 +22,14 @@ export async function POST(request: NextRequest) {
       email,
       phone,
       message,
-      noteByAdmin,
-      status,
+      noteByAdmin:"",
+      status:'Pending',
     });
 
     return NextResponse.json({
       status: 1,
       message: "Contact form entry created successfully",
-      data: newEntry,
+      // data: newEntry,
     });
   } catch (error) {
     console.error("POST /contactForm error:", error);

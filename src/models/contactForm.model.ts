@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "@/database/db";
 
 export const contactFormModel = sequelize.define(
-  "role",
+  "contactForm",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -33,7 +33,7 @@ export const contactFormModel = sequelize.define(
       defaultValue: "Pending",
     },
   },
-  { tableName: "role", freezeTableName: true, timestamps: true }
+  { tableName: "contactForm", freezeTableName: true, timestamps: true }
 );
 
 await contactFormModel.sync();

@@ -531,15 +531,15 @@ const FooterManagementComponent = () => {
                   </form>
                 </div>
 
-                <div className="modal-footer">
+                <div className="modal-footer border-top">
                   <button
-                    className="btn btn-sm btn-secondary"
+                    className="btn btn-outline-secondary btn-lg"
                     onClick={() => setShowEditModal(false)}
                   >
                     Cancel
                   </button>
                   <button
-                    className="btn btn-sm btn-success"
+                    className="btn btn-primary btn-lg fw-bold"
                     onClick={handleUpdate}
                   >
                     Save

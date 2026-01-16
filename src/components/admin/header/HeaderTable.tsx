@@ -205,95 +205,108 @@ const HeaderManagementComponent = () => {
         </button>
       </div>
       <PermissionGate permission="postheader">
-      <div className="d-flex justify-content-end mb-3">
-        <button
-          className="btn btn-sm btn-success"
-          onClick={() => setShowCreateModal((prev) => !prev)}
-        >
-          Create Header
-        </button>
-      </div>
-      </PermissionGate>
-      <PermissionGate permission="getheader">
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle mb-0">
-          <thead className="table-light">
-            <tr>
-              <th>SNo.</th>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {items.length > 0 &&
-              items.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{index + 1}</td>
-
-                  {/* name is HTML */}
-                  <td dangerouslySetInnerHTML={{ __html: item.name }} />
-
-                  <td>
-                    <span>{item.active ? "Active" : "Inactive"}</span>
-                  </td>
-
-                  <td>
-                    <div className="d-flex gap-2">
-                      <PermissionGate permission="putheader">
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => {
-                          setselectUpdateId(item.id);
-                          setUpdateHeaderEntry({
-                            name: item.name,
-                            active: item.active,
-                          });
-                          setShowEditModal(true);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      </PermissionGate>
-
-                      <PermissionGate permission="deleteheader">
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => {
-                          setselectDeleteId(item.id);
-                          setShowDeleteModal((prev) => !prev);
-                        }}
-                      >
-                        Delete
-                      </button>
-                      </PermissionGate>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        <div className="d-flex justify-content-between align-items-center mt-3">
+        <div className="d-flex justify-content-end mb-3">
           <button
-            className="btn btn-sm text-white"
-            style={{
-              background: "linear-gradient(135deg, #667eea, #764ba2)",
-            }}
+            className="btn btn-sm btn-success"
+            onClick={() => setShowCreateModal((prev) => !prev)}
           >
-            Previous
-          </button>
-
-          <button
-            className="btn btn-sm text-white"
-            style={{
-              background: "linear-gradient(135deg, #43cea2, #185a9d)",
-            }}
-          >
-            Next
+            Create Header
           </button>
         </div>
-      </div>
+      </PermissionGate>
+      <PermissionGate permission="getheader">
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover align-middle mb-0">
+            <thead className="table-light">
+              <tr>
+                <th>SNo.</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {items.length > 0 &&
+                items.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{index + 1}</td>
+
+                    {/* name is HTML */}
+                    <td>
+                      <div
+                        style={{
+                          maxHeight: "150px", // Limit the height
+                          overflowY: "auto", // Scroll when content exceeds
+                          padding: "0.5rem", // Some inner spacing
+                          background: "#f8f9fa", // Light box background
+                          border: "1px solid #dee2e6", // Subtle border
+                          borderRadius: "4px", // Rounded corners
+                          whiteSpace: "normal", // Allow wrapping
+                        }}
+                        dangerouslySetInnerHTML={{ __html: item.name }}
+                      />
+                    </td>
+
+                    <td>
+                      <span>{item.active ? "Active" : "Inactive"}</span>
+                    </td>
+
+                    <td>
+                      <div className="d-flex gap-2">
+                        <PermissionGate permission="putheader">
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => {
+                              setselectUpdateId(item.id);
+                              setUpdateHeaderEntry({
+                                name: item.name,
+                                active: item.active,
+                              });
+                              setShowEditModal(true);
+                            }}
+                          >
+                            Edit
+                          </button>
+                        </PermissionGate>
+
+                        <PermissionGate permission="deleteheader">
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => {
+                              setselectDeleteId(item.id);
+                              setShowDeleteModal((prev) => !prev);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </PermissionGate>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #667eea, #764ba2)",
+              }}
+            >
+              Previous
+            </button>
+
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #43cea2, #185a9d)",
+              }}
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </PermissionGate>
 
       {showCreateModal && (
@@ -305,7 +318,7 @@ const HeaderManagementComponent = () => {
             onClick={() => setShowCreateModal(false)} // 👈 outside click
           >
             <div
-              className="modal-dialog modal-dialog-centered modal-md"
+              className="modal-dialog modal-fullscreen"
               onClick={(e) => e.stopPropagation()} // 👈 prevent inner click
             >
               <div className="modal-content">
@@ -320,50 +333,25 @@ const HeaderManagementComponent = () => {
 
                 <div className="modal-body">
                   <form>
-                    <div className="mb-3">
-                      <label className="form-label">Header Content</label>
-                      <ReactQuill
-                        theme="snow"
+                    <div className="mb-4">
+                      <label className="form-label fw-bold mb-2">
+                        Footer Content (HTML)
+                      </label>
+                      <textarea
+                        className="form-control"
+                        rows={10}
+                        placeholder="Paste footer HTML here"
                         value={createHeaderEntry.name}
-                        onChange={(value) =>
+                        onChange={(e) =>
                           setHeaderEntry({
                             ...createHeaderEntry,
-                            name: value,
+                            name: e.target.value,
                           })
                         }
-                        modules={{
-                          toolbar: [
-                            [{ header: [1, 2, 3, 4, 5, false] }],
-                            [{ font: [] }],
-                            [{ size: ["small", false, "large", "huge"] }],
-
-                            ["bold", "italic", "underline", "strike"],
-                            [{ color: [] }, { background: [] }],
-
-                            [{ script: "sub" }, { script: "super" }],
-                            [{ list: "ordered" }, { list: "bullet" }],
-                            [{ indent: "-1" }, { indent: "+1" }],
-                            [{ align: [] }],
-
-                            ["blockquote", "code-block"],
-                            ["link", "image"],
-
-                            ["clean"],
-                          ],
-                        }}
-                        className="bg-white"
+                        style={{ fontFamily: "monospace", fontSize: "0.95rem" }}
                       />
-
-                      <div className="card mt-3">
-                        <div className="card-header fw-bold">Preview</div>
-                        <div
-                          className="card-body"
-                          dangerouslySetInnerHTML={{
-                            __html: createHeaderEntry.name,
-                          }}
-                        />
-                      </div>
                     </div>
+
                     <div className="mb-3">
                       <label className="form-label d-block">
                         Header Status
@@ -390,18 +378,39 @@ const HeaderManagementComponent = () => {
                         </label>
                       </div>
                     </div>
+                    <div className="card">
+                      <div className="card-header fw-bold bg-white border-bottom">
+                        Preview
+                      </div>
+                      <div className="card-body p-0">
+                        <div
+                          style={{
+                            maxHeight: "60vh",
+                            overflowY: "auto",
+                            padding: "1rem",
+                            background: "#fff",
+                            color: "#000",
+                            borderRadius: "0 0 0.25rem 0.25rem",
+                            border: "1px solid #dee2e6",
+                          }}
+                          dangerouslySetInnerHTML={{
+                            __html: createHeaderEntry.name,
+                          }}
+                        />
+                      </div>
+                    </div>
                   </form>
                 </div>
 
-                <div className="modal-header">
+                <div className="modal-footer border-top">
                   <button
-                    className="btn btn-sm btn-secondary"
+                    className="btn btn-outline-secondary btn-lg"
                     onClick={() => setShowCreateModal(false)}
                   >
                     Cancel
                   </button>
                   <button
-                    className="btn btn-sm btn-success"
+                    className="btn btn-primary btn-lg fw-bold"
                     onClick={() => handleCreate()}
                   >
                     Save
@@ -424,12 +433,12 @@ const HeaderManagementComponent = () => {
             onClick={() => setShowEditModal(false)} // 👈 outside click
           >
             <div
-              className="modal-dialog modal-dialog-centered modal-md"
+              className="modal-dialog modal-fullscreen"
               onClick={(e) => e.stopPropagation()} // 👈 prevent inner click
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Edit Role</h5>
+                  <h5 className="modal-title">Edit Header</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -439,62 +448,24 @@ const HeaderManagementComponent = () => {
 
                 <div className="modal-body">
                   <form>
-                      <div className="mb-3">
-                        <label className="form-label">Header Content</label>
-                        <ReactQuill
-                          theme="snow"
-                          value={updateHeaderEntry.name}
-                          onChange={(value) => {
-                            setUpdateHeaderEntry((prev) => ({
-                              ...prev,
-                              name: value,
-                            }));
-                          }}
-                          modules={{
-                            toolbar: [
-                              [{ header: [1, 2, 3, 4, 5, false] }],
-                              [{ font: [] }],
-                              [{ size: ["small", false, "large", "huge"] }],
-
-                              ["bold", "italic", "underline", "strike"],
-                              [{ color: [] }, { background: [] }],
-
-                              [{ script: "sub" }, { script: "super" }],
-                              [{ list: "ordered" }, { list: "bullet" }],
-                              [{ indent: "-1" }, { indent: "+1" }],
-                              [{ align: [] }],
-
-                              ["blockquote", "code-block"],
-                              ["link", "image"],
-
-                              ["clean"],
-                            ],
-                          }}
-                          className="bg-white"
-                        />
-
-                        <div className="card mt-3">
-                          <div className="card-header fw-bold">Preview</div>
-                          <div
-                            className="card-body"
-                            dangerouslySetInnerHTML={{
-                              __html: updateHeaderEntry.name,
-                            }}
-                          />
-                        </div>
-                      </div>
-                      {/* <input
-                        type="text"
+                    <div className="mb-4">
+                      <label className="form-label fw-bold mb-2">
+                        Footer Content (HTML)
+                      </label>
+                      <textarea
                         className="form-control"
-                        placeholder="Enter Header content"
+                        rows={10}
+                        placeholder="Paste Header HTML here"
                         value={updateHeaderEntry.name}
-                        onChange={(e) => {
-                          setUpdateHeaderEntry((prev) => ({
-                            ...prev,
+                        onChange={(e) =>
+                          setUpdateHeaderEntry({
+                            ...updateHeaderEntry,
                             name: e.target.value,
-                          }));
-                        }}
-                      /> */}
+                          })
+                        }
+                        style={{ fontFamily: "monospace", fontSize: "0.95rem" }}
+                      />
+                    </div>
                     <div className="mb-3">
                       <label className="form-label d-block">
                         Header Status
@@ -521,18 +492,40 @@ const HeaderManagementComponent = () => {
                         </label>
                       </div>
                     </div>
+                    {/* Preview */}
+                    <div className="card">
+                      <div className="card-header fw-bold bg-white border-bottom">
+                        Preview
+                      </div>
+                      <div className="card-body p-0">
+                        <div
+                          style={{
+                            maxHeight: "60vh",
+                            overflowY: "auto",
+                            padding: "1rem",
+                            background: "#fff",
+                            color: "#000",
+                            borderRadius: "0 0 0.25rem 0.25rem",
+                            border: "1px solid #dee2e6",
+                          }}
+                          dangerouslySetInnerHTML={{
+                            __html: updateHeaderEntry.name,
+                          }}
+                        />
+                      </div>
+                    </div>
                   </form>
                 </div>
 
-                <div className="modal-header">
+                <div className="modal-header ">
                   <button
-                    className="btn btn-sm btn-secondary"
+                    className="btn btn-outline-secondary btn-lg"
                     onClick={() => setShowEditModal(false)}
                   >
                     Cancel
                   </button>
                   <button
-                    className="btn btn-sm btn-success"
+                    className="btn btn-primary btn-lg fw-bold"
                     onClick={handleUpdate}
                   >
                     Save

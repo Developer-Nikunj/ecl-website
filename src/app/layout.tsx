@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Providers from "./providers";
 import ToastProvider from "@/components/ToastProvider";
 import BootstrapClient from "@/components/admin/BootstrapClient";
-
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 
 export const metadata: Metadata = {

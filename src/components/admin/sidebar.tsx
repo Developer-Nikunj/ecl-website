@@ -211,6 +211,40 @@ const Sidebar = () => {
               </ul>
             </div>
           </li>
+
+          {/* Blogs*/}
+          <li className="nav-item">
+            <Link
+              className="nav-link menu-link"
+              href="#sidebarBlogs"
+              data-bs-toggle="collapse"
+              role="button"
+              aria-expanded="false"
+              aria-controls="sidebarBlogs"
+            >
+              <i className="ri-book-2-line" />
+              <span>Blogs</span>
+            </Link>
+
+            <div
+              className="collapse menu-dropdown"
+              data-bs-parent="#sidebarAccordion"
+              id="sidebarBlogs"
+            >
+              <ul className="nav nav-sm flex-column">
+                <li className="nav-item">
+                  <Link href="/dev/blogCategory" className="nav-link">
+                    Category
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/dev/blog" className="nav-link">
+                    Blogs
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
         </ul>
       </div>
     </div>

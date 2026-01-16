@@ -1,6 +1,8 @@
 import { userModel } from "./user.model";
 import { menuModel } from "./menu.model";
 import { permissionModel } from "./permission.model";
+import { Blog } from "./blog.model";
+import { blogCategoryModel } from "./blogCategory.model";
 
 /* User <-> Permission */
 userModel.hasMany(permissionModel, {
@@ -22,4 +24,15 @@ menuModel.hasMany(permissionModel, {
 permissionModel.belongsTo(menuModel, {
   foreignKey: "menuId",
   as: "menu",
+});
+
+
+Blog.belongsTo(blogCategoryModel, {
+  foreignKey: "categoryId",
+  as: "category",
+});
+
+blogCategoryModel.hasMany(Blog, {
+  foreignKey: "categoryId",
+  as: "blogs",
 });

@@ -20,11 +20,11 @@ function deleteImage(filePath: string | null) {
 /* ---------------- GET BLOG BY ID ---------------- */
 export async function GET(
   _req: NextRequest,
-  context: { params: { id: string } }
+  context: { params:Promise< { id: string }> }
 ) {
   await testConnection();
-
-  const blog = await Blog.findByPk(Number(context.params.id), {
+  const { id } = await context.params;
+  const blog = await Blog.findByPk(Number(id), {
     attributes: { exclude: ["updatedAt"] },
   });
 
@@ -41,10 +41,10 @@ export async function GET(
 /* ---------------- UPDATE BLOG ---------------- */
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await testConnection();
-
+const { id } = await context.params;
   const auth = await verifyAdmin(request, "putblog");
   if (!auth.valid) {
     return NextResponse.json(
@@ -53,7 +53,7 @@ export async function PUT(
     );
   }
 
-  const blog = await Blog.findByPk(Number(context.params.id));
+  const blog = await Blog.findByPk(Number(id));
   if (!blog) {
     return NextResponse.json(
       { status: 0, message: "Blog not found" },
@@ -64,7 +64,7 @@ export async function PUT(
   const formData = await request.formData();
   const image = formData.get("image");
 
-  console.log("image")
+  console.log("image");
 
   let imgPath = blog.img;
 
@@ -114,10 +114,11 @@ export async function PUT(
 /* ---------------- DELETE BLOG ---------------- */
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await testConnection();
 
+  const { id } = await context.params;
   const auth = await verifyAdmin(request, "deleteblog");
   if (!auth.valid) {
     return NextResponse.json(
@@ -126,7 +127,7 @@ export async function DELETE(
     );
   }
 
-  const blog = await Blog.findByPk(Number(context.params.id));
+  const blog = await Blog.findByPk(Number(id));
   if (!blog) {
     return NextResponse.json(
       { status: 0, message: "Blog not found" },

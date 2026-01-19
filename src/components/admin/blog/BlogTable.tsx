@@ -42,7 +42,7 @@ const BlogTable = () => {
     status: "",
     active: "",
     categoryId: "",
-    image: null,
+    image: "",
   });
 
   const { loading, error, blogs, selectedBlog, meta } = useAppSelector(
@@ -127,6 +127,47 @@ const BlogTable = () => {
       offset: Math.max(0, filters.offset - filters.limit),
     });
   };
+
+  const handleUpdate = async()=>{
+    if(!selectedBlogId) return;
+    const formData = new FormData();
+    formData.append("title", blogEntry.title);
+    formData.append("excerpt", blogEntry.excerpt);
+    formData.append("content", blogEntry.content);
+    formData.append("status", blogEntry.status);
+    formData.append("active", blogEntry.active ? "true" : "false");
+    formData.append("categoryId", blogEntry.categoryId);
+    formData.append("image", blogEntry.image);
+
+    const res = await dispatch(
+      updateBlog({
+        id:selectedBlogId,
+        data:formData
+      })
+    )
+
+    if(updateBlog.fulfilled.match(res)){
+      setShowEditModal(false);
+      setBlogEntry({
+        title: "",
+        excerpt: "",
+        content: "",
+        status: "draft",
+        active: true,
+        categoryId: "",
+        image: "",
+      });
+
+      await dispatch(
+        getAllBlog({
+          limit: filters.limit,
+          offset: filters.offset,
+          startDate: filters.startDate || undefined,
+          endDate: filters.endDate || undefined,
+        })
+      );
+    }
+  }
 
   useEffect(() => {
     fetchBlogs();
@@ -236,6 +277,14 @@ const BlogTable = () => {
                           setSelectedBlogId(item.id);
                           setEditBlogData(item);
                           setShowEditModal(true);
+                          setBlogEntry({
+                            title: item.title,
+                            excerpt: item.excerpt,
+                            content: item.content,
+                            status: item.status,
+                            active: item.status,
+                            image: item.img,
+                          });
                         }}
                       >
                         Edit
@@ -388,10 +437,10 @@ const BlogTable = () => {
                         type="file"
                         className="form-control"
                         onChange={(e) =>
-                        setBlogEntry({
-                        ...blogEntry,
-                        image: e.target.files[0],
-                        })
+                          setBlogEntry({
+                            ...blogEntry,
+                            image: e.target.files[0],
+                          })
                         }
                       />
                     </div>
@@ -455,7 +504,7 @@ const BlogTable = () => {
                     </div>
 
                     {/* Slug (Readonly) */}
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                       <label className="form-label">Slug</label>
                       <input
                         type="text"
@@ -463,7 +512,7 @@ const BlogTable = () => {
                         value={blogEntry.slug}
                         disabled
                       />
-                    </div>
+                    </div> */}
 
                     {/* Excerpt */}
                     <div className="mb-3">
@@ -533,22 +582,26 @@ const BlogTable = () => {
                     </div>
 
                     {/* Active */}
-                    <div className="mb-3">
-                      <label className="form-label">Active</label>
-                      <select
-                        className="form-select"
-                        value={blogEntry.active}
+                    <div className="mb-3 form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="activeCheck"
+                        checked={blogEntry.active}
                         onChange={(e) =>
-                          setBlogEntry({ ...blogEntry, active: e.target.value })
+                          setBlogEntry({
+                            ...blogEntry,
+                            active: e.target.checked,
+                          })
                         }
-                      >
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                      </select>
+                      />
+                      <label className="form-check-label" htmlFor="activeCheck">
+                        Active
+                      </label>
                     </div>
 
                     {/* Views (Readonly) */}
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                       <label className="form-label">Views</label>
                       <input
                         type="number"
@@ -556,30 +609,36 @@ const BlogTable = () => {
                         value={blogEntry.views}
                         disabled
                       />
-                    </div>
+                    </div> */}
 
-                    {/* Image */}
+                    {/* Featured Image */}
                     <div className="mb-3">
                       <label className="form-label">Featured Image</label>
+
                       <input
                         type="file"
                         className="form-control"
-                        // onChange={(e) =>
-                        //   setBlogEntry({
-                        //     ...blogEntry,
-                        //     image: e.target.files[0],
-                        //   })
-                        // }
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+
+                          setBlogEntry({
+                            ...blogEntry,
+                            image: file,
+                            img: URL.createObjectURL(file), // ✅ preview
+                          });
+                        }}
                       />
 
-                      {/* {blogEntry.img && (
+                      {blogEntry.image && (
                         <img
-                          src={blogEntry.img}
+                          src={blogEntry.image}
                           alt="preview"
                           className="img-fluid rounded mt-2"
                           style={{ maxHeight: "120px" }}
                         />
-                      )} */}
+                      )}
                     </div>
                   </form>
                 </div>
@@ -593,7 +652,7 @@ const BlogTable = () => {
                   </button>
                   <button
                     className="btn btn-sm btn-success"
-                    // onClick={handleUpdate}
+                    onClick={handleUpdate}
                   >
                     Update
                   </button>

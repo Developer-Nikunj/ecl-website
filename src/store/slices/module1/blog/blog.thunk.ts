@@ -105,10 +105,10 @@ export const updateBlog = createAsyncThunk<
   blogResponse,
   blogUpPayload,
   { rejectValue: string }
->("blog/update", async ({ id, data }, { rejectWithValue }) => {
+>("blog/update", async ({ id, data: blogUpPayload }, { rejectWithValue }) => {
   try {
     // send name & active directly
-    const res = await api.put<blogResponse>(`/blog/${id}`, data);
+    const res = await api.put<blogResponse>(`/blog/${id}`, blogUpPayload);
     if (res.data.status === 0) return rejectWithValue(res.data.message);
     toast.success(res.data.message);
     return res.data;

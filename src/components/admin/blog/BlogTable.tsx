@@ -295,14 +295,14 @@ const fetchCategory = async () => {
                         className="btn btn-sm btn-primary"
                         onClick={() => {
                           setSelectedBlogId(item.id);
-                          setEditBlogData(item);
+                          // setEditBlogData(item);
                           setShowEditModal(true);
                           setBlogEntry({
                             title: item.title,
                             excerpt: item.excerpt,
                             content: item.content,
-                            status: item.status,
-                            active: item.status,
+                            status: item.status,  
+                            active: item.active?true:false,
                             image: item.img,
                             categoryId:item.categoryId
                           });

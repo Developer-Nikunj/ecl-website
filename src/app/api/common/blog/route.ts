@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
       where.status = "published"
     }
 
-    const footers = await Blog.findOne({
+    const footers = await Blog.findAll({
       where,
       order: [["createdAt", "DESC"]],
       limit,

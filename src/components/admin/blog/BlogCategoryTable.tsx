@@ -4,18 +4,24 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  createCategory,
+  getAllBlogCat,
+  deleteCategory,
+  updateCategory,
+} from "@/store/slices/module1/blogCategory/blogCategory.thunk";
+import PermissionGate from "@/components/admin/PermissionGate";
 
 const BlogCategoryTable = () => {
-  const [categories, setCategories] = useState([]);
+  const dispatch = useAppDispatch();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
   const [categoryEntry, setCategoryEntry] = useState({
     name: "",
     description: "",
-    active: "1",
+    active: 1,
   });
   const [filters, setFilters] = useState({
     startDate: "",
@@ -23,34 +29,116 @@ const BlogCategoryTable = () => {
     limit: 10,
     offset: 0,
   });
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
-  const sampleCategories = [
-    {
-      id: 1,
-      name: "React",
-      description: "All React related blogs",
-      active: true,
-      createdAt: "2026-01-10",
-    },
-    {
-      id: 2,
-      name: "Node.js",
-      description: "Backend & API blogs",
-      active: true,
-      createdAt: "2026-01-12",
-    },
-    {
-      id: 3,
-      name: "Database",
-      description: "SQL, MongoDB & ORM content",
-      active: false,
-      createdAt: "2026-01-14",
-    },
-  ];
+  const { loading, error, categories, meta } = useAppSelector(
+    (state) => state.blogCat
+  );
+  console.log("categories", categories);
+  const fetchCategory = () => {
+    dispatch(
+      getAllBlogCat({
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        limit: filters.limit,
+        offset: filters.offset,
+      })
+    );
+  };
 
-  // useEffect(() => {
-  //   fetchRoles();
-  // }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
+  const handleCreate = async () => {
+    const res = await dispatch(
+      createCategory({
+        name: categoryEntry.name,
+        description: categoryEntry.description,
+      })
+    );
+    if (createCategory.fulfilled.match(res)) {
+      setShowCreateModal(false);
+      fetchCategory();
+    }
+    setCategoryEntry({
+      name: "",
+      description: "",
+      active: 1,
+    });
+  };
+
+  const applyFilter = () => {
+    fetchCategory();
+  };
+
+  const handlePrevious = () => {
+    setFilters((prev) => ({
+      ...prev,
+      offset: Math.max(prev.offset - prev.limit, 0),
+    }));
+  };
+
+  const handleNext = () => {
+    if (meta && filters.offset + filters.limit < meta.total) {
+      setFilters((prev) => ({
+        ...prev,
+        offset: prev.offset + prev.limit,
+      }));
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedCategoryId) return;
+
+    const res = await dispatch(deleteCategory(selectedCategoryId));
+
+    if (deleteCategory.fulfilled.match(res)) {
+      setShowDeleteModal(false);
+      setSelectedCategoryId(null);
+
+      dispatch(
+        getAllBlogCat({
+          limit: filters.limit,
+          offset: filters.offset,
+          startDate: filters.startDate || undefined,
+          endDate: filters.endDate || undefined,
+        })
+      );
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!selectedCategoryId) return;
+
+    const res = await dispatch(
+      updateCategory({
+        id: selectedCategoryId,
+        data: {
+          name: categoryEntry.name,
+          description: categoryEntry.description,
+        },
+      })
+    );
+
+    if (updateCategory.fulfilled.match(res)) {
+      setShowEditModal(false);
+      dispatch(
+        getAllBlogCat({
+          startDate: filters.startDate,
+          endDate: filters.endDate,
+          limit: filters.limit,
+        })
+      );
+      setCategoryEntry({
+        name: "",
+        description: "",
+        active: 1,
+      });
+    }
+  };
+
+
+
+  useEffect(() => {
+    fetchCategory();
+  }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
 
   return (
     <div>
@@ -103,20 +191,20 @@ const BlogCategoryTable = () => {
         </div>
 
         {/* Apply Button */}
-        <button className="btn btn-primary px-4">
+        <button className="btn btn-primary px-4" onClick={applyFilter}>
           Apply
         </button>
       </div>
       {/* <PermissionGate permission="postrole"> */}
-              <div className="d-flex justify-content-end mb-3">
-                <button
-                  onClick={() => setShowCreateModal((prev) => !prev)}
-                  className="btn btn-sm btn-success"
-                >
-                  Create Role
-                </button>
-              </div>
-            {/* </PermissionGate> */}
+      <div className="d-flex justify-content-end mb-3">
+        <button
+          onClick={() => setShowCreateModal((prev) => !prev)}
+          className="btn btn-sm btn-success"
+        >
+          Create Category
+        </button>
+      </div>
+      {/* </PermissionGate> */}
       <div className="table-responsive">
         <table className="table table-bordered table-hover align-middle">
           <thead className="table-light">
@@ -124,24 +212,21 @@ const BlogCategoryTable = () => {
               <th>SNo.</th>
               <th>Name</th>
               <th>Description</th>
-              <th>Active</th>
+              {/* <th>Image</th> */}
+              <th>Time</th>
               <th>Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {sampleCategories.map((item, index) => (
+           {categories.length > 0 && categories.map((item, index) => (
               <tr key={item.id}>
-                <td>{index + 1}</td>
+                <td>{filters.offset + index + 1}</td>
                 <td>{item.name}</td>
                 <td>{item.description}</td>
-                <td>
-                  {item.active ? (
-                    <span className="badge bg-success">Active</span>
-                  ) : (
-                    <span className="badge bg-danger">Inactive</span>
-                  )}
-                </td>
+                {/* <td>{item.img || "NA"}</td> */}
+                <td>{new Date(item.createdAt).toLocaleDateString("en-GB")}</td>
+
                 <td>
                   <div className="d-flex gap-2">
                     <button
@@ -151,7 +236,7 @@ const BlogCategoryTable = () => {
                         setCategoryEntry({
                           name: item.name,
                           description: item.description,
-                          active: item.active ? "1" : "0",
+                          active: 1,
                         });
                         setShowEditModal(true);
                       }}
@@ -174,6 +259,29 @@ const BlogCategoryTable = () => {
             ))}
           </tbody>
         </table>
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <button
+            className="btn btn-sm text-white"
+            style={{
+              background: "linear-gradient(135deg, #667eea, #764ba2)",
+            }}
+            onClick={handlePrevious}
+            disabled={filters.offset === 0}
+          >
+            Previous
+          </button>
+
+          <button
+            className="btn btn-sm text-white"
+            style={{
+              background: "linear-gradient(135deg, #43cea2, #185a9d)",
+            }}
+            onClick={handleNext}
+            disabled={!meta || filters.offset + filters.limit >= meta.total}
+          >
+            Next
+          </button>
+        </div>
       </div>
       {showCreateModal && (
         <>
@@ -225,7 +333,7 @@ const BlogCategoryTable = () => {
                     />
                   </div>
 
-                  <div className="mb-3">
+                  {/* <div className="mb-3">
                     <label className="form-label">Active</label>
                     <select
                       className="form-select"
@@ -240,7 +348,7 @@ const BlogCategoryTable = () => {
                       <option value="1">Active</option>
                       <option value="0">Inactive</option>
                     </select>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="modal-footer">
@@ -250,7 +358,14 @@ const BlogCategoryTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => {
+                      handleCreate();
+                    }}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -308,7 +423,7 @@ const BlogCategoryTable = () => {
                     />
                   </div>
 
-                  <div className="mb-3">
+                  {/* <div className="mb-3">
                     <label className="form-label">Active</label>
                     <select
                       className="form-select"
@@ -323,7 +438,7 @@ const BlogCategoryTable = () => {
                       <option value="1">Active</option>
                       <option value="0">Inactive</option>
                     </select>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="modal-footer">
@@ -333,7 +448,14 @@ const BlogCategoryTable = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Update</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => {
+                      handleUpdate();
+                    }}
+                  >
+                    Update
+                  </button>
                 </div>
               </div>
             </div>
@@ -372,7 +494,7 @@ const BlogCategoryTable = () => {
 
                 <div className="modal-body text-center">
                   <p className="mb-1 fw-semibold">
-                    Are you sure you want to delete this role?
+                    Are you sure you want to delete this Category?
                   </p>
                   <small className="text-muted">
                     This action cannot be undone.
@@ -388,7 +510,7 @@ const BlogCategoryTable = () => {
                   </button>
                   <button
                     className="btn btn-sm btn-danger"
-                    // onClick={handleDelete}
+                    onClick={handleDelete}
                   >
                     Delete
                   </button>

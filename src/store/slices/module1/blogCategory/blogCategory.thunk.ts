@@ -41,11 +41,12 @@ export const createCategory = createAsyncThunk<
 });
 
 export interface blogCatItem {
-    id:number;
-    img?:string;
-    name:string;
-    description:string;
-    active:boolean;
+  id: number;
+  img?: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  active: boolean;
 }
 export interface blogCatMeta {
   total: number;
@@ -102,10 +103,11 @@ export const updateCategory = createAsyncThunk<
   blogCatResponse,
   blogCatUpPayload,
   { rejectValue: string }
->("blogCat/create", async ({ id,data }, { rejectWithValue }) => {
+>("blogCat/update", async ({ id,data }, { rejectWithValue }) => {
   try {
     const res = await api.put<blogCatResponse>(`blog/category/${id}`, {
-      data
+      name:data.name,
+      description:data.description,
     });
     if (res.data.status === 0) {
       toast.error(res.data.message);
@@ -127,7 +129,7 @@ export const deleteCategory = createAsyncThunk<
   blogCatResponse,
   number,
   { rejectValue: string }
->("blogCat/create", async (id, { rejectWithValue }) => {
+>("blogCat/delete", async (id, { rejectWithValue }) => {
   try {
     const res = await api.delete<blogCatResponse>(`blog/category/${id}`);
     if (res.data.status === 0) {

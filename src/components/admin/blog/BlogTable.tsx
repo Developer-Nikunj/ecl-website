@@ -12,6 +12,7 @@ import {
   deleteBlog,
   getOneBlog,
 } from "@/store/slices/module1/blog/blog.thunk";
+import axios from "axios";
 
 const BlogTable = () => {
   const dispatch = useAppDispatch();
@@ -45,11 +46,13 @@ const BlogTable = () => {
     image: "",
   });
 
+  const [cat,setCat] = useState([]);
+
   const { loading, error, blogs, selectedBlog, meta } = useAppSelector(
     (state) => state.blog
   );
 
-  console.log("blogs", blogs);
+  // console.log("blogs", blogs);
 
   const fetchBlogs = async () => {
     await dispatch(
@@ -169,9 +172,26 @@ const BlogTable = () => {
     }
   }
 
+const fetchCategory = async () => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/blog`
+    );
+
+    setCat(res.data.data);
+    console.log("cat (api response)", res.data.data); // ✅ correct
+  } catch (error) {
+    console.error(error);
+  }finally{}
+};
+
+  
+
   useEffect(() => {
     fetchBlogs();
+    fetchCategory();
   }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
+
 
   return (
     <div>
@@ -284,6 +304,7 @@ const BlogTable = () => {
                             status: item.status,
                             active: item.status,
                             image: item.img,
+                            categoryId:item.categoryId
                           });
                         }}
                       >
@@ -402,6 +423,7 @@ const BlogTable = () => {
                       <label className="form-label">Category</label>
                       <select
                         className="form-select"
+                        style={{ maxHeight: "150px", overflowY: "auto" }}
                         value={blogEntry.categoryId}
                         onChange={(e) =>
                           setBlogEntry({
@@ -411,9 +433,11 @@ const BlogTable = () => {
                         }
                       >
                         <option value="">Select Category</option>
-                        <option value={1}>React</option>
-                        <option value={2}>Node.js</option>
-                        <option value={3}>Database</option>
+                        {cat.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                        ))}
                       </select>
                     </div>
 
@@ -551,18 +575,22 @@ const BlogTable = () => {
                       <label className="form-label">Category</label>
                       <select
                         className="form-select"
-                        value={blogEntry.categoryId}
+                        style={{ maxHeight: "150px", overflowY: "auto" }}
+                        
+                        value={blogEntry.categoryId?.toString() || ""}
                         onChange={(e) =>
                           setBlogEntry({
                             ...blogEntry,
-                            categoryId: e.target.value,
+                            categoryId: parseInt(e.target.value) || "",
                           })
                         }
                       >
                         <option value="">Select Category</option>
-                        <option value={1}>React</option>
-                        <option value={2}>Node.js</option>
-                        <option value={3}>Database</option>
+                        {cat.map((c) => (
+                          <option key={c.id} value={c.id.toString()}>
+                            {c.name}
+                          </option>
+                        ))}
                       </select>
                     </div>
 

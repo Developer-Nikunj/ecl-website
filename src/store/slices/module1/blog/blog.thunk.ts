@@ -36,6 +36,7 @@ export interface categoryItem{
     id:number;name:string;
 }
 export interface blogItem {
+  categoryId: string;
   id: number;
   img: string;
   title: string;

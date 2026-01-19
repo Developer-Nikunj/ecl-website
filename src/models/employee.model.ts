@@ -12,7 +12,7 @@ export const employeeModel = sequelize.define(
             unique: true,
              allowNull: false,
         },
-        employeeNmame: {
+        employeeName: {
             type: DataTypes.STRING,
             allowNull: false,
         },

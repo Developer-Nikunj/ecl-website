@@ -4,7 +4,7 @@ import { employeeModel } from "@/models/employee.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { saveImage } from "@/utils/uploads/saveImage";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
-import "@models";
+// import "@models";
 import { Op, where } from "sequelize";
 
 
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     try {
         await testConnection();
 
-        const auth = await verifyAdmin(request, "postemployee000");
+        const auth = await verifyAdmin(request, "");
 
         if (!auth.valid) {
             return NextResponse.json(
@@ -127,3 +127,5 @@ export async function POST(request: NextRequest) {
             },
         });
     }
+
+    

@@ -5,9 +5,16 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import PermissionGate from "@/components/admin/PermissionGate";
+import {
+  createBlog,
+  getAllBlog,
+  updateBlog,
+  deleteBlog,
+  getOneBlog,
+} from "@/store/slices/module1/blog/blog.thunk";
+
 const BlogTable = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [meta, setMeta] = useState(null);
+  const dispatch = useAppDispatch();
   const [filters, setFilters] = useState({
     limit: 10,
     offset: 0,
@@ -24,9 +31,9 @@ const BlogTable = () => {
     excerpt: "",
     content: "",
     status: "draft",
-    active: "1",
+    active: true,
     categoryId: "",
-    image: null,
+    image: "",
   });
   const [editBlogData, setEditBlogData] = useState({
     title: "",
@@ -38,11 +45,68 @@ const BlogTable = () => {
     image: null,
   });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { loading, error, blogs, selectedBlog, meta } = useAppSelector(
+    (state) => state.blog
+  );
 
-  const fetchBlogs = async()=>{
+  console.log("blogs", blogs);
 
+  const fetchBlogs = async () => {
+    await dispatch(
+      getAllBlog({
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        limit: filters.limit,
+        offset: filters.offset,
+      })
+    );
+  };
+
+  const handleCreate = async () => {
+    const formData = new FormData();
+    formData.append("title",blogEntry.title)
+    formData.append("excerpt", blogEntry.excerpt);
+    formData.append("content", blogEntry.content);
+    formData.append("status", blogEntry.status);
+    formData.append("active", blogEntry.active ? "true":"false");
+    formData.append("categoryId", blogEntry.categoryId);
+    formData.append("image", blogEntry.image);
+
+    const res = await dispatch(createBlog(formData));
+
+    if(createBlog.fulfilled.match(res)){
+      setShowCreateModal(false);
+      fetchBlogs();
+    }
+    setBlogEntry({
+      title: "",
+      excerpt: "",
+      content: "",
+      status: "draft",
+      active: true,
+      categoryId: "",
+      image: "",
+    });
+  };
+
+  const handleDelete = async()=>{
+    if(!selectedBlogId) return;
+
+    const res = await dispatch(deleteBlog(selectedBlogId));
+
+    if(deleteBlog.fulfilled.match(res)){
+      setShowDeleteModal(false);
+      setSelectedBlogId(null);
+    }
+
+    await dispatch(
+      getAllBlog({
+        limit: filters.limit,
+        offset: filters.offset,
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+      })
+    );
   }
 
   const applyFilter = () => {
@@ -64,60 +128,9 @@ const BlogTable = () => {
     });
   };
 
-  useEffect(()=>{fetchBlogs();},[])
-
-const sampleBlogs = [
-  {
-    id: 1,
-    img: "/uploads/blog/react-hooks.png",
-    title: "Understanding React Hooks",
-    slug: "understanding-react-hooks",
-    excerpt: "A beginner friendly guide to React Hooks and their usage.",
-    content: "Long blog content here...",
-    views: 120,
-    status: "published",
-    active: true,
-    category: {
-      id: 1,
-      name: "React",
-    },
-    createdAt: "2026-01-10",
-  },
-  {
-    id: 2,
-    img: "/uploads/blog/node-api.png",
-    title: "Building REST APIs with Node.js",
-    slug: "building-rest-apis-with-nodejs",
-    excerpt: "Learn how to build scalable REST APIs using Express and Node.js.",
-    content: "Long blog content here...",
-    views: 87,
-    status: "draft",
-    active: true,
-    category: {
-      id: 2,
-      name: "Node.js",
-    },
-    createdAt: "2026-01-12",
-  },
-  {
-    id: 3,
-    img: "/uploads/blog/sequelize.png",
-    title: "Sequelize ORM Best Practices",
-    slug: "sequelize-orm-best-practices",
-    excerpt: "Tips and tricks to write clean and efficient Sequelize code.",
-    content: "Long blog content here...",
-    views: 45,
-    status: "published",
-    active: false,
-    category: {
-      id: 3,
-      name: "Database",
-    },
-    createdAt: "2026-01-14",
-  },
-];
-
-
+  useEffect(() => {
+    fetchBlogs();
+  }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
 
   return (
     <div>
@@ -199,8 +212,8 @@ const sampleBlogs = [
           </thead>
 
           <tbody>
-            {sampleBlogs.length > 0 &&
-              sampleBlogs.map((item, index) => (
+            {blogs.length > 0 &&
+              blogs.map((item, index) => (
                 <tr key={item.id}>
                   <td>{filters.offset + index + 1}</td>
                   <td>{item.title}</td>
@@ -374,12 +387,12 @@ const sampleBlogs = [
                       <input
                         type="file"
                         className="form-control"
-                        // onChange={(e) =>
-                        // setBlogEntry({
-                        // ...blogEntry,
-                        // image: e.target.files[0],
-                        // })
-                        // }
+                        onChange={(e) =>
+                        setBlogEntry({
+                        ...blogEntry,
+                        image: e.target.files[0],
+                        })
+                        }
                       />
                     </div>
                   </form>
@@ -394,7 +407,7 @@ const sampleBlogs = [
                   </button>
                   <button
                     className="btn btn-sm btn-success"
-                    // onClick={handleCreate}
+                    onClick={handleCreate}
                   >
                     Save
                   </button>
@@ -631,7 +644,7 @@ const sampleBlogs = [
                   </button>
                   <button
                     className="btn btn-sm btn-danger"
-                    // onClick={handleDelete}
+                    onClick={handleDelete}
                   >
                     Delete
                   </button>

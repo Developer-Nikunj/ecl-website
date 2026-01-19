@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
         const limit = Number(searchParams.get("limit")) || 10;
         const offset = Number(searchParams.get("offset"))|| 0;
 
-        const whaere: any = {};
+        const where: any = {};
 
         if (startDate && endDate) {
             where.createdAt = {

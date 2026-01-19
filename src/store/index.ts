@@ -10,6 +10,7 @@ import testimonialReducer from "./slices/module1/testimonial/testimonial.slices"
 import seoReducer from "./slices/module1/seo/seo.slices"
 import profileReducer from "./slices/module1/profile/profile.slices"
 import blogCategoryReducer from "./slices/module1/blogCategory/blogCategory.slices"
+import blogReducer from "./slices/module1/blog/blog.slices"
 import { injectStore } from "@/lib/axios";
 
 
@@ -26,6 +27,7 @@ export const store = configureStore({
     seo: seoReducer,
     profile: profileReducer,
     blogCat: blogCategoryReducer,
+    blog: blogReducer,
   },
 });
 

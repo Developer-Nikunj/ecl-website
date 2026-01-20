@@ -127,11 +127,11 @@ const BlogsComponent = () => {
           return (
             <div
               key={post.id}
-              className="blog_details_item d-flex flex-column flex-md-row gap-4 mb-5 pb-4 border-bottom position-relative"
+              className="blog_details_item d-flex flex-column flex-md-row gap-6 mb-5 pb-4 border-bottom position-relative"
             >
               {/* Decorative background element */}
               <div
-                className="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-25 rounded-4"
+                className="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-25 rounded-6"
                 style={{ zIndex: -1 }}
               ></div>
 
@@ -146,12 +146,12 @@ const BlogsComponent = () => {
                       className="position-relative overflow-hidden rounded-4 shadow"
                       style={{
                         width: "300px",
-                        height: "330px",
-                        transition: "all 0.3s ease",
+                        height: "300px",
+                        transition: "all 0.5s ease",
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.boxShadow =
-                          "0 10px 30px rgba(0,0,0,0.15)";
+                          "0 20px 40px rgba(0,0,0,0.19)";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.boxShadow =
@@ -203,7 +203,7 @@ const BlogsComponent = () => {
               )}
 
               {/* Blog Content */}
-              <div className="xb-item--holder flex-grow-1">
+              <div className="xb-item--holder flex-grow-1 ps-md-2">
                 {/* Date with enhanced styling */}
                 <div className="d-flex align-items-center gap-3 mb-3">
                   <div className="d-flex align-items-center gap-2 text-primary bg-primary bg-opacity-10 px-3 py-1 rounded-pill">
@@ -545,7 +545,7 @@ const BlogsComponent = () => {
         {blog.length > 0 && (
           <div className="text-center mt-5">
             <Link
-              href="/blog"
+              href="/blogs"
               className="btn btn-primary px-5 py-3 rounded-pill fw-semibold"
             >
               <i className="fas fa-book me-2"></i>

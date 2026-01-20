@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Testimonials from "@/app/(main)/components/Testimonial"
+import TeamSlider from "@/app/(main)/components/Employees";
 
 export default function Home() {
   return (
@@ -1186,7 +1187,7 @@ export default function Home() {
         {/* <div className="container">
           <div className="sa-tes_top pos-rel mb-60">
             <div className="sec-title--two"> */}
-              {/* <div
+        {/* <div
                 className="sub-title wow fadeInDown"
                 data-wow-duration="600ms"
               >
@@ -1196,18 +1197,17 @@ export default function Home() {
                 />
                 99% positive feedback
               </div> */}
-              {/* <h2
+        {/* <h2
                 className="title wow skewIn"
                 data-wow-delay="150ms"
                 data-wow-duration="600ms"
               >
                 Feedback That Speaks
               </h2> */}
-            {/* </div>
+        {/* </div>
           </div>
         </div> */}
         <Testimonials></Testimonials>
-        
       </section>
       {/* testimonial section end  */}
       {/* feature section start  */}
@@ -1391,7 +1391,8 @@ export default function Home() {
               Dedicated Professionals{" "}
             </h2>
           </div>
-          <div className="sa-team pos-rel">
+          <TeamSlider />
+          {/* <div className="sa-team pos-rel">
             <div className="team-slider swiper-container">
               <div className="swiper-wrapper">
                 <div className="swiper-slide">
@@ -1453,242 +1454,6 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="swiper-slide">
-                  <div className="team-item">
-                    <div className="xb-item--content pos-rel">
-                      <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/team/team-bg.jpg"
-                          alt="Expert Code Lab"
-                        />
-                      </div>
-                      <div className="xb-item--item">
-                        <span className="xb-item--skill">
-                          18 Years experience
-                        </span>
-                        <span className="xb-item--reating">
-                          <i className="fas fa-star" /> 4.8
-                        </span>
-                      </div>
-                    </div>
-                    <div className="xb-item--inner ul_li_between align-items-end">
-                      <div className="xb-item--holder">
-                        <div className="xb-item--avatar">
-                          <img
-                            src="assets/front/img/team/sa-team03.png"
-                            alt="Expert Code Lab"
-                          />
-                        </div>
-                        <div className="xb-item--author">
-                          <h3 className="xb-item--name">David wilson</h3>
-                          <span className="xb-item--desig">
-                            SEO Project Manager
-                          </span>
-                        </div>
-                      </div>
-                      <ul className="xb-item--social-link ul_li">
-                        <li>
-                          <a href="#!">
-                            <i className="fab fa-linkedin-in" />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#!">
-                            <svg
-                              width={18}
-                              height={18}
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M10.6883 7.62176L17.2244 0H15.6756L10.0002 6.61789L5.46738 0H0.239258L7.09382 10.0074L0.239258 18H1.7882L7.7815 11.0113L12.5685 18H17.7967L10.6879 7.62176H10.6883ZM2.3463 1.16972H4.72537L15.6763 16.8835H13.2972L2.3463 1.16972Z"
-                                fill="#111112"
-                              />
-                            </svg>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="swiper-slide">
-                  <div className="team-item">
-                    <div className="xb-item--content pos-rel">
-                      <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/team/team-bg.jpg"
-                          alt="Expert Code Lab"
-                        />
-                      </div>
-                      <div className="xb-item--item">
-                        <span className="xb-item--skill">
-                          10 Years experience
-                        </span>
-                        <span className="xb-item--reating">
-                          <i className="fas fa-star" /> 4.8
-                        </span>
-                      </div>
-                    </div>
-                    <div className="xb-item--inner ul_li_between align-items-end">
-                      <div className="xb-item--holder">
-                        <div className="xb-item--avatar">
-                          <img
-                            src="assets/front/img/team/sa-team01.png"
-                            alt="Expert Code Lab"
-                          />
-                        </div>
-                        <div className="xb-item--author">
-                          <h3 className="xb-item--name">Sophia turner</h3>
-                          <span className="xb-item--desig">
-                            Link Building Manager
-                          </span>
-                        </div>
-                      </div>
-                      <ul className="xb-item--social-link ul_li">
-                        <li>
-                          <a href="#!">
-                            <i className="fab fa-linkedin-in" />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#!">
-                            <svg
-                              width={18}
-                              height={18}
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M10.6883 7.62176L17.2244 0H15.6756L10.0002 6.61789L5.46738 0H0.239258L7.09382 10.0074L0.239258 18H1.7882L7.7815 11.0113L12.5685 18H17.7967L10.6879 7.62176H10.6883ZM2.3463 1.16972H4.72537L15.6763 16.8835H13.2972L2.3463 1.16972Z"
-                                fill="#111112"
-                              />
-                            </svg>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="swiper-slide">
-                  <div className="team-item">
-                    <div className="xb-item--content pos-rel">
-                      <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/team/team-bg.jpg"
-                          alt="Expert Code Lab"
-                        />
-                      </div>
-                      <div className="xb-item--item">
-                        <span className="xb-item--skill">
-                          18 Years experience
-                        </span>
-                        <span className="xb-item--reating">
-                          <i className="fas fa-star" /> 4.9
-                        </span>
-                      </div>
-                    </div>
-                    <div className="xb-item--inner ul_li_between align-items-end">
-                      <div className="xb-item--holder">
-                        <div className="xb-item--avatar">
-                          <img
-                            src="assets/front/img/team/sa-team04.png"
-                            alt="Expert Code Lab"
-                          />
-                        </div>
-                        <div className="xb-item--author">
-                          <h3 className="xb-item--name">Natalie brooks</h3>
-                          <span className="xb-item--desig">
-                            Senior SEO Strategist
-                          </span>
-                        </div>
-                      </div>
-                      <ul className="xb-item--social-link ul_li">
-                        <li>
-                          <a href="#!">
-                            <i className="fab fa-linkedin-in" />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#!">
-                            <svg
-                              width={18}
-                              height={18}
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M10.6883 7.62176L17.2244 0H15.6756L10.0002 6.61789L5.46738 0H0.239258L7.09382 10.0074L0.239258 18H1.7882L7.7815 11.0113L12.5685 18H17.7967L10.6879 7.62176H10.6883ZM2.3463 1.16972H4.72537L15.6763 16.8835H13.2972L2.3463 1.16972Z"
-                                fill="#111112"
-                              />
-                            </svg>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="swiper-slide">
-                  <div className="team-item">
-                    <div className="xb-item--content pos-rel">
-                      <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/team/team-bg.jpg"
-                          alt="Expert Code Lab"
-                        />
-                      </div>
-                      <div className="xb-item--item">
-                        <span className="xb-item--skill">
-                          20 Years experience
-                        </span>
-                        <span className="xb-item--reating">
-                          <i className="fas fa-star" /> 4.8
-                        </span>
-                      </div>
-                    </div>
-                    <div className="xb-item--inner ul_li_between align-items-end">
-                      <div className="xb-item--holder">
-                        <div className="xb-item--avatar">
-                          <img
-                            src="assets/front/img/team/sa-team05.png"
-                            alt="Expert Code Lab"
-                          />
-                        </div>
-                        <div className="xb-item--author">
-                          <h3 className="xb-item--name">Brian johnson</h3>
-                          <span className="xb-item--desig">
-                            Business Developer
-                          </span>
-                        </div>
-                      </div>
-                      <ul className="xb-item--social-link ul_li">
-                        <li>
-                          <a href="#!">
-                            <i className="fab fa-linkedin-in" />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#!">
-                            <svg
-                              width={18}
-                              height={18}
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M10.6883 7.62176L17.2244 0H15.6756L10.0002 6.61789L5.46738 0H0.239258L7.09382 10.0074L0.239258 18H1.7882L7.7815 11.0113L12.5685 18H17.7967L10.6879 7.62176H10.6883ZM2.3463 1.16972H4.72537L15.6763 16.8835H13.2972L2.3463 1.16972Z"
-                                fill="#111112"
-                              />
-                            </svg>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
             <div className="team-btn">
@@ -1707,7 +1472,7 @@ export default function Home() {
                 Meet our all team member
               </a>
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
       {/* team section end  */}

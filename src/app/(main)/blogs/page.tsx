@@ -1,7 +1,34 @@
+"use client";
+
+import axios from "axios";
 import Image from "next/image";
+import React,{useState,useEffect} from "react";
 
 export default function Blogs() {
+  
+  const [blog, setBlog] = useState([]);
+
+  const fetchBlogs = async ()=>{
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/blog`
+      );
+      if (res.data.data.length > 1) {
+        setBlog(res.data.data);
+      }
+      console.log("blogs",blog)
+    } catch (error) {
+      
+    }finally{
+
+    }
+  }
+
+  useEffect(()=>{
+    fetchBlogs()
+  },[])
   return (
+
    
    <main>
   {/* page title start  */}
@@ -245,50 +272,7 @@ export default function Blogs() {
                 </div>
               </div>
             </div>
-            <div className="blog_details_item ul_li">
-              <div className="xb-item--img">
-                <a href="blog-details.html">
-                  <img src="assets/front/img/blog/b-img05.jpg" alt="" />
-                </a>
-              </div>
-              <div className="xb-item--holder">
-                <span className="xb-item--text">seo audits</span>
-                <h3 className="xb-item--title border-effect">
-                  <a href="blog-details.html">
-                    The importance of SEO audits how to keep your website..
-                  </a>
-                </h3>
-                <span className="xb-item--content">
-                  SEO audits are crucial for maintaining your website’s.
-                </span>
-                <div className="xb-item--button mt-50">
-                  <a href="blog-details.html">
-                    Read more <i className="far fa-arrow-right" />
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="blog_details_item">
-              <div className="xb-item--inner">
-                <span className="xb-item--text">technology</span>
-                <h3 className="xb-item--title border-effect">
-                  <a href="blog-details.html">
-                    Digital transformation with IT solutions <br /> what you
-                    need to know..
-                  </a>
-                </h3>
-                <span className="xb-item--content">
-                  Digital transformation with IT solutions is about using
-                  technology to enhance and streamline <br /> business
-                  processes. It includes adopting tools like cloud.
-                </span>
-                <div className="xb-item--button mt-50">
-                  <a href="blog-details.html">
-                    Read more <i className="far fa-arrow-right" />
-                  </a>
-                </div>
-              </div>
-            </div>
+            
             <ul className="blog-pagination ul_li">
               <li>
                 <a href="#!">

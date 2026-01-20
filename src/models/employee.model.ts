@@ -38,6 +38,12 @@ export const employeeModel = sequelize.define(
         },
         employeeMobileNo: {
             type: DataTypes.STRING,
+        },
+        linkedInUrl: {
+            type: DataTypes.STRING,
+        },
+        twitterUrl: {
+            type: DataTypes.STRING,
         }
         
 
@@ -45,4 +51,4 @@ export const employeeModel = sequelize.define(
     { tableName: "employee", freezeTableName: true, }
 );
 
-await employeeModel.sync();
+await employeeModel.sync({ alter: true });

@@ -26,6 +26,7 @@ const Teams = () => {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/employee`,
       );
+      console.log(res)
       setData(res.data.data || []);
     } catch (error) {
       console.error("Teams data error:", error);

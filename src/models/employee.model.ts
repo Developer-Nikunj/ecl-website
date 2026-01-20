@@ -22,10 +22,10 @@ export const employeeModel = sequelize.define(
         Designation: {
             type: DataTypes.STRING,
         },
-        Status : {
+         Status : {
             type: DataTypes.BOOLEAN,
-            defaultValue: true,
-        },
+             defaultValue: true,
+         },
         Experience : {
             type: DataTypes.INTEGER,
         },

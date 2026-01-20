@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
                 { status: auth.status }
 
             );
-    }
+        }
     
     const formData = await request.formData();
 
@@ -87,30 +87,32 @@ export async function POST(request: NextRequest) {
      }
     }
 
+
     
     export async function GET(req: NextRequest) {
-        await testConnection();
+        console.log("Fetching employees...");
+         await testConnection();
 
-        const { searchParams } = new URL(req.url);
+         const { searchParams } = new URL(req.url);
 
         const startDate = searchParams.get("startDate");
-        const endDate = searchParams.get("endDate");
-        const limit = Number(searchParams.get("limit")) || 10;
-        const offset = Number(searchParams.get("offset"))|| 0;
+         const endDate = searchParams.get("endDate");
+         const limit = Number(searchParams.get("limit")) || 10;
+         const offset = Number(searchParams.get("offset"))|| 0;
 
         const where: any = {};
 
-        if (startDate && endDate) {
-            where.createdAt = {
-                [Op.between]: [new Date(startDate), new Date(endDate)],
+         if (startDate && endDate) {
+         where.createdAt = {
+                 [Op.between]: [new Date(startDate), new Date(endDate)],
             };
-        } else if (startDate) {
-            where.createdAt = { [Op.gte]: new Date(startDate) };
+         } else if (startDate) {
+             where.createdAt = { [Op.gte]: new Date(startDate) };
 
-        }else if (endDate) {
+         }else if (endDate) {
             where.createdAt = { [Op.lte]: new Date(endDate) };
-        }
-        const { rows, count} = await employeeModel.findAndCountAll({
+         }
+         const { rows, count} = await employeeModel.findAndCountAll({
             where,
             order: [["createdAt", "DESC"]],
             limit,
@@ -119,12 +121,12 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
             status: 1,
-            data: rows,
-            meta: {
-                limit,
-                offset,
-                total: count,
-            },
+             data: rows,
+             meta: {
+                 limit,
+                 offset,
+                 total: count,
+             },
         });
     }
 

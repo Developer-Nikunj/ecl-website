@@ -55,14 +55,14 @@ export async function PUT(
     const formData = await request.formData();
     const imageFile = formData.get("employeeImg") as File;
     let imagePath = employee.img;
-    if (image instanceof File && imageFile.size > 0) {
+    if (imageFile && imageFile instanceof File && imageFile.size > 0) {
         deleteImage(employee.img);
         imagePath = await saveImage(imageFile, "employee");
 
     }
 
     await employee.update({
-        employeeName: formData.get("employeeNmae"),
+        employeeName: formData.get("employeeName"),
         employeeEmail: formData.get("employeeEmail"),
         Designation: formData.get("Designation"),
         Experience: formData.get("Experience"),

@@ -36,6 +36,9 @@ export const employeeModel = sequelize.define(
             type: DataTypes.STRING,
             defaultValue : 'https://icon-library.com/images/employee-icon-png/employee-icon-png-29.jpg',
         },
+        employeeMobileNo: {
+            type: DataTypes.STRING,
+        }
         
 
     },

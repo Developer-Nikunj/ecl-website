@@ -53,6 +53,11 @@ const Sidebar = () => {
                     Enquiries
                   </Link>
                 </li>
+                  <li className="nav-item">
+                    <Link href="/dev/employee" className="nav-link">
+                      Employee
+                    </Link>
+                </li>
               </ul>
             </div>
           </li>

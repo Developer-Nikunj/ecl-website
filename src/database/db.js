@@ -15,6 +15,7 @@ export const sequelize = new Sequelize(
 
 export async function testConnection() {
   try {
+    console.log("🔌 Testing database connection...");
     await sequelize.authenticate();
     console.log("✅ Database connected successfully!");
   } catch (error) {

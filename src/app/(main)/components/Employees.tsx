@@ -143,16 +143,16 @@ const Teams = () => {
                                 >
                                   <img
                                     src={
-                                      member.employeeImg ||
-                                      "/default-avatar.png"
+                                      member?.employeeImg ||
+                                      "/assets/front/img/team/img01.png"
                                     }
-                                    alt={member.employeeName}
+                                    alt={member?.employeeName}
                                     className="img-fluid w-100 h-100 object-fit-cover"
                                     onError={(e) => {
                                       const target =
                                         e.target as HTMLImageElement;
                                       target.src =
-                                        "/assets/front/img/team/default-avatar.png";
+                                        "/assets/front/img/team/img01.png";
                                     }}
                                   />
                                 </div>

@@ -14,7 +14,7 @@ import {
 
 import PermissionGate from "@/components/admin/PermissionGate"
 
-const employee = () => {
+const EmployeeTable = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -48,7 +48,7 @@ const employee = () => {
   };
 
   const handleCreate = async () => {
-    const res = await dispatch(
+    const res = await dispatch(      
       createRole({
         name: createRoleEntry.name,
         description: createRoleEntry.description,
@@ -242,11 +242,7 @@ const employee = () => {
                             className="btn btn-sm btn-primary"
                             onClick={() => {
                               setSelectedRoleId(item.id);
-                              setCreateRoleEntry({
-                                name: item.name,
-                                description: item.description,
-                                status: item.status == true ? "1" : "0",
-                              });
+                            
                               setShowEditModal(true);
                             }}
                           >
@@ -326,13 +322,7 @@ const employee = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Role name"
-                        value={createRoleEntry.name}
-                        onChange={(e) =>
-                          setCreateRoleEntry({
-                            ...createRoleEntry,
-                            name: e.target.value,
-                          })
-                        }
+                        
                       />
                     </div>
                     <div className="mb-3">
@@ -341,13 +331,8 @@ const employee = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter menu description"
-                        value={createRoleEntry.description}
-                        onChange={(e) =>
-                          setCreateRoleEntry({
-                            ...createRoleEntry,
-                            description: e.target.value,
-                          })
-                        }
+                      
+                        
                       />
                     </div>
                     <div className="mb-3">
@@ -355,13 +340,8 @@ const employee = () => {
                       <select
                         className="form-select mb-3"
                         aria-label="Default select example"
-                        value={createRoleEntry.status}
-                        onChange={(e) =>
-                          setCreateRoleEntry({
-                            ...createRoleEntry,
-                            status: e.target.value,
-                          })
-                        }
+                      
+                        
                       >
                         <option selected>Status</option>
                         <option value="1">Active</option>
@@ -423,13 +403,8 @@ const employee = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter menu name"
-                        value={createRoleEntry?.name || ""}
-                        onChange={(e) =>
-                          setCreateRoleEntry((prev) => ({
-                            ...prev,
-                            name: e.target.value,
-                          }))
-                        }
+                       
+                        
                       />
                     </div>
                     <div className="mb-3">
@@ -438,13 +413,8 @@ const employee = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter menu description"
-                        value={createRoleEntry?.description || ""}
-                        onChange={(e) =>
-                          setCreateRoleEntry((prev) => ({
-                            ...prev,
-                            description: e.target.value,
-                          }))
-                        }
+                       
+                        
                       />
                     </div>
                     <div className="mb-3">
@@ -455,13 +425,8 @@ const employee = () => {
                         id="roleStatus"
                         className="form-select mb-3"
                         aria-label="Role Status"
-                        value={createRoleEntry.status}
-                        onChange={(e) =>
-                          setCreateRoleEntry((prev) => ({
-                            ...prev,
-                            status: e.target.value, // convert string to number
-                          }))
-                        }
+                        
+                        
                       >
                         <option value="">Select Status</option>
                         <option value={1}>Active</option>
@@ -557,4 +522,4 @@ const employee = () => {
   );
 };
 
-export default RoleTable;
+export default EmployeeTable;

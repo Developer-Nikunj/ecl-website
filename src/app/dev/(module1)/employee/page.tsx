@@ -1,6 +1,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import FooterManagementComponent from "@/components/admin/footer/FooterTable";
+import employeeTable from "@/components/admin/Employee/EmployeeTable";
+import EmployeeTable from "@/components/admin/Employee/EmployeeTable";
 
 export default function Home() {
   return (
@@ -15,12 +16,12 @@ export default function Home() {
                     <div className="d-flex align-items-lg-center flex-lg-row flex-column">
                       <div className="flex-grow-1">
                         {/* <h4 className="fs-16 mb-1">Good Morning, Anna!</h4> */}
-                        <FooterManagementComponent />
+                        <EmployeeTable />
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>{" "}
+              </div>
             </div>{" "}
           </div>
         </div>

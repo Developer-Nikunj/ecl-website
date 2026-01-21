@@ -7,18 +7,18 @@ interface UserAttributes {
   token?: string;
   email: string;
   password: string;
-  img: string;
+  img?: string;
   otp?: string;
   role: string;
   actions?: any[];
-  emailVerified: boolean;
+  emailVerified?: boolean;
   status: boolean;
 }
 
 interface UserCreationAttributes
   extends Optional<
     UserAttributes,
-    "id" | "otp" | "actions" | "emailVerified" | "token"
+    "id" | "otp" | "actions" | "emailVerified" | "token" | "name" | "img"
   > {}
 
 export class User
@@ -26,15 +26,15 @@ export class User
   implements UserAttributes
 {
   declare id: number;
-  declare name: string;
-  declare token: string;
+  declare name?: string;
+  declare token?: string;
   declare email: string;
-  declare img: string;
+  declare img?: string;
   declare password: string;
   declare otp?: string;
   declare role: string;
   declare actions?: any[];
-  declare emailVerified: boolean;
+  declare emailVerified?: boolean;
   declare status: boolean;
 }
 
@@ -81,7 +81,7 @@ export const userModel = User.init(
   },
   {
     sequelize,
-    tableName: "user",
+    tableName: "users",
     freezeTableName: true,
     timestamps: true,
   }

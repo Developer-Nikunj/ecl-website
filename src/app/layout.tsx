@@ -6,6 +6,9 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+import {startup} from "@/lib/startup"
+
+startup();
 
 export const metadata: Metadata = {
   title: "Create Next App",

@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request, "postUser");
+    const auth = await verifyAdmin(request, "postuser");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },

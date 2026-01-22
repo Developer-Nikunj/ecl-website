@@ -23,17 +23,17 @@ export const contactFormModel = sequelize.define(
       type: DataTypes.STRING,
     },
     message: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     noteByAdmin: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     status: {
       type: DataTypes.STRING,
       defaultValue: "Pending",
     },
   },
-  { tableName: "contactForm", freezeTableName: true, timestamps: true }
+  { tableName: "contactForm", freezeTableName: true, timestamps: true },
 );
 
-await contactFormModel.sync();
+await contactFormModel.sync({alter:true});

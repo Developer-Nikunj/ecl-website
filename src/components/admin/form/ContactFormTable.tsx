@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from "@/lib/axios";
 
 interface ContactForm {
   id: number;
@@ -391,8 +392,8 @@ const ContactFormTable: React.FC = () => {
                 <button
                   className="btn btn-success px-4"
                   onClick={async () => {
-                    await axios.put(
-                      `${process.env.NEXT_PUBLIC_BACKEND_URL}/contactForm/${selectedContact.id}`,
+                    await api.put(
+                      `/contactForm/${selectedContact.id}`,
                       editForm
                     );
                     closeAllModals();

@@ -81,7 +81,7 @@ export const userModel = User.init(
   },
   {
     sequelize,
-    tableName: "users",
+    tableName: "user",
     freezeTableName: true,
     timestamps: true,
   }

@@ -26,11 +26,18 @@ export async function POST(request: NextRequest) {
       status:'Pending',
     });
 
-    return NextResponse.json({
-      status: 1,
-      message: "Contact form entry created successfully",
-      // data: newEntry,
-    });
+    if (!newEntry){
+      return NextResponse.json({
+        status: 0,
+        message: "Contact form Failed",
+        // data: newEntry,
+      });
+    }
+      return NextResponse.json({
+        status: 1,
+        message: "Contact form entry created successfully",
+        // data: newEntry,
+      });
   } catch (error) {
     console.error("POST /contactForm error:", error);
     return NextResponse.json({ status: 0, message: "Internal server error" });

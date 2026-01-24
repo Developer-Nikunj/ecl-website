@@ -580,9 +580,9 @@ export default function Header() {
                     
                   </li>
                   <li className="">
-                    <a href="#">
+                    <Link href="/blogs">
                       <span>Blog</span>
-                    </a>
+                    </Link>
                   
                   </li>
                   <li>

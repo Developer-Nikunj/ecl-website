@@ -1,10 +1,6 @@
-"use client";
-import React, { useState, useEffect } from "react";
+
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import axios from "axios";
-
-import { useParams } from "next/navigation";
 
 type ServiceParams = {
   params: {
@@ -37,7 +33,7 @@ const service: Record<string, ServiceData> = {
 
 // ✅ SEO Metadata
 export async function generateMetadata({ params }: ServiceParams) {
-  const mservice = service[params.slug as keyof typeof service];
+  const mservice = service[params.slug ];
 
   if (!mservice) return {};
 
@@ -79,6 +75,9 @@ function ServiceSchema({ slug, data }: ServiceSchemaProps) {
   );
 }
 
+
+
+
 // ✅ Page Component
 export default function Service({ params }: ServiceParams) {
   const mservice = service[params.slug];
@@ -86,23 +85,7 @@ export default function Service({ params }: ServiceParams) {
   if (!mservice) {
     notFound();
   }
-  const { slug } = useParams();
-  const getSeoBySlug = async () => {
-    try {
-      const data = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/seo/bySlug`,
-        {
-          slug: slug,
-        },
-      );
 
-      console.log("data", data);
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    getSeoBySlug();
-  });
 
   return (
     <main>

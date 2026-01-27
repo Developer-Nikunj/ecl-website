@@ -5,10 +5,9 @@ import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { z } from "zod";
 
 const seoSchema = z.object({
-  pageUrl: z
+  slug: z
     .string()
     .min(1, "Page URL is required")
-    .regex(/^\/.*/, "pageUrl must start with /")
 });
 
 export async function POST(request: NextRequest) {
@@ -18,15 +17,18 @@ export async function POST(request: NextRequest) {
     const auth = await verifyAdmin(request,"getSeo");
 
     if (!auth.valid) {
-      return NextResponse.json({ message: auth.message }, { status: 401 });
+      return NextResponse.json({ message: auth.message }, { status: 400});
     }
     const body = await request.json();
     const validatedData = seoSchema.parse(body);
 
     const fetchedSeo = await Service.findOne({
       where: {
-        pageUrl: validatedData.pageUrl,
+        slug: validatedData.slug,
       },
+      attributes:{
+        exclude:["createdAt",'updatedAt'],
+      }
     });    
 
     const response = NextResponse.json({

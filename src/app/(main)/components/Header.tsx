@@ -120,7 +120,7 @@ export default function Header() {
                                       <div className="col-xl-4 col-md-4">
                                         <a
                                           className="iconbox_block_2"
-                                          href="service.html"
+                                          href="services"
                                         >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
@@ -409,7 +409,7 @@ export default function Header() {
                     </ul>
                   </li>
                   <li className="menu-item-has-children megamenu">
-                    <a href="service.html">
+                    <a href="services">
                       <span>Services</span>
                     </a>
                     <ul className="submenu">

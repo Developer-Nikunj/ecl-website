@@ -47,11 +47,12 @@ export async function POST(request: NextRequest) {
 
       ogTitle: formData.get("ogTitle"),
       ogDescription: formData.get("ogDescription"),
-      ogImage: ogImagePath,
+      ogImage: ogImagePath ||"",
 
-      schema: formData.get("schema")
-        ? JSON.parse(formData.get("schema") as string)
-        : null,
+      schema: formData.get("schema"),
+      // schema: formData.get("schema")
+      //   ? JSON.parse(formData.get("schema") as string)
+      //   : null,
     };
 
     const data = seoSchema.parse(payload);

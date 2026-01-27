@@ -112,7 +112,7 @@ const SeoTable = () => {
 
     /* ---------- SCHEMA ---------- */
     if (createSeoEntry.schema) {
-      formData.append("schema", JSON.stringify(editSeoEntry.schema));
+      formData.append("schema", createSeoEntry.schema);
     }
 
     /* ---------- IMAGE ---------- */
@@ -309,113 +309,113 @@ const SeoTable = () => {
         </button>
       </div>
       <PermissionGate permission="postseo">
-      <div className="d-flex justify-content-end mb-3">
-        <button
-          onClick={() => setShowCreateModal((prev) => !prev)}
-          className="btn btn-sm btn-success"
-        >
-          Create Seo
-        </button>
-      </div>
-      </PermissionGate>
-      <PermissionGate permission="getseo">
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle mb-0">
-          <thead className="table-light">
-            <tr>
-              <th>SNo.</th>
-              <th>Slug</th>
-              <th>Title</th>
-              <th>Meta Title</th>
-              <th>Category</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {list.length > 0 &&
-              list.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{filters.offset + index + 1}</td>
-                  <td>{item.slug}</td>
-                  <td>{item.title}</td>
-                  <td>{item.metaTitle}</td>
-                  <td>{item.category}</td>
-                  <td>{item.status == true ? "Active" : "InActive"}</td>
-
-                  <td>
-                    <div className="d-flex gap-2">
-                      <PermissionGate permission="putseo">
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => {
-                          setSelectedSeoId(item.id);
-                          setShowEditModal(true);
-                          setEditSeoEntry({
-                            slug: item.slug,
-                            pageUrl: item.pageUrl,
-                            title: item.title,
-                            description: item.description,
-                            category: item.category,
-                            status: item.status ? true : false,
-                            metaTitle: item.metaTitle,
-                            metaDescription: item.metaDescription,
-                            metaKeywords: item.metaKeywords,
-                            robots: item.robots,
-                            canonicalUrl: item.canonicalUrl,
-                            ogTitle: item.ogTitle,
-                            ogDescription: item.ogDescription,
-                            schema: item.schema,
-                          });
-                          // setOgImage(item.ogImage);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      </PermissionGate>
-                      <PermissionGate permission="deleteseo">
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => {
-                          console.log("selectedSeoId", item.id);
-                          setSelectedSeoId(item.id);
-                          setShowDeleteModal((prev) => !prev);
-                        }}
-                      >
-                        Delete
-                      </button>
-                      </PermissionGate>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        <div className="d-flex justify-content-between align-items-center mt-3">
+        <div className="d-flex justify-content-end mb-3">
           <button
-            className="btn btn-sm text-white"
-            style={{
-              background: "linear-gradient(135deg, #667eea, #764ba2)",
-            }}
-            onClick={handlePrevious}
-            disabled={filters.offset === 0}
+            onClick={() => setShowCreateModal((prev) => !prev)}
+            className="btn btn-sm btn-success"
           >
-            Previous
-          </button>
-
-          <button
-            className="btn btn-sm text-white"
-            style={{
-              background: "linear-gradient(135deg, #43cea2, #185a9d)",
-            }}
-            onClick={handleNext}
-            disabled={filters.offset + filters.limit >= total}
-          >
-            Next
+            Create Seo
           </button>
         </div>
-      </div>
+      </PermissionGate>
+      <PermissionGate permission="getseo">
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover align-middle mb-0">
+            <thead className="table-light">
+              <tr>
+                <th>SNo.</th>
+                <th>Slug</th>
+                <th>Title</th>
+                <th>Meta Title</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {list.length > 0 &&
+                list.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{filters.offset + index + 1}</td>
+                    <td>{item.slug}</td>
+                    <td>{item.title}</td>
+                    <td>{item.metaTitle}</td>
+                    <td>{item.category}</td>
+                    <td>{item.status == true ? "Active" : "InActive"}</td>
+
+                    <td>
+                      <div className="d-flex gap-2">
+                        <PermissionGate permission="putseo">
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => {
+                              setSelectedSeoId(item.id);
+                              setShowEditModal(true);
+                              setEditSeoEntry({
+                                slug: item.slug,
+                                pageUrl: item.pageUrl,
+                                title: item.title,
+                                description: item.description,
+                                category: item.category,
+                                status: item.status ? true : false,
+                                metaTitle: item.metaTitle,
+                                metaDescription: item.metaDescription,
+                                metaKeywords: item.metaKeywords,
+                                robots: item.robots,
+                                canonicalUrl: item.canonicalUrl,
+                                ogTitle: item.ogTitle,
+                                ogDescription: item.ogDescription,
+                                schema: item.schema,
+                              });
+                              // setOgImage(item.ogImage);
+                            }}
+                          >
+                            Edit
+                          </button>
+                        </PermissionGate>
+                        <PermissionGate permission="deleteseo">
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => {
+                              console.log("selectedSeoId", item.id);
+                              setSelectedSeoId(item.id);
+                              setShowDeleteModal((prev) => !prev);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </PermissionGate>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #667eea, #764ba2)",
+              }}
+              onClick={handlePrevious}
+              disabled={filters.offset === 0}
+            >
+              Previous
+            </button>
+
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #43cea2, #185a9d)",
+              }}
+              onClick={handleNext}
+              disabled={filters.offset + filters.limit >= total}
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </PermissionGate>
 
       {showCreateModal && (
@@ -705,7 +705,7 @@ const SeoTable = () => {
                       <textarea
                         className="form-control"
                         rows={4}
-                        placeholder='{"@context":"https://schema.org"}'
+                        placeholder='"{@context":"https://schema.org}"'
                         value={createSeoEntry.schema}
                         onChange={(e) => {
                           setCreateSeoEntry({
@@ -1027,12 +1027,12 @@ const SeoTable = () => {
                       <textarea
                         className="form-control"
                         rows={4}
-                        placeholder='{"@context":"https://schema.org"}'
-                        value={JSON.stringify(editSeoEntry.schema, null, 2)}
+                        // placeholder='"{"@context":"https://schema.org"}"'
+                        value={editSeoEntry.schema}
                         onChange={(e) =>
                           setEditSeoEntry({
                             ...editSeoEntry,
-                            schema: JSON.parse(e.target.value),
+                            schema: e.target.value,
                           })
                         }
                       />

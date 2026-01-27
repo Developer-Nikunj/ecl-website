@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Sidebar from "./sidebar";
 import Profile from "./profile";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -11,6 +12,7 @@ const Header = () => {
   const [isDark, setIsDark] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const dropdownRef = useRef(null);
+  const pathname = usePathname(); // Add this line
 
   const toggleSidebar = () => {
     const newState = !isSidebarOpen;
@@ -58,6 +60,17 @@ const Header = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Reset sidebar when route changes
+  useEffect(() => {
+    setIsSidebarOpen(true);
+    document.body.setAttribute("data-sidebar-size", "lg");
+
+    const mainContent = document.querySelector(".main-content");
+    if (mainContent) {
+      mainContent.style.marginLeft = "";
+    }
+  }, [pathname]);
 
   return (
     <>
@@ -165,7 +178,7 @@ const Header = () => {
                   </button>
                 </div>
 
-                <div className="ms-2 header-item d-none d-sm-flex">
+                {/* <div className="ms-2 header-item d-none d-sm-flex">
                   <button
                     type="button"
                     className="btn btn-icon btn-topbar material-shadow-none btn-ghost-secondary rounded-circle light-dark-mode"
@@ -173,7 +186,7 @@ const Header = () => {
                   >
                     <i className="bx bx-moon fs-22" />
                   </button>
-                </div>
+                </div> */}
 
                 <div
                   className="dropdown ms-2 header-item topbar-user"

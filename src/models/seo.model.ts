@@ -101,4 +101,4 @@ Service.init(
 );
 
 // optional but recommended
-await Service.sync();
+await Service.sync({alter:true});

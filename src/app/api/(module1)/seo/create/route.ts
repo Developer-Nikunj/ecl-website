@@ -25,7 +25,7 @@ const seoSchema = z.object({
 
   ogDescription: z.string().optional(),
 
-  ogImage: z.string().url("Invalid OG image URL").optional(),
+  ogImage: z.string().url("Invalid OG image URL").nullable().optional(),
 
   schema: z.record(z.string(), z.any()).optional(),
 });
@@ -40,14 +40,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: auth.message }, { status: 401 });
     }
     const body = await request.json();
+    console.log("---------------------------------",body.ogImage);
+    if (!body.ogImage) {
+      body.ogImage = "";
+    }
     const validatedData = seoSchema.parse(body);
 
+      
     const createdSeo = await Service.create(validatedData);
 
     if (auth.user == null) {
       return NextResponse.json(
         { message: auth.message },
-        { status: auth.status }
+        { status: auth.status },
       );
     }
 

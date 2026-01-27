@@ -1,5 +1,8 @@
+"use client"
+import React,{useState,useEffect} from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import axios from "axios";
 
 type ServiceParams = {
   params: {
@@ -86,6 +89,25 @@ export default function Service({ params }: ServiceParams) {
   if (!mservice) {
     notFound();
   }
+
+  const getSeoBySlug = async()=>{
+    try {
+      const data = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/seo/bySlug`,
+        {
+          slug: "slug",
+        },
+      );
+
+      console.log("data",data)
+    } catch (error) {
+      
+    }
+  }
+
+  useEffect(()=>{
+    getSeoBySlug()
+  })
 
   return (
   

@@ -283,7 +283,7 @@ const BlogsComponent = () => {
                 {/* Enhanced Read More Button */}
                 <div className="xb-item--button d-flex align-items-center gap-3">
                   <Link
-                    href={`/blog/${post.slug}`}
+                    href={`/blogs/${post.slug}`}
                     className="btn btn-primary text-white fw-semibold d-inline-flex align-items-center gap-2 px-4 py-2 rounded-pill border-0"
                     style={{
                       transition: "all 0.3s ease",

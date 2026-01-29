@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -31,9 +30,11 @@ const service: Record<string, ServiceData> = {
   },
 };
 
+
+
 // ✅ SEO Metadata
 export async function generateMetadata({ params }: ServiceParams) {
-  const mservice = service[params.slug ];
+  const mservice = service[params.slug as keyof typeof service];
 
   if (!mservice) return {};
 
@@ -42,6 +43,8 @@ export async function generateMetadata({ params }: ServiceParams) {
     description: mservice.description,
   };
 }
+
+
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return Object.keys(service).map((slug) => ({ slug }));
@@ -76,8 +79,6 @@ function ServiceSchema({ slug, data }: ServiceSchemaProps) {
 }
 
 
-
-
 // ✅ Page Component
 export default function Service({ params }: ServiceParams) {
   const mservice = service[params.slug];
@@ -86,8 +87,8 @@ export default function Service({ params }: ServiceParams) {
     notFound();
   }
 
-
   return (
+  
     <main>
       {/* hero section start  */}
       <section
@@ -195,40 +196,22 @@ export default function Service({ params }: ServiceParams) {
             </div>
             <div className="brand-wrap brand-marquee">
               <div className="brand-logo">
-                <img
-                  src="assets/front/img/brand/brand-logo01.png"
-                  alt="Expert Code Lab"
-                />
+                <img src="assets/front/img/brand/brand-logo01.png" alt="Expert Code Lab" />
               </div>
               <div className="brand-logo">
-                <img
-                  src="assets/front/img/brand/brand-logo02.png"
-                  alt="Expert Code Lab"
-                />
+                <img src="assets/front/img/brand/brand-logo02.png" alt="Expert Code Lab" />
               </div>
               <div className="brand-logo">
-                <img
-                  src="assets/front/img/brand/brand-logo03.png"
-                  alt="Expert Code Lab"
-                />
+                <img src="assets/front/img/brand/brand-logo03.png" alt="Expert Code Lab" />
               </div>
               <div className="brand-logo">
-                <img
-                  src="assets/front/img/brand/brand-logo04.png"
-                  alt="Expert Code Lab"
-                />
+                <img src="assets/front/img/brand/brand-logo04.png" alt="Expert Code Lab" />
               </div>
               <div className="brand-logo">
-                <img
-                  src="assets/front/img/brand/brand-logo05.png"
-                  alt="Expert Code Lab"
-                />
+                <img src="assets/front/img/brand/brand-logo05.png" alt="Expert Code Lab" />
               </div>
               <div className="brand-logo">
-                <img
-                  src="assets/front/img/brand/brand-logo06.png"
-                  alt="Expert Code Lab"
-                />
+                <img src="assets/front/img/brand/brand-logo06.png" alt="Expert Code Lab" />
               </div>
             </div>
           </div>
@@ -244,11 +227,7 @@ export default function Service({ params }: ServiceParams) {
                 className="sub-title wow fadeInDown"
                 data-wow-duration="600ms"
               >
-                <img
-                  src="assets/front/img/icon/magic.png"
-                  alt="Expert Code Lab"
-                />{" "}
-                We are ECL
+                <img src="assets/front/img/icon/magic.png" alt="Expert Code Lab" /> We are ECL
               </div>
               <h2
                 className="title wow fadeInDown"
@@ -264,10 +243,7 @@ export default function Service({ params }: ServiceParams) {
                   <h2 className="title">Coure values</h2>
                   <div className="about-item_box ul_li">
                     <div className="xb-item--icon">
-                      <img
-                        src="assets/front/img/icon/airdrop.png"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/airdrop.png" alt="Expert Code Lab" />
                     </div>
                     <div className="xb-item--holder">
                       <p className="xb-item--content">
@@ -278,10 +254,7 @@ export default function Service({ params }: ServiceParams) {
                   </div>
                   <div className="about-item_box ul_li">
                     <div className="xb-item--icon">
-                      <img
-                        src="assets/front/img/icon/people.png"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/people.png" alt="Expert Code Lab" />
                     </div>
                     <div className="xb-item--holder">
                       <p className="xb-item--content">
@@ -292,10 +265,7 @@ export default function Service({ params }: ServiceParams) {
                   </div>
                   <div className="about-item_box ul_li">
                     <div className="xb-item--icon">
-                      <img
-                        src="assets/front/img/icon/microphone.png"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/microphone.png" alt="Expert Code Lab" />
                     </div>
                     <div className="xb-item--holder">
                       <p className="xb-item--content">
@@ -350,10 +320,7 @@ export default function Service({ params }: ServiceParams) {
                     className="sub-title wow fadeInDown"
                     data-wow-duration="600ms"
                   >
-                    <img
-                      src="assets/front/img/icon/ser-01.svg"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/icon/ser-01.svg" alt="Expert Code Lab" />
                     Feature-services
                   </span>
                   <h2
@@ -399,16 +366,10 @@ export default function Service({ params }: ServiceParams) {
                     </div>
                     <div className="xb-item--icon ul_li_between">
                       <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/icon/research.gif"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/icon/research.gif" alt="Expert Code Lab" />
                       </div>
                       <a href="service-details.html" className="xb-item--arrow">
-                        <img
-                          src="assets/front/img/icon/arrow-black.svg"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/icon/arrow-black.svg" alt="Expert Code Lab" />
                       </a>
                     </div>
                   </div>
@@ -425,16 +386,10 @@ export default function Service({ params }: ServiceParams) {
                     </div>
                     <div className="xb-item--icon ul_li_between">
                       <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/icon/digital-tra.gif"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/icon/digital-tra.gif" alt="Expert Code Lab" />
                       </div>
                       <a href="service-details.html" className="xb-item--arrow">
-                        <img
-                          src="assets/front/img/icon/arrow-black.svg"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/icon/arrow-black.svg" alt="Expert Code Lab" />
                       </a>
                     </div>
                   </div>
@@ -451,16 +406,10 @@ export default function Service({ params }: ServiceParams) {
                     </div>
                     <div className="xb-item--icon ul_li_between">
                       <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/icon/search.gif"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/icon/search.gif" alt="Expert Code Lab" />
                       </div>
                       <a href="service-details.html" className="xb-item--arrow">
-                        <img
-                          src="assets/front/img/icon/arrow-black.svg"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/icon/arrow-black.svg" alt="Expert Code Lab" />
                       </a>
                     </div>
                   </div>
@@ -481,16 +430,10 @@ export default function Service({ params }: ServiceParams) {
                     </div>
                     <div className="xb-item--icon ul_li_between">
                       <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/icon/durability.gif"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/icon/durability.gif" alt="Expert Code Lab" />
                       </div>
                       <a href="service-details.html" className="xb-item--arrow">
-                        <img
-                          src="assets/front/img/icon/arrow-black.svg"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/icon/arrow-black.svg" alt="Expert Code Lab" />
                       </a>
                     </div>
                   </div>
@@ -513,10 +456,7 @@ export default function Service({ params }: ServiceParams) {
                         />
                       </div>
                       <a href="service-details.html" className="xb-item--arrow">
-                        <img
-                          src="assets/front/img/icon/arrow-black.svg"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/icon/arrow-black.svg" alt="Expert Code Lab" />
                       </a>
                     </div>
                   </div>
@@ -533,16 +473,10 @@ export default function Service({ params }: ServiceParams) {
                     </div>
                     <div className="xb-item--icon ul_li_between">
                       <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/icon/warning.gif"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/icon/warning.gif" alt="Expert Code Lab" />
                       </div>
                       <a href="service-details.html" className="xb-item--arrow">
-                        <img
-                          src="assets/front/img/icon/arrow-black.svg"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/icon/arrow-black.svg" alt="Expert Code Lab" />
                       </a>
                     </div>
                   </div>
@@ -563,10 +497,7 @@ export default function Service({ params }: ServiceParams) {
                 className="sub-title wow fadeInDown"
                 data-wow-duration="600ms"
               >
-                <img
-                  src="assets/front/img/icon/eye-icon.svg"
-                  alt="Expert Code Lab"
-                />
+                <img src="assets/front/img/icon/eye-icon.svg" alt="Expert Code Lab" />
                 Case study
               </span>
               <h2 className="title wow skewIn" data-wow-duration="600ms">
@@ -664,10 +595,7 @@ export default function Service({ params }: ServiceParams) {
                       >
                         Read case study{" "}
                         <span>
-                          <img
-                            src="assets/front/img/icon/proj-arrow.svg"
-                            alt="Expert Code Lab"
-                          />
+                          <img src="assets/front/img/icon/proj-arrow.svg" alt="Expert Code Lab" />
                         </span>
                       </a>
                     </div>
@@ -714,10 +642,7 @@ export default function Service({ params }: ServiceParams) {
                       >
                         Read case study{" "}
                         <span>
-                          <img
-                            src="assets/front/img/icon/proj-arrow.svg"
-                            alt="Expert Code Lab"
-                          />
+                          <img src="assets/front/img/icon/proj-arrow.svg" alt="Expert Code Lab" />
                         </span>
                       </a>
                     </div>
@@ -764,10 +689,7 @@ export default function Service({ params }: ServiceParams) {
                       >
                         Read case study{" "}
                         <span>
-                          <img
-                            src="assets/front/img/icon/proj-arrow.svg"
-                            alt="Expert Code Lab"
-                          />
+                          <img src="assets/front/img/icon/proj-arrow.svg" alt="Expert Code Lab" />
                         </span>
                       </a>
                     </div>
@@ -814,10 +736,7 @@ export default function Service({ params }: ServiceParams) {
                       >
                         Read case study{" "}
                         <span>
-                          <img
-                            src="assets/front/img/icon/proj-arrow.svg"
-                            alt="Expert Code Lab"
-                          />
+                          <img src="assets/front/img/icon/proj-arrow.svg" alt="Expert Code Lab" />
                         </span>
                       </a>
                     </div>
@@ -864,10 +783,7 @@ export default function Service({ params }: ServiceParams) {
                       >
                         Read case study{" "}
                         <span>
-                          <img
-                            src="assets/front/img/icon/proj-arrow.svg"
-                            alt="Expert Code Lab"
-                          />
+                          <img src="assets/front/img/icon/proj-arrow.svg" alt="Expert Code Lab" />
                         </span>
                       </a>
                     </div>
@@ -901,55 +817,37 @@ export default function Service({ params }: ServiceParams) {
               <div className="seo-project-slider-nav">
                 <div className="sa-brand-item">
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/brand/brand-logo03.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/brand/brand-logo03.png" alt="Expert Code Lab" />
                   </div>
                   <div className="xb-line" />
                 </div>
                 <div className="sa-brand-item">
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/brand/brand-logo04.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/brand/brand-logo04.png" alt="Expert Code Lab" />
                   </div>
                   <div className="xb-line" />
                 </div>
                 <div className="sa-brand-item">
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/brand/brand-logo02.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/brand/brand-logo02.png" alt="Expert Code Lab" />
                   </div>
                   <div className="xb-line" />
                 </div>
                 <div className="sa-brand-item">
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/brand/brand-logo01.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/brand/brand-logo01.png" alt="Expert Code Lab" />
                   </div>
                   <div className="xb-line" />
                 </div>
                 <div className="sa-brand-item">
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/brand/brand-logo02.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/brand/brand-logo02.png" alt="Expert Code Lab" />
                   </div>
                   <div className="xb-line" />
                 </div>
                 <div className="sa-brand-item">
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/brand/brand-logo01.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/brand/brand-logo01.png" alt="Expert Code Lab" />
                   </div>
                   <div className="xb-line" />
                 </div>
@@ -970,10 +868,7 @@ export default function Service({ params }: ServiceParams) {
               className="sub-title sub-title--strock wow fadeInDown"
               data-wow-duration="600ms"
             >
-              <img
-                src="assets/front/img/icon/process-icon.svg"
-                alt="Expert Code Lab"
-              />
+              <img src="assets/front/img/icon/process-icon.svg" alt="Expert Code Lab" />
               Our working process
             </div>
             <h2
@@ -998,10 +893,7 @@ export default function Service({ params }: ServiceParams) {
                   />
                 </div>
                 <div className="process_shape">
-                  <img
-                    src="assets/front/img/shape/pattern.png"
-                    alt="Expert Code Lab"
-                  />
+                  <img src="assets/front/img/shape/pattern.png" alt="Expert Code Lab" />
                 </div>
               </div>
             </div>
@@ -1009,10 +901,7 @@ export default function Service({ params }: ServiceParams) {
               <div className="sa-process_left">
                 <div className="process-item process-item--one">
                   <div className="xb-item--icon">
-                    <img
-                      src="assets/front/img/icon/search01.svg"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/icon/search01.svg" alt="Expert Code Lab" />
                   </div>
                   <h4 className="xb-item--title">Research niche </h4>
                   <p className="xb-item--contact">
@@ -1023,10 +912,7 @@ export default function Service({ params }: ServiceParams) {
                 </div>
                 <div className="process-item process-item--two">
                   <div className="xb-item--icon">
-                    <img
-                      src="assets/front/img/icon/user-icon.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/icon/user-icon.png" alt="Expert Code Lab" />
                   </div>
                   <h4 className="xb-item--title">Set up your team</h4>
                   <p className="xb-item--contact">
@@ -1037,10 +923,7 @@ export default function Service({ params }: ServiceParams) {
                 </div>
                 <div className="process-item process-item--three">
                   <div className="xb-item--icon">
-                    <img
-                      src="assets/front/img/icon/clipboar02.svg"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/icon/clipboar02.svg" alt="Expert Code Lab" />
                   </div>
                   <h4 className="xb-item--title">Create a game plan</h4>
                   <p className="xb-item--contact">
@@ -1051,10 +934,7 @@ export default function Service({ params }: ServiceParams) {
                 </div>
                 <div className="process-item process-item--four">
                   <div className="xb-item--icon">
-                    <img
-                      src="assets/front/img/icon/medal-star.svg"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/icon/medal-star.svg" alt="Expert Code Lab" />
                   </div>
                   <h4 className="xb-item--title">Review and scale</h4>
                   <p className="xb-item--contact">
@@ -1069,16 +949,10 @@ export default function Service({ params }: ServiceParams) {
         </div>
         <div className="sa-process_shape">
           <div className="shape shape--one">
-            <img
-              src="assets/front/img/shape/trangle-shape02.png"
-              alt="Expert Code Lab"
-            />
+            <img src="assets/front/img/shape/trangle-shape02.png" alt="Expert Code Lab" />
           </div>
           <div className="shape shape--two">
-            <img
-              src="assets/front/img/shape/trangle-shape03.png"
-              alt="Expert Code Lab"
-            />
+            <img src="assets/front/img/shape/trangle-shape03.png" alt="Expert Code Lab" />
           </div>
         </div>
       </section>
@@ -1092,10 +966,7 @@ export default function Service({ params }: ServiceParams) {
                 className="sub-title wow fadeInDown"
                 data-wow-duration="600ms"
               >
-                <img
-                  src="assets/front/img/icon/building.svg"
-                  alt="Expert Code Lab"
-                />
+                <img src="assets/front/img/icon/building.svg" alt="Expert Code Lab" />
                 Industries we work
               </div>
               <h2
@@ -1113,10 +984,7 @@ export default function Service({ params }: ServiceParams) {
                   data-wow-duration="600ms"
                 >
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/industrie/img01.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/industrie/img01.png" alt="Expert Code Lab" />
                   </div>
                   <h3 className="xb-title">SaaS</h3>
                 </div>
@@ -1128,10 +996,7 @@ export default function Service({ params }: ServiceParams) {
                   data-wow-duration="600ms"
                 >
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/industrie/img02.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/industrie/img02.png" alt="Expert Code Lab" />
                   </div>
                   <h3 className="xb-title">Lawyers</h3>
                 </div>
@@ -1143,10 +1008,7 @@ export default function Service({ params }: ServiceParams) {
                   data-wow-duration="600ms"
                 >
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/industrie/img03.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/industrie/img03.png" alt="Expert Code Lab" />
                   </div>
                   <h3 className="xb-title">Real estate</h3>
                 </div>
@@ -1158,10 +1020,7 @@ export default function Service({ params }: ServiceParams) {
                   data-wow-duration="600ms"
                 >
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/industrie/img04.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/industrie/img04.png" alt="Expert Code Lab" />
                   </div>
                   <h3 className="xb-title">Insurance</h3>
                 </div>
@@ -1173,10 +1032,7 @@ export default function Service({ params }: ServiceParams) {
                   data-wow-duration="600ms"
                 >
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/industrie/img05.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/industrie/img05.png" alt="Expert Code Lab" />
                   </div>
                   <h3 className="xb-title">Crypto</h3>
                 </div>
@@ -1187,10 +1043,7 @@ export default function Service({ params }: ServiceParams) {
                   data-wow-duration="600ms"
                 >
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/industrie/img06.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/industrie/img06.png" alt="Expert Code Lab" />
                   </div>
                   <h3 className="xb-title">Private equity</h3>
                 </div>
@@ -1202,10 +1055,7 @@ export default function Service({ params }: ServiceParams) {
                   data-wow-duration="600ms"
                 >
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/industrie/img07.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/industrie/img07.png" alt="Expert Code Lab" />
                   </div>
                   <h3 className="xb-title">Education</h3>
                 </div>
@@ -1217,10 +1067,7 @@ export default function Service({ params }: ServiceParams) {
                   data-wow-duration="600ms"
                 >
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/industrie/img08.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/industrie/img08.png" alt="Expert Code Lab" />
                   </div>
                   <h3 className="xb-title">Finance</h3>
                 </div>
@@ -1232,10 +1079,7 @@ export default function Service({ params }: ServiceParams) {
                   data-wow-duration="600ms"
                 >
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/industrie/img09.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/industrie/img09.png" alt="Expert Code Lab" />
                   </div>
                   <h3 className="xb-title">Healthcare</h3>
                 </div>
@@ -1247,10 +1091,7 @@ export default function Service({ params }: ServiceParams) {
                   data-wow-duration="600ms"
                 >
                   <div className="xb-img">
-                    <img
-                      src="assets/front/img/industrie/img10.png"
-                      alt="Expert Code Lab"
-                    />
+                    <img src="assets/front/img/industrie/img10.png" alt="Expert Code Lab" />
                   </div>
                   <h3 className="xb-title">Automotive</h3>
                 </div>
@@ -1274,10 +1115,7 @@ export default function Service({ params }: ServiceParams) {
                 className="sub-title wow fadeInDown"
                 data-wow-duration="600ms"
               >
-                <img
-                  src="assets/front/img/icon/like-icon.svg"
-                  alt="Expert Code Lab"
-                />
+                <img src="assets/front/img/icon/like-icon.svg" alt="Expert Code Lab" />
                 99% positive feedback
               </div>
               <h2
@@ -1305,10 +1143,7 @@ export default function Service({ params }: ServiceParams) {
                 <div className="sa-testimonial-item">
                   <div className="xb-item--inner">
                     <div className="xb-item--quta">
-                      <img
-                        src="assets/front/img/icon/quta.png"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/quta.png" alt="Expert Code Lab" />
                     </div>
                     <p className="xb-item--content">
                       "Working with ECL was fantastic! Their strategies
@@ -1316,10 +1151,7 @@ export default function Service({ params }: ServiceParams) {
                     </p>
                     <div className="xb-item--holder ul_li">
                       <div className="xb-item--avatar">
-                        <img
-                          src="assets/front/img/testimonial/sa-tas05.png"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/testimonial/sa-tas05.png" alt="Expert Code Lab" />
                       </div>
                       <div className="xb-item--author">
                         <h3 className="xb-item--name">Christopher Smith</h3>
@@ -1341,21 +1173,15 @@ export default function Service({ params }: ServiceParams) {
                 <div className="sa-testimonial-item">
                   <div className="xb-item--inner">
                     <div className="xb-item--quta">
-                      <img
-                        src="assets/front/img/icon/quta.png"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/quta.png" alt="Expert Code Lab" />
                     </div>
                     <p className="xb-item--content">
-                      "ECL exceeded all our expectations! Their expertise in SEO
-                      helped us achieve a remarkable 150% "
+                      "ECL exceeded all our expectations! Their expertise in
+                      SEO helped us achieve a remarkable 150% "
                     </p>
                     <div className="xb-item--holder ul_li">
                       <div className="xb-item--avatar">
-                        <img
-                          src="assets/front/img/testimonial/sa-tas01.png"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/testimonial/sa-tas01.png" alt="Expert Code Lab" />
                       </div>
                       <div className="xb-item--author">
                         <h3 className="xb-item--name">Sarah Davis</h3>
@@ -1377,21 +1203,16 @@ export default function Service({ params }: ServiceParams) {
                 <div className="sa-testimonial-item">
                   <div className="xb-item--inner">
                     <div className="xb-item--quta">
-                      <img
-                        src="assets/front/img/icon/quta.png"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/quta.png" alt="Expert Code Lab" />
                     </div>
                     <p className="xb-item--content">
-                      "Choosing ECL was a great decision. Their focus on trends
-                      helped us rank for competitive keywords, our success!"
+                      "Choosing ECL was a great decision. Their focus on
+                      trends helped us rank for competitive keywords, our
+                      success!"
                     </p>
                     <div className="xb-item--holder ul_li">
                       <div className="xb-item--avatar">
-                        <img
-                          src="assets/front/img/testimonial/sa-tas02.png"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/testimonial/sa-tas02.png" alt="Expert Code Lab" />
                       </div>
                       <div className="xb-item--author">
                         <h3 className="xb-item--name">Robert Miller</h3>
@@ -1413,22 +1234,16 @@ export default function Service({ params }: ServiceParams) {
                 <div className="sa-testimonial-item">
                   <div className="xb-item--inner">
                     <div className="xb-item--quta">
-                      <img
-                        src="assets/front/img/icon/quta.png"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/quta.png" alt="Expert Code Lab" />
                     </div>
                     <p className="xb-item--content">
-                      "Since partnering with ECL, our website's performance has
-                      improved remarkably. Their data-driven approach and
+                      "Since partnering with ECL, our website's performance
+                      has improved remarkably. Their data-driven approach and
                       top-notch!"
                     </p>
                     <div className="xb-item--holder ul_li">
                       <div className="xb-item--avatar">
-                        <img
-                          src="assets/front/img/testimonial/sa-tas03.png"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/testimonial/sa-tas03.png" alt="Expert Code Lab" />
                       </div>
                       <div className="xb-item--author">
                         <h3 className="xb-item--name">Jessica Martinez</h3>
@@ -1450,10 +1265,7 @@ export default function Service({ params }: ServiceParams) {
                 <div className="sa-testimonial-item">
                   <div className="xb-item--inner">
                     <div className="xb-item--quta">
-                      <img
-                        src="assets/front/img/icon/quta.png"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/quta.png" alt="Expert Code Lab" />
                     </div>
                     <p className="xb-item--content">
                       "Thanks to ECL, our organic search traffic has
@@ -1462,10 +1274,7 @@ export default function Service({ params }: ServiceParams) {
                     </p>
                     <div className="xb-item--holder ul_li">
                       <div className="xb-item--avatar">
-                        <img
-                          src="assets/front/img/testimonial/sa-tas04.png"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/testimonial/sa-tas04.png" alt="Expert Code Lab" />
                       </div>
                       <div className="xb-item--author">
                         <h3 className="xb-item--name">Kevin Johnson</h3>
@@ -1498,10 +1307,7 @@ export default function Service({ params }: ServiceParams) {
                   className="sub-title wow fadeInDown"
                   data-wow-duration="600ms"
                 >
-                  <img
-                    src="assets/front/img/icon/star.svg"
-                    alt="Expert Code Lab"
-                  />
+                  <img src="assets/front/img/icon/star.svg" alt="Expert Code Lab" />
                   Why we’re dirrerent
                 </div>
                 <h2
@@ -1517,10 +1323,7 @@ export default function Service({ params }: ServiceParams) {
                   <tr>
                     <th>Features</th>
                     <th>
-                      <img
-                        src="assets/front/img/logo/logo-white.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/logo/logo-white.svg" alt="Expert Code Lab" />
                     </th>
                     <th>Other SEO agencies</th>
                   </tr>
@@ -1529,121 +1332,73 @@ export default function Service({ params }: ServiceParams) {
                   <tr>
                     <td>Take on projects only if confident in delivery.</td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/check.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/check.svg" alt="Expert Code Lab" />
                     </td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/erorr.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/erorr.svg" alt="Expert Code Lab" />
                     </td>
                   </tr>
                   <tr>
                     <td>Tailor-made, revenue-boosting strategy.</td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/check.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/check.svg" alt="Expert Code Lab" />
                     </td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/erorr.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/erorr.svg" alt="Expert Code Lab" />
                     </td>
                   </tr>
                   <tr>
                     <td>100% focus on your project.</td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/check.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/check.svg" alt="Expert Code Lab" />
                     </td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/erorr.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/erorr.svg" alt="Expert Code Lab" />
                     </td>
                   </tr>
                   <tr>
                     <td>Transparent about meeting goals and deadlines.</td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/check.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/check.svg" alt="Expert Code Lab" />
                     </td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/check.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/check.svg" alt="Expert Code Lab" />
                     </td>
                   </tr>
                   <tr>
                     <td>Cares about long-term SEO success.</td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/check.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/check.svg" alt="Expert Code Lab" />
                     </td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/erorr.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/erorr.svg" alt="Expert Code Lab" />
                     </td>
                   </tr>
                   <tr>
                     <td>Knows that ROI is the most important metric.</td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/check.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/check.svg" alt="Expert Code Lab" />
                     </td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/erorr.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/erorr.svg" alt="Expert Code Lab" />
                     </td>
                   </tr>
                   <tr>
                     <td>Feels like an extension of your marketing team.</td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/check.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/check.svg" alt="Expert Code Lab" />
                     </td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/check.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/check.svg" alt="Expert Code Lab" />
                     </td>
                   </tr>
                   <tr>
                     <td>Crafts a results-driven strategy.</td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/check.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/check.svg" alt="Expert Code Lab" />
                     </td>
                     <td>
-                      <img
-                        src="assets/front/img/icon/check.svg"
-                        alt="Expert Code Lab"
-                      />
+                      <img src="assets/front/img/icon/check.svg" alt="Expert Code Lab" />
                     </td>
                   </tr>
                 </tbody>
@@ -1676,10 +1431,7 @@ export default function Service({ params }: ServiceParams) {
                   <div className="team-item">
                     <div className="xb-item--content pos-rel">
                       <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/team/team-bg.jpg"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/team/team-bg.jpg" alt="Expert Code Lab" />
                       </div>
                       <div className="xb-item--item">
                         <span className="xb-item--skill">
@@ -1693,10 +1445,7 @@ export default function Service({ params }: ServiceParams) {
                     <div className="xb-item--inner ul_li_between align-items-end">
                       <div className="xb-item--holder">
                         <div className="xb-item--avatar">
-                          <img
-                            src="assets/front/img/team/sa-team02.png"
-                            alt="Expert Code Lab"
-                          />
+                          <img src="assets/front/img/team/sa-team02.png" alt="Expert Code Lab" />
                         </div>
                         <div className="xb-item--author">
                           <h3 className="xb-item--name">James anderson</h3>
@@ -1735,10 +1484,7 @@ export default function Service({ params }: ServiceParams) {
                   <div className="team-item">
                     <div className="xb-item--content pos-rel">
                       <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/team/team-bg.jpg"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/team/team-bg.jpg" alt="Expert Code Lab" />
                       </div>
                       <div className="xb-item--item">
                         <span className="xb-item--skill">
@@ -1752,10 +1498,7 @@ export default function Service({ params }: ServiceParams) {
                     <div className="xb-item--inner ul_li_between align-items-end">
                       <div className="xb-item--holder">
                         <div className="xb-item--avatar">
-                          <img
-                            src="assets/front/img/team/sa-team03.png"
-                            alt="Expert Code Lab"
-                          />
+                          <img src="assets/front/img/team/sa-team03.png" alt="Expert Code Lab" />
                         </div>
                         <div className="xb-item--author">
                           <h3 className="xb-item--name">David wilson</h3>
@@ -1794,10 +1537,7 @@ export default function Service({ params }: ServiceParams) {
                   <div className="team-item">
                     <div className="xb-item--content pos-rel">
                       <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/team/team-bg.jpg"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/team/team-bg.jpg" alt="Expert Code Lab" />
                       </div>
                       <div className="xb-item--item">
                         <span className="xb-item--skill">
@@ -1811,10 +1551,7 @@ export default function Service({ params }: ServiceParams) {
                     <div className="xb-item--inner ul_li_between align-items-end">
                       <div className="xb-item--holder">
                         <div className="xb-item--avatar">
-                          <img
-                            src="assets/front/img/team/sa-team01.png"
-                            alt="Expert Code Lab"
-                          />
+                          <img src="assets/front/img/team/sa-team01.png" alt="Expert Code Lab" />
                         </div>
                         <div className="xb-item--author">
                           <h3 className="xb-item--name">Sophia turner</h3>
@@ -1853,10 +1590,7 @@ export default function Service({ params }: ServiceParams) {
                   <div className="team-item">
                     <div className="xb-item--content pos-rel">
                       <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/team/team-bg.jpg"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/team/team-bg.jpg" alt="Expert Code Lab" />
                       </div>
                       <div className="xb-item--item">
                         <span className="xb-item--skill">
@@ -1870,10 +1604,7 @@ export default function Service({ params }: ServiceParams) {
                     <div className="xb-item--inner ul_li_between align-items-end">
                       <div className="xb-item--holder">
                         <div className="xb-item--avatar">
-                          <img
-                            src="assets/front/img/team/sa-team04.png"
-                            alt="Expert Code Lab"
-                          />
+                          <img src="assets/front/img/team/sa-team04.png" alt="Expert Code Lab" />
                         </div>
                         <div className="xb-item--author">
                           <h3 className="xb-item--name">Natalie brooks</h3>
@@ -1912,10 +1643,7 @@ export default function Service({ params }: ServiceParams) {
                   <div className="team-item">
                     <div className="xb-item--content pos-rel">
                       <div className="xb-item--img">
-                        <img
-                          src="assets/front/img/team/team-bg.jpg"
-                          alt="Expert Code Lab"
-                        />
+                        <img src="assets/front/img/team/team-bg.jpg" alt="Expert Code Lab" />
                       </div>
                       <div className="xb-item--item">
                         <span className="xb-item--skill">
@@ -1929,10 +1657,7 @@ export default function Service({ params }: ServiceParams) {
                     <div className="xb-item--inner ul_li_between align-items-end">
                       <div className="xb-item--holder">
                         <div className="xb-item--avatar">
-                          <img
-                            src="assets/front/img/team/sa-team05.png"
-                            alt="Expert Code Lab"
-                          />
+                          <img src="assets/front/img/team/sa-team05.png" alt="Expert Code Lab" />
                         </div>
                         <div className="xb-item--author">
                           <h3 className="xb-item--name">Brian johnson</h3>
@@ -1994,10 +1719,7 @@ export default function Service({ params }: ServiceParams) {
         <div className="container">
           <div className="sec-title--two text-center mb-60">
             <div className="sub-title wow fadeInDown" data-wow-duration="600ms">
-              <img
-                src="assets/front/img/icon/magic.svg"
-                alt="Expert Code Lab"
-              />
+              <img src="assets/front/img/icon/magic.svg" alt="Expert Code Lab" />
               FAQ’s
             </div>
             <h2
@@ -2225,5 +1947,6 @@ export default function Service({ params }: ServiceParams) {
       </section>
       {/* cta section end  */}
     </main>
+
   );
 }

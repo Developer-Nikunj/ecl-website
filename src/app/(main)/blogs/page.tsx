@@ -17,7 +17,7 @@ export default function Blogs() {
       if (res.data.data.length > 1) {
         setBlog(res.data.data);
       }
-      console.log("blogs",blog)
+      // console.log("blogs",blog)
     } catch (error) {
       
     }finally{

@@ -139,7 +139,7 @@ const BlogsComponent = () => {
               {isImageOnLeft && (
                 <div className="xb-item--img flex-shrink-0 mb-3 mb-md-0">
                   <Link
-                    href={`/blog/${post.slug}`}
+                    href={`/blogs/${post.slug}`}
                     className="text-decoration-none d-block"
                   >
                     <div

@@ -26,17 +26,17 @@ export default function RootLayout({
         <meta httpEquiv="x-ua-compatible" content="ie=edge" />
 
         {/* CSS */}
-        <link rel="stylesheet" href="assets/front/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="assets/front/css/fontawesome.css" />
-        <link rel="stylesheet" href="assets/front/css/animate.css" />
-        <link rel="stylesheet" href="assets/front/css/swiper.min.css" />
-        <link rel="stylesheet" href="assets/front/css/slick.css" />
-        <link rel="stylesheet" href="assets/front/css/odometer.css" />
-        <link rel="stylesheet" href="assets/front/css/nice-select.css" />
-        <link rel="stylesheet" href="assets/front/css/magnific-popup.css" />
-        <link rel="stylesheet" href="assets/front/css/cursor.css" />
-        <link rel="stylesheet" href="assets/front/css/custom-font.css" />
-        <link rel="stylesheet" href="assets/front/css/main.css" />
+        <link rel="stylesheet" href="/assets/front/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/assets/front/css/fontawesome.css" />
+        <link rel="stylesheet" href="/assets/front/css/animate.css" />
+        <link rel="stylesheet" href="/assets/front/css/swiper.min.css" />
+        <link rel="stylesheet" href="/assets/front/css/slick.css" />
+        <link rel="stylesheet" href="/assets/front/css/odometer.css" />
+        <link rel="stylesheet" href="/assets/front/css/nice-select.css" />
+        <link rel="stylesheet" href="/assets/front/css/magnific-popup.css" />
+        <link rel="stylesheet" href="/assets/front/css/cursor.css" />
+        <link rel="stylesheet" href="/assets/front/css/custom-font.css" />
+        <link rel="stylesheet" href="/assets/front/css/main.css" />
       </head>
 
       <body className="sco_agency">

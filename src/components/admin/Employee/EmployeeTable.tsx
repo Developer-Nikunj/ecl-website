@@ -1,150 +1,173 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  createRole,
-  getallRoles,
-  deleteRole,
-  getRoleById,
-  updateRole,
-} from "@/store/slices/module1/roles/roles.thunk";
+  createEmployeeEntry,
+  getAllEmployees,
+  deleteEmployee,
+  getEmployeeById,
+  updateEmployee,
 
-import PermissionGate from "@/components/admin/PermissionGate"
+} from "@/store/slices/module1/Employee/employee.thunk";
+import { createRole } from "@/store/slices/module1/roles/roles.thunk";
+import { create } from "domain";
+type Employee = {
+  id: number;
+  name: string;
+  email: string;
+  designation: string;
+  status: boolean;
+  experience: string;
+  rating: string;
+  employeeImg: string;
+  employeeMobileNo: string;
+  linkedinUrl: string;
+  twitterUrl: string;
+};
+
+
 
 const EmployeeTable = () => {
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [createRoleEntry, ] = useState({
+  const dispatch = useAppDispatch();
+  const [employees, setEmployees] = useState<Employee[]>([
+    {
+      id: 1,
+      name: "Rahul",
+      email: "rahul@gmail.com",
+      designation: "UI Designer",
+      status: true,
+      experience: "3",
+      rating: "5.5",
+      employeeImg: "",
+      employeeMobileNo: "7896354798",
+      linkedinUrl: "",
+      twitterUrl: "",
+    
+    },
+    {
+      id: 2,
+      name: "Raj",
+      email: "rajsharma23@gmail.com",
+      designation: "Frontend Developer",
+      status: true,
+      experience: "5",
+      rating: "7.5",
+      employeeImg: "",
+      employeeMobileNo: "8050480504",
+      linkedinUrl: "",
+      twitterUrl: "",
+    }
+
+  ]);
+  // const dispatch = useAppDispatch();
+  // const { roles, meta, loading } useAppSelector(
+  //   (state) => state.roles
+  // );
+  const [createRoleEntry, setCreateRoleEntry] = useState({
     name: "",
     description: "",
     status: "",
   });
+  // ✅ Filters
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
+    experience: "3",
+    rating: "5.5",
+    employeeImg: "",
+    employeeMobileNo: "7896354798",
+    linkedinUrl: "",
+    twitterUrl: "",
     limit: 10,
     offset: 0,
   });
+  // ✅ Modal states
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
 
-  const dispatch = useAppDispatch();
-  const { roles, selectedRole, meta, loading, error } = useAppSelector(
-    (state) => state.role
-  );
+  // ✅ Fetch roles
+  useEffect(() => {
+    dispatch(getAllEmployees(filters));
+  }, [filters, dispatch]);
 
-  const fetchRoles = () => {
-    dispatch(
-      getallRoles({
-        startDate: filters.startDate || undefined,
-        endDate: filters.endDate || undefined,
-        limit: filters.limit,
-        offset: filters.offset,
-      })
-    );
-  };
-
+  // ✅ Create
   const handleCreate = async () => {
-    const res = await dispatch(      
-      createRole({
-        name: createRoleEntry.name,
-        description: createRoleEntry.description,
-        status: createRoleEntry.status,
+    await dispatch(createEmployees(createEmployeeEntry));
+    setShowCreateModal(false);
+    setCreateRoleEntry({
+      name: "",
+      email: "",
+      designation: "",
+      status: "",
+      experience: "",
+      rating: "",
+      employeeImg: "",
+      mobileNo: "",
+      linkedinURL: "",
+      twitter: "",
+    });
+    dispatch(getAllEmployees(filters));
+  };
+
+  // ✅ Edit open
+  const handleEditOpen = (item: any) => {
+    setSelectedRoleId(item.id);
+    setCreateRoleEntry({
+      name: item.name,
+      email: item.email,
+      designation: item.designation,
+      status: item.status,
+      experience: item.experience,
+      rating: item.rating,
+      mobileNo: item.mobileNo,
+      linkedinURL: item.linkedinURL,
+      twitter: item.twitter,
+    });
+    setShowEditModal(true);
+  };
+
+  // ✅ Update
+  const handleUpdate = async () => {
+    if (!selectedEmployeeId) return;
+
+    await dispatch(
+      updateEmployee({
+        employeeId: selectedEmployeeId,
+        ...createEmployeesEntry,
       })
     );
 
-    if (createRole.fulfilled.match(res)) {
-      setShowCreateModal(false);
-      fetchRoles(); // ✅ correct
-    }
-
-//     setCreateRoleEntry({
-//       name: "",
-//       description: "",
-//       status: "",
-//     });
-   };
-
-  const applyFilter = () => {
-    fetchRoles();
+    setShowEditModal(false);
+    dispatch(getAllEmployees(filters));
+  };
+  // ✅ Delete open
+  const handleDeleteOpen = (id: number) => {
+    setSelectedRoleId(id);
+    setShowDeleteModal(true);
   };
 
-  const handlePrevious = () => {
-    setFilters((prev) => ({
-      ...prev,
-      offset: Math.max(prev.offset - prev.limit, 0),
-    }));
-  };
-
-  const handleNext = () => {
-    if (meta && filters.offset + filters.limit < meta.total) {
-      setFilters((prev) => ({
-        ...prev,
-        offset: prev.offset + prev.limit,
-      }));
-    }
-  };
-
+  // ✅ Delete  
   const handleDelete = async () => {
     if (!selectedRoleId) return;
-
-    const res = await dispatch(deleteRole(selectedRoleId));
-
-    if (deleteRole.fulfilled.match(res)) {
-      setShowDeleteModal(false);
-      setSelectedRoleId(null);
-
-      // 🔥 Refresh list with current filters & pagination
-      dispatch(
-        getallRoles({
-          limit: filters.limit,
-          offset: filters.offset,
-          startDate: filters.startDate || undefined,
-          endDate: filters.endDate || undefined,
-        })
-      );
-    }
+    await dispatch(deleteEmployee(selectedRoleId));
+    setShowDeleteModal(false);
+    dispatch(getAllEmployees(filters));
   };
 
-  const handleUpdate = async () => {
-    if (!selectedRoleId) return;
-
-    const res = await dispatch(
-      updateRole({
-        roleId: selectedRoleId,
-        name: createRoleEntry.name,
-        description: createRoleEntry.description,
-        status: createRoleEntry.status,
-      })
-    );
-
-    if (updateRole.fulfilled.match(res)) {
-      // success
-      setShowEditModal(false);
-      dispatch(
-        getallRoles({
-          startDate: filters.startDate,
-          endDate: filters.endDate,
-          limit: filters.limit,
-        })
-      );
-    //   setCreateRoleEntry({ name: "", description: "", status: "" }); // reset form
-    }
+  // ✅ Pagination
+  const handleNext = () => {
+    setFilters({ ...filters, offset: filters.offset + filters.limit });
+  };
+  const handlePrevious = () => {
+    setFilters({ ...filters, offset: Math.max(0, filters.offset - filters.limit) });
   };
 
 
-  useEffect(() => {
-    fetchRoles();
-  }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
 
-  useEffect(() => {
-    if (selectedRoleId !== null && showEditModal) {
-      dispatch(getRoleById(selectedRoleId));
-    }
-  }, [selectedRoleId, showEditModal, dispatch]);
 
 
   return (
@@ -198,99 +221,101 @@ const EmployeeTable = () => {
         </div>
 
         {/* Apply Button */}
-        <button className="btn btn-primary px-4" onClick={applyFilter}>
+        <button className="btn btn-primary px-4" >
           Apply
         </button>
       </div>
-      <PermissionGate permission="postrole">
-        <div className="d-flex justify-content-end mb-3">
-          <button
-            onClick={() => setShowCreateModal((prev) => !prev)}
-            className="btn btn-sm btn-success"
-          >
-            Create Role
-          </button>
-        </div>
-      </PermissionGate>
-      <PermissionGate permission="getrole">
-        <div className="table-responsive">
-          <table className="table table-bordered table-hover align-middle mb-0">
-            <thead className="table-light">
-              <tr>
-                <th>SNo.</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
+      <div className="d-flex justify-content-end mb-3">
+        <button
+          className="btn btn-sm btn-success"
+           onClick={() => setShowCreateModal((prev) => !prev)}
+            
+        >
+          Create Employees
+        </button>
+      </div>
 
-            <tbody>
-              {roles.length > 0 &&
-                roles.map((item, index) => (
-                  <tr key={item.id}>
-                    <td>{filters.offset + index + 1}</td>
-                    <td>{item.name}</td>
-                    <td>{item.description}</td>
-                    <td>
-                      <span>{item.status == true ? "Active" : "Inactive"}</span>
-                    </td>
-                    <td>
-                      <div className="d-flex gap-2">
-                        <PermissionGate permission="putrole">
-                          <button
-                            className="btn btn-sm btn-primary"
-                            onClick={() => {
+      <div className="table-responsive">
+        <table className="table table-bordered table-hover align-middle mb-0">
+          <thead className="table-light">
+            <tr>
+              <th>SNo.</th>
+              <th>Employee Name</th>
+              <th>Employee Email</th>
+              <th>Designation</th>
+              <th>Experience</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {employees.length > 0 &&
+              employees.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{filters.offset + index + 1}</td>
+                  <td>{item.name}</td>
+                  <td>{item.email}</td>
+                  <td>{item.designation}</td>
+                  <td>{item.experience}</td>  
+                  <td>{item.status ? "Active" : "Inactive"}</td>
+                
+                  <td>
+                    <div className="d-flex gap-2">
+                      <button
+                        className="btn btn-sm btn-primary"
+                         onClick={() => {
                               setSelectedRoleId(item.id);
-                            
+                              setCreateRoleEntry({
+                                name: item.name,
+                                description: item.description,
+                                status: item.status == true ? "1" : "0",
+                              });
                               setShowEditModal(true);
                             }}
-                          >
-                            Edit
-                          </button>
-                        </PermissionGate>
-                        <PermissionGate permission="deleterole">
+                      >
+                        Edit
+                      </button>
+                      
                           <button
-                            className="btn btn-sm btn-danger"
+                           className="btn btn-sm btn-danger"
                             onClick={() => {
-                              setShowDeleteModal((prev) => !prev);
-                              setSelectedRoleId(item.id);
-                            }}
-                          >
+                           setShowDeleteModal((prev) => !prev);
+                            setSelectedRoleId(item.id);
+                             }}
+                             >
                             Delete
-                          </button>
-                        </PermissionGate>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-          <div className="d-flex justify-content-between align-items-center mt-3">
-            <button
-              className="btn btn-sm text-white"
-              style={{
-                background: "linear-gradient(135deg, #667eea, #764ba2)",
-              }}
-              onClick={handlePrevious}
-              disabled={filters.offset === 0}
-            >
-              Previous
-            </button>
+                            </button>
+                        
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <button
+            className="btn btn-sm text-white"
+            style={{
+              background: "linear-gradient(135deg, #667eea, #764ba2)",
+            }}
+            onClick={handlePrevious}
+            disabled={filters.offset === 0}
+          >
+            Previous
+          </button>
 
-            <button
-              className="btn btn-sm text-white"
-              style={{
-                background: "linear-gradient(135deg, #43cea2, #185a9d)",
-              }}
-              onClick={handleNext}
-              disabled={!meta || filters.offset + filters.limit >= meta.total}
-            >
-              Next
-            </button>
-          </div>
+          <button
+            className="btn btn-sm text-white"
+            style={{
+              background: "linear-gradient(135deg, #43cea2, #185a9d)",
+            }}
+            onClick={handleNext}
+          >
+            Next
+          </button>
         </div>
-      </PermissionGate>
+      </div>
 
       {showCreateModal && (
         <>
@@ -306,7 +331,7 @@ const EmployeeTable = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Create Role</h5>
+                  <h5 className="modal-title">Add Employee</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -317,32 +342,56 @@ const EmployeeTable = () => {
                 <div className="modal-body">
                   <form>
                     <div className="mb-3">
-                      <label className="form-label">Role Name</label>
+                      <label className="form-label">Employee name</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter Role name"
-                        
+                        placeholder="Enter Employee name"
+
                       />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Description</label>
+                      <label className="form-label">Employee email</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter menu description"
-                      
-                        
+                        placeholder="Enter Employee email"
+
+
                       />
                     </div>
+
+                     <div className="mb-3"
+                      >
+                        <label className="from-label">Designation</label>
+                        <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Designation"
+
+
+                      />
+                      </div>
+
+                       <div className="mb-3"
+                      >
+                        <label className="from-label">Experience</label>
+                        <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Experience"
+
+
+                      />
+                      </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Status</label>
+                      <label className="form-label">Employee</label>
                       <select
                         className="form-select mb-3"
                         aria-label="Default select example"
-                      
-                        
                       >
+                     
+
                         <option selected>Status</option>
                         <option value="1">Active</option>
                         <option value="0">Inactive</option>
@@ -387,7 +436,7 @@ const EmployeeTable = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Edit Role</h5>
+                  <h5 className="modal-title">Edit Detalis</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -398,36 +447,71 @@ const EmployeeTable = () => {
                 <div className="modal-body">
                   <form>
                     <div className="mb-3">
-                      <label className="form-label">Role Name</label>
+                      <label className="form-label">Employee name</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter menu name"
-                       
-                        
+                        placeholder="Enter Employee name"
+                      value={createRoleEntry.name}
+                      onChange={(e) =>
+                        setCreateEmployeeEntry ((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
                       />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Role Description</label>
+                      <label className="form-label">Employee email</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter menu description"
-                       
-                        
+                        placeholder="Enter Employee email"
+                         value={createRoleEntry.description}
+                        onChange={(e) =>
+                          setCreateEmployeeEntry({
+                            ...createEmployeeEntry,
+                            description: e.target.value,
+                          })
+                        }
+
+                      />
+
+                       <div className="mb-3">
+                      <label className="form-label">Designation</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Designation"
+                      value={createRoleEntry.name}
+                      onChange={(e) =>
+                        setCreateEmployeeEntry ((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
                       />
                     </div>
-                    <div className="mb-3">
-                      <label htmlFor="roleStatus" className="form-label">
-                        Role Status
-                      </label>
+
+                    
+                    </div>
+                     <div className="mb-3">
+                      <label className="form-label"> Status</label>
                       <select
-                        id="roleStatus"
+                      id="Status"
                         className="form-select mb-3"
-                        aria-label="Role Status"
-                        
-                        
+                        aria-label="Default select example"
+                        value={createRoleEntry.status}
+                        onChange={(e) =>
+                          setCreateEmployeeEntry ((prev) => ({
+                            ...prev,
+                            status: e.target.value,
+                          }))
+                        }
                       >
+
+
+                      
                         <option value="">Select Status</option>
                         <option value={1}>Active</option>
                         <option value={0}>Inactive</option>
@@ -472,7 +556,7 @@ const EmployeeTable = () => {
             <div
               className="modal-dialog modal-dialog-centered modal-sm"
               role="document"
-              onClick={(e) => e.stopPropagation()}
+               onClick={(e) => e.stopPropagation()}
             >
               <div className="modal-content rounded-3 shadow">
                 <div className="modal-header border-0">
@@ -489,7 +573,7 @@ const EmployeeTable = () => {
 
                 <div className="modal-body text-center">
                   <p className="mb-1 fw-semibold">
-                    Are you sure you want to delete this role?
+                    Are you sure you want to delete this Employee?
                   </p>
                   <small className="text-muted">
                     This action cannot be undone.

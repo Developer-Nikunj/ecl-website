@@ -23,4 +23,4 @@ export const headerModel = sequelize.define(
   { tableName: "header", freezeTableName: true, timestamps: true }
 );
 
-await headerModel.sync();
+// await headerModel.sync();

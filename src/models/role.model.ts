@@ -27,4 +27,4 @@ export const roleModel = sequelize.define(
   { tableName: "role", freezeTableName: true, timestamps: true }
 );
 
-await roleModel.sync();
+// await roleModel.sync();

@@ -30,4 +30,4 @@ export const blogCategoryModel = sequelize.define(
   { tableName: "BlogCategory", freezeTableName: true, timestamps: true }
 );
 
-await blogCategoryModel.sync();
+// await blogCategoryModel.sync();

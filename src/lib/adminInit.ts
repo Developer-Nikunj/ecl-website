@@ -12,7 +12,7 @@ export async function initAdmin() {
   });
 
   if (!adminExists) {
-    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
+    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD!, 10);
 
     const firstAdmin = await User.create({
       email: process.env.ADMIN_EMAIL,

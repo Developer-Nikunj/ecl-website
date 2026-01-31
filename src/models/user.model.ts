@@ -87,4 +87,4 @@ export const userModel = User.init(
   }
 );
 
-await userModel.sync({alter:true});
+// await userModel.sync();

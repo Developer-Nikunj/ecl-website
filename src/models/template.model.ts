@@ -35,4 +35,4 @@ export const templateModel = sequelize.define(
   { tableName: "templates", freezeTableName: true, timestamps: true }
 );
 
-await templateModel.sync();
+// await templateModel.sync();

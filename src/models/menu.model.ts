@@ -50,4 +50,4 @@ export const menuModel = Menu.init(
 );
 
 
-await menuModel.sync({alter:true});
+// await menuModel.sync();

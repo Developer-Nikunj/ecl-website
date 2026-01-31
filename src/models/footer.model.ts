@@ -23,4 +23,4 @@ export const Footer = sequelize.define(
   { tableName: "footer", freezeTableName: true, timestamps: true }
 );
 
-await Footer.sync();
+// await Footer.sync();

@@ -53,4 +53,4 @@ export const permissionModel = Permission.init(
 );
 
 
-await permissionModel.sync({alter:true});
+// await permissionModel.sync();

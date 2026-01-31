@@ -26,4 +26,4 @@ export const actionModel = sequelize.define(
   { tableName: "action", freezeTableName: true, timestamps: true }
 );
 
-await actionModel.sync();
+// await actionModel.sync();

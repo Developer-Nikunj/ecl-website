@@ -46,4 +46,4 @@ Log.init(
   }
 );
 
-await Log.sync({ alter: true });
+// await Log.sync();

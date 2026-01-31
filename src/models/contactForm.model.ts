@@ -36,4 +36,4 @@ export const contactFormModel = sequelize.define(
   { tableName: "contactForm", freezeTableName: true, timestamps: true },
 );
 
-await contactFormModel.sync({alter:true});
+// await contactFormModel.sync();

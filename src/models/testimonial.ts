@@ -30,4 +30,4 @@ export const testimonialModel = sequelize.define(
   { tableName: "testimonial", freezeTableName: true, timestamps: true }
 );
 
-await testimonialModel.sync();
+// await testimonialModel.sync();

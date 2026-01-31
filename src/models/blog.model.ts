@@ -63,4 +63,4 @@ export const Blog = sequelize.define(
 );
 
 
-await Blog.sync();
+// await Blog.sync();

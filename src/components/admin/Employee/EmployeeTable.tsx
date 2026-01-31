@@ -3,19 +3,18 @@
 import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  createEmployeeEntry,
+  createEmployee,
   getAllEmployees,
   deleteEmployee,
   getEmployeeById,
   updateEmployee,
 
 } from "@/store/slices/module1/Employee/employee.thunk";
-import { createRole } from "@/store/slices/module1/roles/roles.thunk";
 import { create } from "domain";
 type Employee = {
   id: number;
-  name: string;
-  email: string;
+  EmployeeName: string;
+  EmployeeEmail: string;
   designation: string;
   status: boolean;
   experience: string;
@@ -26,15 +25,13 @@ type Employee = {
   twitterUrl: string;
 };
 
-
-
 const EmployeeTable = () => {
   const dispatch = useAppDispatch();
   const [employees, setEmployees] = useState<Employee[]>([
     {
       id: 1,
-      name: "Rahul",
-      email: "rahul@gmail.com",
+      EmployeeName: "Rahul",
+      EmployeeEmail: "rahul@gmail.com",
       designation: "UI Designer",
       status: true,
       experience: "3",
@@ -47,8 +44,8 @@ const EmployeeTable = () => {
     },
     {
       id: 2,
-      name: "Raj",
-      email: "rajsharma23@gmail.com",
+     EmployeeName: "Raj",
+      EmployeeEmail: "rajsharma23@gmail.com",
       designation: "Frontend Developer",
       status: true,
       experience: "5",
@@ -60,23 +57,16 @@ const EmployeeTable = () => {
     }
 
   ]);
-  // const dispatch = useAppDispatch();
-  // const { roles, meta, loading } useAppSelector(
-  //   (state) => state.roles
-  // );
-  const [createRoleEntry, setCreateRoleEntry] = useState({
-    name: "",
-    description: "",
-    status: "",
-  });
+
+  
   // ✅ Filters
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
-    experience: "3",
-    rating: "5.5",
+    experience: "",
+    rating: "",
     employeeImg: "",
-    employeeMobileNo: "7896354798",
+    employeeMobileNo: "",
     linkedinUrl: "",
     twitterUrl: "",
     limit: 10,
@@ -86,8 +76,19 @@ const EmployeeTable = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
+  const [createEmployeeEntry, setCreateEmployeeEntry] = useState({
+     EmployeeName: "",
+    EmployeeEmail: "",
+    designation: "",
+    status: "",
+    experience: "",
+    rating: "",
+    employeeImg: "",
+    employeeMobileNo: "",
+    linkedinUrl: "",
+    twitterUrl: "",
+  });
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(null);
 
   // ✅ Fetch roles
   useEffect(() => {
@@ -96,36 +97,61 @@ const EmployeeTable = () => {
 
   // ✅ Create
   const handleCreate = async () => {
-    await dispatch(createEmployees(createEmployeeEntry));
-    setShowCreateModal(false);
-    setCreateRoleEntry({
-      name: "",
-      email: "",
-      designation: "",
-      status: "",
-      experience: "",
-      rating: "",
-      employeeImg: "",
-      mobileNo: "",
-      linkedinURL: "",
-      twitter: "",
-    });
-    dispatch(getAllEmployees(filters));
-  };
+  console.log(createEmployeeEntry);
+  
+  const formData = new FormData();
+  
+  // ✅ Append each field individually
+  formData.forEach((i)=>{
+    console.log(i)
+  })
+  formData.append('EmployeeName', createEmployeeEntry.EmployeeName);
+  formData.append('EmployeeEmail', createEmployeeEntry.EmployeeEmail);
+  formData.append('designation', createEmployeeEntry.designation);
+  formData.append('status', createEmployeeEntry.status);
+  formData.append('experience', createEmployeeEntry.experience);
+  formData.append('rating', createEmployeeEntry.rating);
+  formData.append('employeeMobileNo', createEmployeeEntry.employeeMobileNo);
+  formData.append('linkedinUrl', createEmployeeEntry.linkedinUrl);
+  formData.append('twitterUrl', createEmployeeEntry.twitterUrl);
+  
+  // ✅ Handle file upload if employeeImg is a File object
+  if (createEmployeeEntry.employeeImg) {
+    formData.append('employeeImg', createEmployeeEntry.employeeImg);
+  }
+
+  await dispatch(createEmployee(formData));
+  
+  setShowCreateModal(false);
+  setCreateEmployeeEntry({
+    EmployeeName: "",
+    EmployeeEmail: "",
+    designation: "",
+    status: "",
+    experience: "",
+    rating: "",
+    employeeImg: "",
+    employeeMobileNo: "",
+    linkedinUrl: "",
+    twitterUrl: "",
+  });
+  
+  dispatch(getAllEmployees(filters));
+};    
 
   // ✅ Edit open
   const handleEditOpen = (item: any) => {
-    setSelectedRoleId(item.id);
-    setCreateRoleEntry({
-      name: item.name,
-      email: item.email,
+    setSelectedEmployeeId(item.id);
+    setCreateEmployeeEntry({
+      EmployeeName: item.EmployeeName,
+      EmployeeEmail: item.EmployeeEmail,
       designation: item.designation,
       status: item.status,
       experience: item.experience,
       rating: item.rating,
-      mobileNo: item.mobileNo,
-      linkedinURL: item.linkedinURL,
-      twitter: item.twitter,
+      employeeMobileNo: item.employeeMobileNo,
+      linkedinUrl: item.linkedinUrl,
+      twitterURL: item.twitterUrl,
     });
     setShowEditModal(true);
   };
@@ -146,14 +172,14 @@ const EmployeeTable = () => {
   };
   // ✅ Delete open
   const handleDeleteOpen = (id: number) => {
-    setSelectedRoleId(id);
+    setSelectedEmployeeId(id);
     setShowDeleteModal(true);
   };
 
   // ✅ Delete  
   const handleDelete = async () => {
-    if (!selectedRoleId) return;
-    await dispatch(deleteEmployee(selectedRoleId));
+    if (!selectedEmployeeId) return;
+    await dispatch(deleteEmployee(selectedEmployeeId));
     setShowDeleteModal(false);
     dispatch(getAllEmployees(filters));
   };
@@ -221,7 +247,7 @@ const EmployeeTable = () => {
         </div>
 
         {/* Apply Button */}
-        <button className="btn btn-primary px-4" >
+        <button className="btn btn-primary px-4" > 
           Apply
         </button>
       </div>
@@ -265,11 +291,19 @@ const EmployeeTable = () => {
                       <button
                         className="btn btn-sm btn-primary"
                          onClick={() => {
-                              setSelectedRoleId(item.id);
-                              setCreateRoleEntry({
+                              setSelectedEmployeeId(item.id);
+                              setCreateEmployeeEntry({
                                 name: item.name,
-                                description: item.description,
-                                status: item.status == true ? "1" : "0",
+                                email: item.email,
+                                 designation:item.designation,
+                                  
+                               experience:item.experience,
+                                 rating: item.rating,
+                                  employeeImg: item.employeeImg,
+                                  employeeMobileNo: item.employeeMobileNo,
+                                     linkedinUrl: item.linkedinUrl,
+                                         twitterUrl: item.twitterUrl,
+                                 status: item.status == true ? "1" : "0",
                               });
                               setShowEditModal(true);
                             }}
@@ -281,7 +315,7 @@ const EmployeeTable = () => {
                            className="btn btn-sm btn-danger"
                             onClick={() => {
                            setShowDeleteModal((prev) => !prev);
-                            setSelectedRoleId(item.id);
+                            setSelectedEmployeeId(item.id);
                              }}
                              >
                             Delete
@@ -311,6 +345,7 @@ const EmployeeTable = () => {
               background: "linear-gradient(135deg, #43cea2, #185a9d)",
             }}
             onClick={handleNext}
+
           >
             Next
           </button>
@@ -347,6 +382,13 @@ const EmployeeTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Employee name"
+                         value={createEmployeeEntry?.EmployeeName || ""}
+                        onChange={(e) =>
+                          setCreateEmployeeEntry((prev) => ({
+                            ...prev,
+                            EmployeeName: e.target.value,
+                          }))
+                        }
 
                       />
                     </div>
@@ -356,7 +398,12 @@ const EmployeeTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Employee email"
-
+                        onChange={(e) =>
+                          setCreateEmployeeEntry((prev) => ({
+                            ...prev,
+                            EmployeeEmail: e.target.value,
+                          }))
+                        }
 
                       />
                     </div>
@@ -368,7 +415,12 @@ const EmployeeTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Designation"
-
+                        onChange={(e) =>
+                          setCreateEmployeeEntry((prev) => ({
+                            ...prev,
+                            designation: e.target.value,
+                          }))
+                        }
 
                       />
                       </div>
@@ -380,7 +432,12 @@ const EmployeeTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Experience"
-
+                        onChange={(e) =>
+                          setCreateEmployeeEntry((prev) => ({
+                            ...prev,
+                            experience: e.target.value,
+                          }))
+                        }
 
                       />
                       </div>
@@ -389,12 +446,19 @@ const EmployeeTable = () => {
                       <select
                         className="form-select mb-3"
                         aria-label="Default select example"
-                      >
-                     
+                      
+                          value={createEmployeeEntry.status}
+                        onChange={(e) =>
+                          setCreateEmployeeEntry((prev) => ({
+                            ...prev,
+                            status: e.target.value, // convert string to number
+                          }))
+                        }
+                     >
 
                         <option selected>Status</option>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
+                        <option value={1}>Active</option>
+                        <option value={0}>Inactive</option>
                       </select>
                     </div>
                   </form>
@@ -452,11 +516,11 @@ const EmployeeTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Employee name"
-                      value={createRoleEntry.name}
+                      value={createEmployeeEntry.EmployeeName}
                       onChange={(e) =>
                         setCreateEmployeeEntry ((prev) => ({
                           ...prev,
-                          name: e.target.value,
+                          EmployeeName: e.target.value,
                         }))
                       }
                       />
@@ -467,41 +531,56 @@ const EmployeeTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Employee email"
-                         value={createRoleEntry.description}
+                         value={createEmployeeEntry.EmployeeEmail}
                         onChange={(e) =>
                           setCreateEmployeeEntry({
                             ...createEmployeeEntry,
-                            description: e.target.value,
+                            EmployeeEmail: e.target.value,
                           })
                         }
 
                       />
+                    </div>
 
-                       <div className="mb-3">
+                     <div className="mb-3">
                       <label className="form-label">Designation</label>
                       <input
                         type="text"
                         className="form-control"
                         placeholder="Enter Designation"
-                      value={createRoleEntry.name}
+                      value={createEmployeeEntry.designation}
                       onChange={(e) =>
                         setCreateEmployeeEntry ((prev) => ({
-                          ...prev,
-                          name: e.target.value,
+                          ...createEmployeeEntry,
+                          designation: e.target.value,
                         }))
                       }
                       />
                     </div>
 
-                    
+                       <div className="mb-3">
+                      <label className="form-label">Experience</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Experience"
+                      value={createEmployeeEntry.experience}
+                      onChange={(e) =>
+                        setCreateEmployeeEntry ((prev) => ({
+                          ...prev,
+                          experience: e.target.value,
+                        }))
+                      }
+                      />
                     </div>
+
                      <div className="mb-3">
                       <label className="form-label"> Status</label>
                       <select
                       id="Status"
                         className="form-select mb-3"
                         aria-label="Default select example"
-                        value={createRoleEntry.status}
+                        value={createEmployeeEntry.status}
                         onChange={(e) =>
                           setCreateEmployeeEntry ((prev) => ({
                             ...prev,
@@ -550,7 +629,7 @@ const EmployeeTable = () => {
             tabIndex={-1}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="deleteRoleTitle"
+            aria-labelledby="deleteEmployeeTitle"
             onClick={() => setShowDeleteModal(false)}
           >
             <div

@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import api from "@/lib/axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
@@ -10,17 +11,9 @@ type EmployeeFilters = {
   offset: number;
 };
 
-type CreateEmployeePayload = {
-  name: string;
-  email: string;
-  designation: string;
-  status: boolean;
-  experience: string;
-  rating: string;
-  mobileNo: string;
-  linkedinURL: string;
-  twitter: string;
-};
+type CreateEmployeePayload = 
+  FormData
+;
 
 type UpdateEmployeePayload = CreateEmployeePayload & {
   employeeId: number;
@@ -68,11 +61,11 @@ export const getEmployeeById = createAsyncThunk(
 );
 
 // Create Employee
-export const createEmployeeEntry = createAsyncThunk(
+export const createEmployee = createAsyncThunk(
   "employees/createEmployee",
-  async (employeeData: CreateEmployeePayload, { rejectWithValue }) => {
+  async (data: CreateEmployeePayload, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/employees`, employeeData);
+      const response = await api.post(`/employee`, data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(

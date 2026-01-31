@@ -24,8 +24,8 @@ export async function POST(request: NextRequest) {
     
     const formData = await request.formData();
 
-     const employeeName = formData.get("employeeName");
-     const employeeEmail = formData.get("employeeEmail");
+     const employeeName = formData.get("EmployeeName");
+     const employeeEmail = formData.get("EmployeeEmail");
      const Designation = formData.get("Designation");
      const Experience = formData.get("Experience");
      const Rating = formData.get("Rating");

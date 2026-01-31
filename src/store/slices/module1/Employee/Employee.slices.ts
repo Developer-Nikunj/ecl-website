@@ -1,166 +1,7 @@
-// import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-// import {
-//   createEmployeeEntry,
-//   getAllEmployees,
-//   deleteEmployee,
-//   getEmployeeById,
-//   updateEmployee,
-// } from "./employee.thunk";
-
-// interface Employee {
-//      id: number;
-//   name: string;
-//   email: string;
-//   designation: string;
-//   status: boolean;
-//   experience: string;
-//   rating: string;
-//   employeeImg: string;
-//   employeeMobileNo: string;
-//   linkedinUrl: string;
-//   twitterUrl: string;
-// }
-
-// interface Meta {
-//     total: number;
-//   limit: number;
-//   offset: number;
-// }
-
-// interface RoleState {
-//   loading: boolean;
-//   success: boolean;
-//   error: string | null;
-//   roles: Employee[];
-//   selectedRole: Employee | null;
-//   meta: Meta | null;
-// }
-
-// const initialState: RoleState = {
-//   loading: false,
-//   success: false,
-//   error: null,
-//   roles: [],
-//   selectedRole: null,
-//   meta: null,
-// };
-
-// const roleSlice = createSlice({
-//   name: "employee",
-//   initialState,
-//   reducers: {
-//     clearRoleState(state) {
-//       state.loading = false;
-//       state.success = false;
-//       state.error = null;
-//     },
-// },
-
-
-// extraReducers: (builder) => {
-//     builder
-//       /* ================= CREATE Employee ================= */
-
-//       .addCase(createEmployeeEntry.pending, (state) => {
-//         state.loading = true;
-//         state.success = false;
-//         state.error = null;
-//       })
-
-//       .addCase(createEmployeeEntry.fulfilled, (state) => {
-//               state.loading = false;
-//               state.success = true;
-//               state.error = null;
-//             })
-      
-//             .addCase(createEmployeeEntry.rejected, (state, action) => {
-//               state.loading = false;
-//               state.success = false;
-//               state.error = (action.payload as string) || "Employee creation failed";
-//             })
-
-//     .addCase(getAllEmployees.pending, (state) => {
-//             state.loading = true;
-//             state.error = null;
-//           })
-    
-//            .addCase(getAllEmployees.fulfilled, (state, action) => {
-//                   state.loading = false;
-//                   state.success = true;
-//                   state.roles = action.payload.data;
-//                   state.meta = action.payload.meta;
-//                 })
-//     .addCase(getAllEmployees.rejected, (state, action) => {
-//             state.loading = false;
-//             state.success = false;
-//             state.error = (action.payload as string) || "Employee fetching failed";
-//           })
-//      /* ---------------- DELETE Employee ---------------- */
-//           .addCase(deleteEmployee.pending, (state) => {
-//             state.loading = true;
-//             state.error = null;
-//           })
-//           .addCase(deleteEmployee.fulfilled, (state) => {
-//             state.loading = false;
-//             state.success = true;
-//           )}
-       
-//           .addCase(deleteEmployee.rejected, (state, action) => {
-//                   state.loading = false;
-//                   state.success = false;
-//                   state.error = (action.payload as string) || "Employee deletion failed";
-//                 })
-
-//      /* ---------------- GET SINGLE ROLE ---------------- */
-//           .addCase(getEmployeeById.pending, (state) => {
-//             state.loading = true;
-//             state.error = null;
-//             state.selectedRole = null; // clear previous
-//           })
-//           .addCase(getEmployeeById.fulfilled, (state, action) => {
-//             state.loading = false;
-//             state.selectedRole = action.payload.data; // store single role
-//           })
-//           .addCase(getEmployeeById.rejected, (state, action) => {
-//             state.loading = false;
-//             state.error = action.payload || "Failed to fetch employee";
-//             state.selectedRole = null;
-//           })
-
-//      /* ---------------- UPDATE SINGLE ROLE ---------------- */
-    
-//           .addCase(updateEmployee.pending, (state) => {
-//             state.loading = true;
-//             state.success = false;
-//             state.error = null;
-//           })
-    
-//           // Update role → fulfilled
-//           .addCase(updateEmployee.fulfilled, (state) => {
-//             state.loading = false;
-//             state.success = true;
-//             state.error = null;
-//           })
-//      // Update role → rejected
-//           .addCase(updateEmployee.rejected, (state, action) => {
-//             state.loading = false;
-//             state.success = false;
-//             state.error = (action.payload as string) || "Role update failed";
-//           });
-//         } 
-
-// )};
-
-// export const { clearEmployeeState } = employeeSlice.action;
-// export  default employeeSlice.reducer;
-
-
-
-
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  createEmployeeEntry,
+  createEmployee,
   getAllEmployees,
   deleteEmployee,
   getEmployeeById,
@@ -169,8 +10,8 @@ import {
 
 interface Employee {
   id: number;
-  name: string;
-  email: string;
+  EmployeeName: string;
+  EmployeeEmail: string;
   designation: string;
   status: boolean;
   experience: string;
@@ -206,7 +47,7 @@ const initialState: EmployeeState = {
 };
 
 const employeeSlice = createSlice({ // Fixed: was roleSlice
-  name: "employee",
+  EmployeeName: "employee",
   initialState,
   reducers: {
     clearEmployeeState(state) { // Fixed: was clearRoleState
@@ -219,17 +60,17 @@ const employeeSlice = createSlice({ // Fixed: was roleSlice
   extraReducers: (builder) => {
     builder
       /* ================= CREATE Employee ================= */
-      .addCase(createEmployeeEntry.pending, (state) => {
+      .addCase(createEmployee.pending, (state) => {
         state.loading = true;
         state.success = false;
         state.error = null;
       })
-      .addCase(createEmployeeEntry.fulfilled, (state) => {
+      .addCase(createEmployee.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
         state.error = null;
       })
-      .addCase(createEmployeeEntry.rejected, (state, action) => {
+      .addCase(createEmployee.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
         state.error = (action.payload as string) || "Employee creation failed";

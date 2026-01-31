@@ -51,4 +51,4 @@ export const employeeModel = sequelize.define(
     { tableName: "employee", freezeTableName: true, }
 );
 
-await employeeModel.sync({ alter: true });
+// await employeeModel.sync({ alter: true });

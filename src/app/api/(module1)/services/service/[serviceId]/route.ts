@@ -1,10 +1,23 @@
 import { NextResponse, NextRequest } from "next/server";
 import { testConnection } from "@/database/db";
-import { CompanyService } from "@/models/";
+import { CompanyService } from "@/models/CompanyService.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 import { saveImage } from "@/utils/uploads/saveImage";
 import { Op } from "sequelize";
+
+import fs from "fs";
+import path from "path";
+
+function deleteImage(filePath: string | null) {
+  if (!filePath) return;
+
+  const absolutePath = path.join(process.cwd(), "public", filePath);
+
+  if (fs.existsSync(absolutePath)) {
+    fs.unlinkSync(absolutePath);
+  }
+}
 
 // ----------------update company services----------------
 
@@ -32,29 +45,27 @@ export async function PUT(
     if (!service) {
       return NextResponse.json({ message: "Services Not Found!!!" });
     }
-
+    console.log("service", service);
     const formData = await request.formData();
 
     const image = formData.get("img") as File;
     const name = formData.get("name") as string;
-    const description = formData.get("name") as string;
+    const description = formData.get("description") as string;
     const detail = formData.get("detail") as string;
     const otherDetail = formData.get("otherDetail") as string;
     const active = formData.get("active") === "true";
 
-    if (!image || !name) {
-      return NextResponse.json(
-        { status: 0, message: "Image and name are required" },
-        { status: 400 },
-      );
+    let imgPath = service.image;
+
+    if (image instanceof File && image.size > 0) {
+      deleteImage(service.image);
+
+      imgPath = await saveImage(image, "company_services");
     }
-
-    const imagePath = await saveImage(image, "company_services");
-
-    const updatedService = service.update({
+    const updatedService = await service.update({
       name: name,
       description: description,
-      image: imagePath,
+      image: imgPath,
       detail: detail,
       otherDetail: otherDetail,
     });
@@ -91,6 +102,10 @@ export async function PUT(
     });
   } catch (error: any) {
     console.log("error", error.message);
+     return NextResponse.json({
+       status: 0,
+       message: error.message,
+     });
   }
 }
 
@@ -102,7 +117,7 @@ export async function DELETE(
 ) {
   try {
     await testConnection();
-    const serviceId = await context.params;
+    const {serviceId} = await context.params;
 
     const auth = await verifyAdmin(request, "");
 
@@ -146,7 +161,7 @@ export async function GET(
 ) {
   try {
     await testConnection();
-    const serviceId = await context.params;
+    const { serviceId } = await context.params;
 
     const auth = await verifyAdmin(request, "");
 
@@ -161,6 +176,15 @@ export async function GET(
       where: {
         id: serviceId,
       },
+      attributes: [
+        "id",
+        "name",
+        "description",
+        "details",
+        "image",
+        "otherDetails",
+        "active",
+      ],
     });
 
     if (!service) {
@@ -168,7 +192,7 @@ export async function GET(
     }
 
     return NextResponse.json(
-      { message: "Fetched successfully", status: 1 },
+      { message: "Fetched successfully", status: 1, data: service },
       { status: 200 },
     );
   } catch (error: any) {

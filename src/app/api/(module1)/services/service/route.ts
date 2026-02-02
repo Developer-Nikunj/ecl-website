@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { testConnection } from "@/database/db";
-import { CompanyService } from "@/models/";
+import { CompanyService } from "@/models/CompanyService.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 import { saveImage } from "@/utils/uploads/saveImage";
@@ -91,7 +91,7 @@ export async function GET(request:NextRequest){
         const limit = Number(searchParams.get("limit")) || 10;
         const offset = Number(searchParams.get("offset")) || 0;
 
-        const where: any = {deleted:true};
+        const where: any = {deleted:false};
 
         if (startDate && endDate) {
           where.createdAt = {
@@ -112,6 +112,7 @@ export async function GET(request:NextRequest){
             order:[["createdAt","DESC"]],
             limit,
             offset,
+            attributes:["id","name","description","image","details","otherDetails"]
         })
 
         return NextResponse.json({

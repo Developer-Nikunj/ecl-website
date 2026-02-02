@@ -13,6 +13,9 @@ export const CompanyService = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    image: {
+      type: DataTypes.STRING,
+    },
     description: {
       type: DataTypes.TEXT,
     },
@@ -37,3 +40,5 @@ export const CompanyService = sequelize.define(
     timestamps: true,
   },
 );
+
+await CompanyService.sync({ alter: true });

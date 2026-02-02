@@ -3,8 +3,6 @@ import { testConnection } from "@/database/db";
 import { ServiceCategory } from "@/models/serviceCategory.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
-import z from "zod";
-import { create } from "domain";
 import { Op } from "sequelize";
 
 // ----------------- CREATE SERVICE CATEGORY----------
@@ -107,6 +105,7 @@ export async function GET(request: NextRequest) {
       order: [["createdAt", "DESC"]],
       limit,
       offset,
+      attributes:["id","name","description","active"]
     });
 
     if (!serviceCategories) {
@@ -117,7 +116,11 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { status: 1, message: "Service Categories Fetched Successfully" },
+      {
+        status: 1,
+        message: "Service Categories Fetched Successfully",
+        data: serviceCategories,
+      },
       { status: 200 },
     );
   } catch (error: any) {

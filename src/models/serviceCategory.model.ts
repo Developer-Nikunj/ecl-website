@@ -31,3 +31,6 @@ export const ServiceCategory = sequelize.define(
     timestamps: true,
   },
 );
+
+
+// await ServiceCategory.sync({alter:true});

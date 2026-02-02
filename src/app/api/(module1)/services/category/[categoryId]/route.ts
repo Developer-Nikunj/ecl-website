@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { testConnection } from "@/database/db";
-import { ServiceCategory } from "@/models/";
+import { ServiceCategory } from "@/models/serviceCategory.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 

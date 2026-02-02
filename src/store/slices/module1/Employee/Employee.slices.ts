@@ -47,7 +47,7 @@ const initialState: EmployeeState = {
 };
 
 const employeeSlice = createSlice({ // Fixed: was roleSlice
-  EmployeeName: "employee",
+  name: "employee",
   initialState,
   reducers: {
     clearEmployeeState(state) { // Fixed: was clearRoleState

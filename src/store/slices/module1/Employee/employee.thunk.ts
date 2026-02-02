@@ -35,7 +35,7 @@ export const getAllEmployees = createAsyncThunk(
         params.append("endDate", filters.endDate);
       }
 
-      const response = await axios.get(`${API_BASE_URL}/employees?${params.toString()}`);
+      const response = await api.get(`/employee` , {params: filters});
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -50,13 +50,13 @@ export const getEmployeeById = createAsyncThunk(
   "employees/getEmployeeById",
   async (employeeId: number, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/employees/${employeeId}`);
+      const response = await api.get(`/employee` , data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch employee"
       );
-    }
+    }   
   }
 );
 
@@ -81,10 +81,7 @@ export const updateEmployee = createAsyncThunk(
   async (payload: UpdateEmployeePayload, { rejectWithValue }) => {
     try {
       const { employeeId, ...employeeData } = payload;
-      const response = await axios.put(
-        `${API_BASE_URL}/employees/${employeeId}`,
-        employeeData
-      );
+      const response = await api.put( `/employee/${employeeId}`, employeeData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -99,7 +96,7 @@ export const deleteEmployee = createAsyncThunk(
   "employees/deleteEmployee",
   async (employeeId: number, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_BASE_URL}/employees/${employeeId}`);
+      await api.delete(`/employee/${employeeId}`);
       return employeeId;
     } catch (error: any) {
       return rejectWithValue(

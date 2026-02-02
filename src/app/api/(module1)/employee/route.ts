@@ -6,6 +6,7 @@ import { saveImage } from "@/utils/uploads/saveImage";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 // import "@models";
 import { Op, where } from "sequelize";
+import EmployeeTable from "@/components/admin/Employee/EmployeeTable";
 
 
 export async function POST(request: NextRequest) {
@@ -50,6 +51,8 @@ export async function POST(request: NextRequest) {
             Status,
 
         });
+        
+        
         if (auth.user == null) {
             return NextResponse.json(
                 { message: auth.message },
@@ -73,7 +76,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
             status: 1,
             message: "Employee created successfully",
-            // data: employee,
+            data: employee,
 
         });
 

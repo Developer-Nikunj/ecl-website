@@ -27,36 +27,36 @@ type Employee = {
 
 const EmployeeTable = () => {
   const dispatch = useAppDispatch();
-  const [employees, setEmployees] = useState<Employee[]>([
-    {
-      id: 1,
-      EmployeeName: "Rahul",
-      EmployeeEmail: "rahul@gmail.com",
-      designation: "UI Designer",
-      status: true,
-      experience: "3",
-      rating: "5.5",
-      employeeImg: "",
-      employeeMobileNo: "7896354798",
-      linkedinUrl: "",
-      twitterUrl: "",
+  // const [employees, setEmployees] = useState<Employee[]>([
+  //   {
+  //     id: 1,
+  //     EmployeeName: "Rahul",
+  //     EmployeeEmail: "rahul@gmail.com",
+  //     designation: "UI Designer",
+  //     status: true,
+  //     experience: "3",
+  //     rating: "5.5",
+  //     employeeImg: "",
+  //     employeeMobileNo: "7896354798",
+  //     linkedinUrl: "",
+  //     twitterUrl: "",
     
-    },
-    {
-      id: 2,
-     EmployeeName: "Raj",
-      EmployeeEmail: "rajsharma23@gmail.com",
-      designation: "Frontend Developer",
-      status: true,
-      experience: "5",
-      rating: "7.5",
-      employeeImg: "",
-      employeeMobileNo: "8050480504",
-      linkedinUrl: "",
-      twitterUrl: "",
-    }
+  //   },
+  //   {
+  //     id: 2,
+  //    EmployeeName: "Raj",
+  //     EmployeeEmail: "rajsharma23@gmail.com",
+  //     designation: "Frontend Developer",
+  //     status: true,
+  //     experience: "5",
+  //     rating: "7.5",
+  //     employeeImg: "",
+  //     employeeMobileNo: "8050480504",
+  //     linkedinUrl: "",
+  //     twitterUrl: "",
+  //   }
 
-  ]);
+  // ]);
 
   
   // ✅ Filters
@@ -89,6 +89,12 @@ const EmployeeTable = () => {
     twitterUrl: "",
   });
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(null);
+  
+
+   const { loading, success, error,employees , selectedEmployee, meta } =
+      useAppSelector((state) => state.employee);
+
+      console.log("employees",employees)
 
   // ✅ Fetch roles
   useEffect(() => {
@@ -126,7 +132,7 @@ const EmployeeTable = () => {
   setCreateEmployeeEntry({
     EmployeeName: "",
     EmployeeEmail: "",
-    designation: "",
+    Designation: "",
     status: "",
     experience: "",
     rating: "",
@@ -163,7 +169,7 @@ const EmployeeTable = () => {
     await dispatch(
       updateEmployee({
         employeeId: selectedEmployeeId,
-        ...createEmployeesEntry,
+        ...createEmployeeEntry,
       })
     );
 
@@ -191,7 +197,6 @@ const EmployeeTable = () => {
   const handlePrevious = () => {
     setFilters({ ...filters, offset: Math.max(0, filters.offset - filters.limit) });
   };
-
 
 
 
@@ -280,10 +285,10 @@ const EmployeeTable = () => {
               employees.map((item, index) => (
                 <tr key={item.id}>
                   <td>{filters.offset + index + 1}</td>
-                  <td>{item.name}</td>
-                  <td>{item.email}</td>
-                  <td>{item.designation}</td>
-                  <td>{item.experience}</td>  
+                  <td>{item.employeeName}</td>
+                  <td>{item.employeeEmail}</td>
+                  <td>{item.Designation}</td>
+                  <td>{item.Experience}</td>  
                   <td>{item.status ? "Active" : "Inactive"}</td>
                 
                   <td>
@@ -293,9 +298,9 @@ const EmployeeTable = () => {
                          onClick={() => {
                               setSelectedEmployeeId(item.id);
                               setCreateEmployeeEntry({
-                                name: item.name,
-                                email: item.email,
-                                 designation:item.designation,
+                                EmployeeName: item.EmployeeName,
+                                EmployeeEmail: item.EmployeeEmail,
+                                 designation:item.Designation,
                                   
                                experience:item.experience,
                                  rating: item.rating,
@@ -597,7 +602,11 @@ const EmployeeTable = () => {
                       </select>
                     </div>
                   </form>
-                </div>
+                </div>  
+
+
+
+                
 
                 <div className="modal-footer">
                   <button

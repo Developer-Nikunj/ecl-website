@@ -12,9 +12,9 @@ interface Employee {
   id: number;
   EmployeeName: string;
   EmployeeEmail: string;
-  designation: string;
+  Designation: string;
   status: boolean;
-  experience: string;
+  experience: integer;
   rating: string;
   employeeImg: string;
   employeeMobileNo: string;

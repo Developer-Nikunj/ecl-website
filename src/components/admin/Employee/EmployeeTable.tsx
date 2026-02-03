@@ -15,9 +15,9 @@ type Employee = {
   id: number;
   EmployeeName: string;
   EmployeeEmail: string;
-  designation: string;
-  status: boolean;
-  experience: string;
+  Designation: string;
+  status: number;
+  experience: number;
   rating: string;
   employeeImg: string;
   employeeMobileNo: string;
@@ -63,6 +63,7 @@ const EmployeeTable = () => {
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
+    Designation:"",
     experience: "",
     rating: "",
     employeeImg: "",
@@ -79,7 +80,7 @@ const EmployeeTable = () => {
   const [createEmployeeEntry, setCreateEmployeeEntry] = useState({
      EmployeeName: "",
     EmployeeEmail: "",
-    designation: "",
+    Designation: "",
     status: "",
     experience: "",
     rating: "",
@@ -113,7 +114,7 @@ const EmployeeTable = () => {
   })
   formData.append('EmployeeName', createEmployeeEntry.EmployeeName);
   formData.append('EmployeeEmail', createEmployeeEntry.EmployeeEmail);
-  formData.append('designation', createEmployeeEntry.designation);
+  formData.append('Designation', createEmployeeEntry.Designation);
   formData.append('status', createEmployeeEntry.status);
   formData.append('experience', createEmployeeEntry.experience);
   formData.append('rating', createEmployeeEntry.rating);
@@ -133,7 +134,7 @@ const EmployeeTable = () => {
     EmployeeName: "",
     EmployeeEmail: "",
     Designation: "",
-    status: "",
+    status: "1",
     experience: "",
     rating: "",
     employeeImg: "",
@@ -149,9 +150,9 @@ const EmployeeTable = () => {
   const handleEditOpen = (item: any) => {
     setSelectedEmployeeId(item.id);
     setCreateEmployeeEntry({
-      EmployeeName: item.EmployeeName,
-      EmployeeEmail: item.EmployeeEmail,
-      designation: item.designation,
+      employeeName: item.employeeName,
+      employeeEmail: item.employeeEmail,
+      Designation: item.Designation,
       status: item.status,
       experience: item.experience,
       rating: item.rating,
@@ -168,16 +169,25 @@ const EmployeeTable = () => {
 
     await dispatch(
       updateEmployee({
-        employeeId: selectedEmployeeId,
-        ...createEmployeeEntry,
+    employeeName: "",
+    employeeEmail: "",
+    Designation: "",
+    status: "",
+    experience: "",
+    rating: "",
+    employeeImg: "",
+    employeeMobileNo: "",
+    linkedinUrl: "",
+    twitterUrl: "",
       })
     );
 
-    setShowEditModal(false);
+    setShowEditModal(true);
     dispatch(getAllEmployees(filters));
   };
   // ✅ Delete open
-  const handleDeleteOpen = (id: number) => {
+  const handleDeleteOpen =
+   (id: number) => {
     setSelectedEmployeeId(id);
     setShowDeleteModal(true);
   };
@@ -289,7 +299,7 @@ const EmployeeTable = () => {
                   <td>{item.employeeEmail}</td>
                   <td>{item.Designation}</td>
                   <td>{item.Experience}</td>  
-                  <td>{item.status ? "Active" : "Inactive"}</td>
+                  <td>{item.Status ? "Active" : "Inactive"}</td>
                 
                   <td>
                     <div className="d-flex gap-2">
@@ -298,11 +308,11 @@ const EmployeeTable = () => {
                          onClick={() => {
                               setSelectedEmployeeId(item.id);
                               setCreateEmployeeEntry({
-                                EmployeeName: item.EmployeeName,
-                                EmployeeEmail: item.EmployeeEmail,
-                                 designation:item.Designation,
+                                employeeName: item.employeeName,
+                                employeeEmail: item.employeeEmail,
+                                 Designation:item.Designation,
                                   
-                               experience:item.experience,
+                               Experience:item.Experience,
                                  rating: item.rating,
                                   employeeImg: item.employeeImg,
                                   employeeMobileNo: item.employeeMobileNo,
@@ -311,6 +321,9 @@ const EmployeeTable = () => {
                                  status: item.status == true ? "1" : "0",
                               });
                               setShowEditModal(true);
+                              console.log("Api is calling")
+
+                              
                             }}
                       >
                         Edit
@@ -340,7 +353,7 @@ const EmployeeTable = () => {
             }}
             onClick={handlePrevious}
             disabled={filters.offset === 0}
-          >
+          >                                                                          
             Previous
           </button>
 
@@ -363,7 +376,7 @@ const EmployeeTable = () => {
           <div
             className="modal fade show d-block"
             tabIndex={-1}
-            onClick={() => setShowCreateModal(false)} // 👈 outside click
+            onClick={( ) => setShowCreateModal(false)} // 👈 outside click
           >
             <div
               className="modal-dialog modal-dialog-centered modal-md"
@@ -373,6 +386,7 @@ const EmployeeTable = () => {
                 <div className="modal-header">
                   <h5 className="modal-title">Add Employee</h5>
                   <button
+
                     type="button"
                     className="btn-close"
                     onClick={() => setShowCreateModal(false)}
@@ -400,7 +414,7 @@ const EmployeeTable = () => {
                     <div className="mb-3">
                       <label className="form-label">Employee email</label>
                       <input
-                        type="text"
+                        type="text"         
                         className="form-control"
                         placeholder="Enter Employee email"
                         onChange={(e) =>
@@ -423,7 +437,7 @@ const EmployeeTable = () => {
                         onChange={(e) =>
                           setCreateEmployeeEntry((prev) => ({
                             ...prev,
-                            designation: e.target.value,
+                            Designation: e.target.value,
                           }))
                         }
 
@@ -459,11 +473,11 @@ const EmployeeTable = () => {
                             status: e.target.value, // convert string to number
                           }))
                         }
-                     >
+                          >
 
                         <option selected>Status</option>
-                        <option value={1}>Active</option>
-                        <option value={0}>Inactive</option>
+                        <option value={"1"}>Active</option>
+                        <option value={"0"}>Inactive</option>    
                       </select>
                     </div>
                   </form>
@@ -553,11 +567,11 @@ const EmployeeTable = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Designation"
-                      value={createEmployeeEntry.designation}
+                      value={createEmployeeEntry.Designation}
                       onChange={(e) =>
                         setCreateEmployeeEntry ((prev) => ({
                           ...createEmployeeEntry,
-                          designation: e.target.value,
+                          Designation: e.target.value,
                         }))
                       }
                       />
@@ -573,7 +587,7 @@ const EmployeeTable = () => {
                       onChange={(e) =>
                         setCreateEmployeeEntry ((prev) => ({
                           ...prev,
-                          experience: e.target.value,
+                          Experience: e.target.value,
                         }))
                       }
                       />
@@ -648,7 +662,7 @@ const EmployeeTable = () => {
             >
               <div className="modal-content rounded-3 shadow">
                 <div className="modal-header border-0">
-                  <h5 className="modal-title" id="deleteRoleTitle">
+                  <h5 className="modal-title" id="deleteEmployeeTitle">
                     Confirm Deletion
                   </h5>
                   <button

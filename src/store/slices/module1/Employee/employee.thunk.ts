@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+// import axios from "axios";
 import api from "@/lib/axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
 type EmployeeFilters = {
   startDate?: string;
@@ -35,7 +35,7 @@ export const getAllEmployees = createAsyncThunk(
         params.append("endDate", filters.endDate);
       }
 
-      const response = await api.get(`/employee` , {params: filters});
+      const response = await api.get(`/employee` , {params});
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -50,7 +50,7 @@ export const getEmployeeById = createAsyncThunk(
   "employees/getEmployeeById",
   async (employeeId: number, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/employee` , data);
+      const response = await api.get(`/employee/${employeeId}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(

@@ -3,47 +3,29 @@ import api from "@/lib/axios";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 
-export interface servCatResponse {
-  status: number;
-  message: string;
-  data: [];
+/* =======================
+   TYPES
+======================= */
+
+export interface ServCat {
+  id: number;
+  name: string;
+  description: string;
+  active: string;
+  createdAt?: string;
 }
 
-export interface servCatPayload {
+export interface ServCatResponse {
+  status: number;
+  message: string;
+  data: ServCat[];
+}
+
+export interface ServCatPayload {
   name: string;
   description: string;
   active: string;
 }
-
-export const createServCat = createAsyncThunk<
-  servCatResponse,
-  servCatPayload,
-  { rejectValue: string }
->(
-  "ServCat/create",
-  async ({ name, description, active }, { rejectWithValue }) => {
-    try {
-      const res = await api.post<servCatResponse>("/services/category", {
-        name,
-        description,
-        active,
-      });
-
-      if (res.data.status === 0) {
-        toast.warn("Creating Service Category Failed");
-        return rejectWithValue(res.data.message);
-      }
-      toast.success(res.data.message);
-      return res.data;
-    } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      const message =
-        err.response?.data?.message || "Service Category creation failed";
-      toast.error(message);
-      return rejectWithValue(message);
-    }
-  },
-);
 
 export interface GetServCatParams {
   search?: string;
@@ -53,13 +35,56 @@ export interface GetServCatParams {
   endDate?: string;
 }
 
+interface UpdateServCatPayload {
+  id: number | string;
+  data: ServCatPayload;
+}
+
+/* =======================
+   CREATE
+======================= */
+
+export const createServCat = createAsyncThunk<
+  ServCatResponse,
+  ServCatPayload,
+  { rejectValue: string }
+>("servCat/create", async (payload, { rejectWithValue }) => {
+  try {
+    const res = await api.post<ServCatResponse>("/services/category", payload);
+
+    if (res.data.status === 0) {
+      toast.warn(res.data.message);
+      return rejectWithValue(res.data.message);
+    }
+
+    toast.success(res.data.message);
+    return res.data;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    const message =
+      err.response?.data?.message || "Service Category creation failed";
+    toast.error(message);
+    return rejectWithValue(message);
+  }
+});
+
+/* =======================
+   GET ALL
+======================= */
+
 export const getAllServCat = createAsyncThunk<
-  { data: []; total: number; limit: number; offset: number },
+  { data: ServCat[]; total: number; limit: number; offset: number },
   GetServCatParams,
   { rejectValue: string }
 >("servCat/all", async (params, { rejectWithValue }) => {
   try {
-    const res = await api.get("/services/category", { params });
+    const res = await api.get<{
+      status: number;
+      message: string;
+      data: ServCat[];
+      total: number;
+    }>("/services/category", { params });
+
     if (res.data.status === 0) {
       return rejectWithValue(res.data.message);
     }
@@ -73,61 +98,66 @@ export const getAllServCat = createAsyncThunk<
   } catch (error) {
     const err = error as AxiosError<{ message: string }>;
     const message =
-      err.response?.data?.message || "Service Category fetching failed !!!";
+      err.response?.data?.message || "Service Category fetching failed";
     toast.error(message);
     return rejectWithValue(message);
   }
 });
 
+/* =======================
+   DELETE
+======================= */
+
 export const deleteServCat = createAsyncThunk<
-    servCatResponse,
-    number|string,
-    {rejectValue:string}
->
- ("servCat/delete",async(id,{rejectWithValue})=>{
-    try {
-        const res = await api.delete(`services/category/${id}`);
+  ServCatResponse,
+  number | string,
+  { rejectValue: string }
+>("servCat/delete", async (id, { rejectWithValue }) => {
+  try {
+    const res = await api.delete<ServCatResponse>(`/services/category/${id}`);
 
-        if (res.data.status === 0) return rejectWithValue(res.data.message);
-
-        toast.success(res.data.message);
-        return res.data;
-    } catch (error) {
-        const err = error as AxiosError<{ message: string }>;
-        const message = err.response?.data?.message || "Service Category deletion failed";
-        toast.error(message);
-        return rejectWithValue(message);
+    if (res.data.status === 0) {
+      return rejectWithValue(res.data.message);
     }
- })
 
-interface updateServCatPayload {
-  id: number | string;
-  data: servCatPayload;
-}
+    toast.success(res.data.message);
+    return res.data;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    const message =
+      err.response?.data?.message || "Service Category deletion failed";
+    toast.error(message);
+    return rejectWithValue(message);
+  }
+});
 
- export const updateServCat = createAsyncThunk<
-    servCatResponse,
-    updateServCatPayload,
-    {rejectValue:string}
- >
- ("servCat/update",async({id,data},{rejectWithValue})=>{
-    try {
-        const res = await api.put<servCatResponse>(
-          `services/category/${id}`,data
-        );
-        console.log("res", res);
+/* =======================
+   UPDATE
+======================= */
 
-        if (res.data.status === 0) {
-          toast.warn("Service Category Update Failed");
-          return rejectWithValue(res.data.message);
-        }
+export const updateServCat = createAsyncThunk<
+  ServCatResponse,
+  UpdateServCatPayload,
+  { rejectValue: string }
+>("servCat/update", async ({ id, data }, { rejectWithValue }) => {
+  try {
+    const res = await api.put<ServCatResponse>(
+      `/services/category/${id}`,
+      data,
+    );
 
-        toast.success(res.data.message);
-        return res.data;
-    } catch (error) {
-        const err = error as AxiosError<{ message: string }>;
-        const message = err.response?.data?.message || "Service Category update failed";
-        toast.error(message);
-        return rejectWithValue(message);
+    if (res.data.status === 0) {
+      toast.warn(res.data.message);
+      return rejectWithValue(res.data.message);
     }
- })
+
+    toast.success(res.data.message);
+    return res.data;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    const message =
+      err.response?.data?.message || "Service Category update failed";
+    toast.error(message);
+    return rejectWithValue(message);
+  }
+});

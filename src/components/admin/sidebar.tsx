@@ -53,10 +53,10 @@ const Sidebar = () => {
                     Enquiries
                   </Link>
                 </li>
-                  <li className="nav-item">
-                    <Link href="/dev/employee" className="nav-link">
-                      Employee
-                    </Link>
+                <li className="nav-item">
+                  <Link href="/dev/employee" className="nav-link">
+                    Employee
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -245,6 +245,39 @@ const Sidebar = () => {
                 <li className="nav-item">
                   <Link href="/dev/blog" className="nav-link">
                     Blogs
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
+          {/* Services*/}
+          <li className="nav-item">
+            <Link
+              className="nav-link menu-link"
+              href="#sidebarServices"
+              data-bs-toggle="collapse"
+              role="button"
+              aria-expanded="false"
+              aria-controls="sidebarServices"
+            >
+              <i className="ri-book-2-line" />
+              <span>Services</span>
+            </Link>
+
+            <div
+              className="collapse menu-dropdown"
+              data-bs-parent="#sidebarAccordion"
+              id="sidebarServices"
+            >
+              <ul className="nav nav-sm flex-column">
+                <li className="nav-item">
+                  <Link href="/dev/serviceCategory" className="nav-link">
+                    Category
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/dev/services" className="nav-link">
+                    Services
                   </Link>
                 </li>
               </ul>

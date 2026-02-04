@@ -23,6 +23,11 @@ const ServiceCatPage = () => {
     description: "",
     active: 1,
   });
+  const [upCategoryEntry, setUpCategoryEntry] = useState({
+    name: "",
+    description: "",
+    active: 1,
+  });
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
@@ -359,22 +364,16 @@ const ServiceCatPage = () => {
                     <textarea className="form-control" rows={3} />
                   </div>
 
-                  {/* <div className="mb-3">
+                  <div className="mb-3">
                     <label className="form-label">Active</label>
                     <select
                       className="form-select"
-                      value={categoryEntry.active}
-                      onChange={(e) =>
-                        setCategoryEntry({
-                          ...categoryEntry,
-                          active: e.target.value,
-                        })
-                      }
+                      
                     >
                       <option value="1">Active</option>
                       <option value="0">Inactive</option>
                     </select>
-                  </div> */}
+                  </div>
                 </div>
 
                 <div className="modal-footer">

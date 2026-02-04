@@ -33,7 +33,7 @@ const RoleTable = () => {
 
   const dispatch = useAppDispatch();
   const { roles, selectedRole, meta, loading, error } = useAppSelector(
-    (state) => state.role
+    (state) => state.role,
   );
 
   const fetchRoles = () => {
@@ -43,7 +43,7 @@ const RoleTable = () => {
         endDate: filters.endDate || undefined,
         limit: filters.limit,
         offset: filters.offset,
-      })
+      }),
     );
   };
 
@@ -53,7 +53,7 @@ const RoleTable = () => {
         name: createRoleEntry.name,
         description: createRoleEntry.description,
         status: createRoleEntry.status,
-      })
+      }),
     );
 
     if (createRole.fulfilled.match(res)) {
@@ -104,7 +104,7 @@ const RoleTable = () => {
           offset: filters.offset,
           startDate: filters.startDate || undefined,
           endDate: filters.endDate || undefined,
-        })
+        }),
       );
     }
   };
@@ -118,7 +118,7 @@ const RoleTable = () => {
         name: createRoleEntry.name,
         description: createRoleEntry.description,
         status: createRoleEntry.status,
-      })
+      }),
     );
 
     if (updateRole.fulfilled.match(res)) {
@@ -129,12 +129,11 @@ const RoleTable = () => {
           startDate: filters.startDate,
           endDate: filters.endDate,
           limit: filters.limit,
-        })
+        }),
       );
       setCreateRoleEntry({ name: "", description: "", status: "" }); // reset form
     }
   };
-
 
   useEffect(() => {
     fetchRoles();
@@ -145,7 +144,6 @@ const RoleTable = () => {
       dispatch(getRoleById(selectedRoleId));
     }
   }, [selectedRoleId, showEditModal, dispatch]);
-
 
   return (
     <div>

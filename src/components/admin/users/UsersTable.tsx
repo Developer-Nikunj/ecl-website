@@ -79,13 +79,13 @@ const UsersTable = () => {
         endDate: filters.endDate || undefined,
         limit: filters.limit,
         offset: filters.offset,
-      })
+      }),
     );
   };
 
   const handleCheckboxChange = (id: number) => {
     setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   };
   const handleSelectAll = (checked: boolean) => {
@@ -102,7 +102,7 @@ const UsersTable = () => {
 
   const handleMenuCheckbox = (id: number) => {
     setSelectedMenuIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
   const handleSelectAllRow = (rowMenus: { id: number }[], checked: boolean) => {
@@ -124,7 +124,7 @@ const UsersTable = () => {
     console.log("all ids there selectedEditMenuIds", selectedEditMenuIds);
     console.log("all ids there selectEditUserId", selectEditUserId);
     await dispatch(
-      grantPermision({ userId: selectedIds, menuId: selectedMenuIds })
+      grantPermision({ userId: selectedIds, menuId: selectedMenuIds }),
     );
     setShowPermisionModal(false);
     setSelectedIds([]);
@@ -138,7 +138,7 @@ const UsersTable = () => {
       grantPermision2({
         userId: [selectEditUserId],
         menuId: selectedEditMenuIds,
-      })
+      }),
     );
     setShowPermisionModal(false);
     setSelectEditUserId(undefined);
@@ -160,7 +160,7 @@ const UsersTable = () => {
     if (!userModule) return false;
 
     return allMenus.every((menu) =>
-      userModule.menus.some((m) => m.menuName == menu.menuName)
+      userModule.menus.some((m) => m.menuName == menu.menuName),
     );
   };
 
@@ -184,8 +184,8 @@ const UsersTable = () => {
     if (res?.payload?.data.length > 0) {
       let ExistMenuIDS = Array.from(
         new Set(
-          res?.payload?.data.flatMap((m) => m.menus.map((menu) => menu.id))
-        )
+          res?.payload?.data.flatMap((m) => m.menus.map((menu) => menu.id)),
+        ),
       );
       console.log("Correct menu IDs:", ExistMenuIDS);
       await setSelectedEditMenuIds(ExistMenuIDS);
@@ -592,21 +592,21 @@ const UsersTable = () => {
                                     type="checkbox"
                                     className="form-check-input"
                                     checked={selectedEditMenuIds.includes(
-                                      menu.id
+                                      menu.id,
                                     )}
                                     onChange={(e) => {
                                       const checked = e.target.checked;
                                       setSelectedEditMenuIds((prev) =>
                                         checked
                                           ? [...prev, menu.id]
-                                          : prev.filter((id) => id !== menu.id)
+                                          : prev.filter((id) => id !== menu.id),
                                       );
                                     }}
                                   />
                                   <span className="ms-2">{menu.menuName}</span>{" "}
                                   {/* <span className="ms-2">{menu.id}</span>{" "} */}
                                 </td>
-                              )
+                              ),
                             )}
                           </tr>
                         ))}
@@ -738,7 +738,7 @@ const UsersTable = () => {
                                 onChange={(e) =>
                                   handleSelectAllRow(
                                     item.menus,
-                                    e.target.checked
+                                    e.target.checked,
                                   )
                                 }
                               />
@@ -754,9 +754,11 @@ const UsersTable = () => {
                                     checked={selectedMenuIds.includes(menu.id)}
                                     onChange={() => handleMenuCheckbox(menu.id)}
                                   />
-                                  <span className="ms-2">{menu.menuName}</span>{" "}
+                                  <span className="ms-2">
+                                    {menu.menuName}
+                                  </span>{" "}
                                 </td>
-                              )
+                              ),
                             )}
                           </tr>
                         ))}

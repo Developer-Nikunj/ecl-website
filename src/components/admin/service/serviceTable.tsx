@@ -182,6 +182,15 @@ const ServiceTable = () => {
     }
   };
 
+  const truncateWords = (text, limit = 20) => {
+    if (!text) return "-";
+    const words = text.split(" ");
+    return words.length > limit
+      ? words.slice(0, limit).join(" ") + " ..."
+      : text;
+  };
+
+
   useEffect(() => {
     fetchServices();
     fetchCategory();
@@ -271,9 +280,9 @@ const ServiceTable = () => {
               list.map((item, index) => (
                 <tr key={item.id}>
                   <td>{filters.offset + index + 1}</td>
-                  <td>{item.name}</td>
-                  <td>{item.description || "-"}</td>
-                  <td>{item.details}</td>
+                  <td>{truncateWords(item.name)}</td>
+                  <td>{truncateWords(item.description || "-")}</td>
+                  <td>{truncateWords(item.details)}</td>
                   <td>
                     {item.active ? (
                       <span className="badge bg-success">Active</span>

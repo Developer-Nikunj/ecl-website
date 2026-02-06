@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
     const limit = Number(searchParams.get("limit")) || 10;
     const offset = Number(searchParams.get("offset")) || 0;
 
-    const where: any = { deleted: false };
+    const where: any = { deleted: false,active:true };
 
     if (startDate && endDate) {
       where.createdAt = {
@@ -97,7 +97,6 @@ export async function GET(request: NextRequest) {
         "name",
         "description",
         "image",
-        "details",
         "otherDetails",
         "active"
       ],

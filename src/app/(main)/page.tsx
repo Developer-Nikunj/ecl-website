@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Testimonials from "@/app/(main)/components/Testimonial"
 import TeamSlider from "@/app/(main)/components/Employees";
+import Services from "@/app/(main)/components/services"
 
 export default function Home() {
   return (
@@ -256,7 +257,7 @@ export default function Home() {
       </section>
       {/* about section end  */}
       {/* service section start  */}
-      <section className="service pt-140 pb-140">
+      {/* <section className="service pt-140 pb-140">
         <div className="container">
           <div className="row mt-none-30">
             <div className="col-lg-4 mt-30">
@@ -468,7 +469,8 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
+      <Services/>
       {/* service section end  */}
       {/* project section start  */}
       <section className="project o-hidden pb-140">

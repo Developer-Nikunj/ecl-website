@@ -45,20 +45,20 @@ export async function PUT(
     if (!service) {
       return NextResponse.json({ message: "Services Not Found!!!" });
     }
-    console.log("service", service);
+    console.log("service", service.dataValues.image);
     const formData = await request.formData();
 
-    const image = formData.get("img") as File;
+    const image = formData.get("image") as File;
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
-    const detail = formData.get("detail") as string;
+    const details = formData.get("details") as string;
     const otherDetail = formData.get("otherDetail") as string;
     const active = formData.get("active") === "true";
 
-    let imgPath = service.image;
+    let imgPath = service.dataValues.image;
 
     if (image instanceof File && image.size > 0) {
-      deleteImage(service.image);
+      deleteImage(service.dataValues.image);
 
       imgPath = await saveImage(image, "company_services");
     }
@@ -66,8 +66,9 @@ export async function PUT(
       name: name,
       description: description,
       image: imgPath,
-      detail: detail,
+      details: details,
       otherDetail: otherDetail,
+      active,
     });
 
     if (!updatedService) {

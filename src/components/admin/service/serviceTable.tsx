@@ -6,12 +6,12 @@ import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import PermissionGate from "@/components/admin/PermissionGate";
 import {
-  createBlog,
-  getAllBlog,
-  updateBlog,
-  deleteBlog,
-  getOneBlog,
-} from "@/store/slices/module1/blog/blog.thunk";
+  createService,
+  deleteService,
+  getAllService,
+  updateService,
+  serviceItem,
+} from "@/store/slices/module1/service/service.thunk";
 import axios from "axios";
 
 const ServiceTable = () => {
@@ -46,15 +46,15 @@ const ServiceTable = () => {
 
   const [cat, setCat] = useState([]);
 
-//   const { loading, error, blogs, selectedBlog, meta } = useAppSelector(
-//     (state) => state.blog,
-//   );
+    const { loading, error, list, meta } = useAppSelector(
+      (state) => state.service,
+    );
 
-  // console.log("blogs", blogs);
+  console.log("list", list);
 
-  const fetchBlogs = async () => {
+  const fetchServices = async () => {
     await dispatch(
-      getAllBlog({
+      getAllService({
         startDate: filters.startDate || undefined,
         endDate: filters.endDate || undefined,
         limit: filters.limit,
@@ -72,12 +72,14 @@ const ServiceTable = () => {
     formData.append("category", serviceEntry.category);
     formData.append("image", serviceEntry.image);
 
-    // const res = await dispatch(createBlog(formData));
-    formData.forEach((i)=>{console.log(i)})
-    // if (createBlog.fulfilled.match(res)) {
-    //   setShowCreateModal(false);
-    //   fetchBlogs();
-    // }
+    const res = await dispatch(createService(formData));
+    formData.forEach((i) => {
+      console.log(i);
+    });
+    if (createService.fulfilled.match(res)) {
+      setShowCreateModal(false);
+      fetchServices();
+    }
     setServiceEntry({
       name: "",
       description: "",
@@ -91,15 +93,15 @@ const ServiceTable = () => {
   const handleDelete = async () => {
     if (!selectedServiceId) return;
 
-    const res = await dispatch(deleteBlog(selectedServiceId));
+    const res = await dispatch(deleteService(selectedServiceId));
 
-    if (deleteBlog.fulfilled.match(res)) {
+    if (deleteService.fulfilled.match(res)) {
       setShowDeleteModal(false);
       setSelectedServiceId(null);
     }
 
     await dispatch(
-      getAllBlog({
+      getAllService({
         limit: filters.limit,
         offset: filters.offset,
         startDate: filters.startDate || undefined,
@@ -110,7 +112,7 @@ const ServiceTable = () => {
 
   const applyFilter = () => {
     setFilters({ ...filters, offset: 0 });
-    fetchBlogs();
+    fetchServices();
   };
 
   const handleNext = () => {
@@ -138,13 +140,13 @@ const ServiceTable = () => {
     formData.append("image", serviceEntry.image);
 
     const res = await dispatch(
-      updateBlog({
+      updateService({
         id: selectedServiceId,
         data: formData,
       }),
     );
 
-    if (updateBlog.fulfilled.match(res)) {
+    if (updateService.fulfilled.match(res)) {
       setShowEditModal(false);
       setServiceEntry({
         name: "",
@@ -156,7 +158,7 @@ const ServiceTable = () => {
       });
 
       await dispatch(
-        getAllBlog({
+        getAllService({
           limit: filters.limit,
           offset: filters.offset,
           startDate: filters.startDate || undefined,
@@ -181,11 +183,10 @@ const ServiceTable = () => {
   };
 
   useEffect(() => {
-    // fetchBlogs();
-    // fetchCategory();
+    fetchServices();
+    fetchCategory();
   }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
 
-    const blogs= [{id:1,name:"name",description:"description",active:true,details:"details",image:"/uploads/blog/1769676716160-17647896901084582_geminid_meteor_shower_88656.webp"}]
 
   return (
     <div>
@@ -245,7 +246,7 @@ const ServiceTable = () => {
           onClick={() => setShowCreateModal(true)}
           className="btn btn-sm btn-success"
         >
-          Create Blog
+          Create Service
         </button>
       </div>
       {/* </PermissionGate> */}
@@ -266,8 +267,8 @@ const ServiceTable = () => {
           </thead>
 
           <tbody>
-            {blogs.length > 0 &&
-              blogs.map((item, index) => (
+            {list.length > 0 &&
+              list.map((item, index) => (
                 <tr key={item.id}>
                   <td>{filters.offset + index + 1}</td>
                   <td>{item.name}</td>
@@ -575,7 +576,7 @@ const ServiceTable = () => {
                         onChange={(e) =>
                           setServiceEntry({
                             ...serviceEntry,
-                            category: (e.target.value) || "",
+                            category: e.target.value || "",
                           })
                         }
                       >
@@ -587,8 +588,6 @@ const ServiceTable = () => {
                         ))}
                       </select>
                     </div>
-
-                    
 
                     {/* Active */}
                     <div className="mb-3 form-check">
@@ -608,7 +607,6 @@ const ServiceTable = () => {
                         Active
                       </label>
                     </div>
-
 
                     {/* Featured Image */}
                     <div className="mb-3">

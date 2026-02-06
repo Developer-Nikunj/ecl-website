@@ -30,6 +30,6 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts",
     "src/types/**/*.d.ts"
-, "src/database/db.js"  ],
+, "src/database/db.js", "src/store/slices/module1/service/service.thunk.ts", "src/store/slices/module1/service/service.slices.ts"  ],
   "exclude": ["node_modules","public/assets/backend/libs"]
 }

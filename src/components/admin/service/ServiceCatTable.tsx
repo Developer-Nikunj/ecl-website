@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  createCategory,
-  getAllBlogCat,
-  deleteCategory,
-  updateCategory,
-} from "@/store/slices/module1/blogCategory/blogCategory.thunk";
+  createServCat,
+  getAllServCat,
+  deleteServCat,
+  updateServCat,
+} from "@/store/slices/module1/services/services.thunk";
 import PermissionGate from "@/components/admin/PermissionGate";
 
 const ServiceCatPage = () => {
@@ -21,12 +21,12 @@ const ServiceCatPage = () => {
   const [categoryEntry, setCategoryEntry] = useState({
     name: "",
     description: "",
-    active: 1,
+    active: "1",
   });
   const [upCategoryEntry, setUpCategoryEntry] = useState({
     name: "",
     description: "",
-    active: 1,
+    active: "1",
   });
   const [filters, setFilters] = useState({
     startDate: "",
@@ -36,12 +36,14 @@ const ServiceCatPage = () => {
   });
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
-  //   const { loading, error, categories, meta } = useAppSelector(
-  //     (state) => state.blogCat
-  //   );
+  const { list, loading, error, total, limit, offset } = useAppSelector(
+    (state) => state.ServCat,
+  );
+
+  console.log("list", list);
   const fetchCategory = () => {
     dispatch(
-      getAllBlogCat({
+      getAllServCat({
         startDate: filters.startDate || undefined,
         endDate: filters.endDate || undefined,
         limit: filters.limit,
@@ -52,20 +54,23 @@ const ServiceCatPage = () => {
 
   const handleCreate = async () => {
     const res = await dispatch(
-      createCategory({
+      createServCat({
         name: categoryEntry.name,
         description: categoryEntry.description,
+        active: categoryEntry.active ? true : false,
       }),
     );
-    if (createCategory.fulfilled.match(res)) {
+    if (createServCat.fulfilled.match(res)) {
       setShowCreateModal(false);
       fetchCategory();
     }
     setCategoryEntry({
       name: "",
       description: "",
-      active: 1,
+      active: "1",
     });
+    setShowCreateModal(false);
+    fetchCategory();
   };
 
   const applyFilter = () => {
@@ -80,7 +85,7 @@ const ServiceCatPage = () => {
   };
 
   const handleNext = () => {
-    if (meta && filters.offset + filters.limit < meta.total) {
+    if (filters.offset + filters.limit < total) {
       setFilters((prev) => ({
         ...prev,
         offset: prev.offset + prev.limit,
@@ -91,14 +96,14 @@ const ServiceCatPage = () => {
   const handleDelete = async () => {
     if (!selectedCategoryId) return;
 
-    const res = await dispatch(deleteCategory(selectedCategoryId));
+    const res = await dispatch(deleteServCat(selectedCategoryId));
 
-    if (deleteCategory.fulfilled.match(res)) {
+    if (deleteServCat.fulfilled.match(res)) {
       setShowDeleteModal(false);
       setSelectedCategoryId(null);
 
       dispatch(
-        getAllBlogCat({
+        getAllServCat({
           limit: filters.limit,
           offset: filters.offset,
           startDate: filters.startDate || undefined,
@@ -112,58 +117,35 @@ const ServiceCatPage = () => {
     if (!selectedCategoryId) return;
 
     const res = await dispatch(
-      updateCategory({
+      updateServCat({
         id: selectedCategoryId,
         data: {
-          name: categoryEntry.name,
-          description: categoryEntry.description,
+          name: upCategoryEntry.name,
+          description: upCategoryEntry.description,
+          active: upCategoryEntry.active ? true : false,
         },
       }),
     );
 
-    if (updateCategory.fulfilled.match(res)) {
+    if (updateServCat.fulfilled.match(res)) {
       setShowEditModal(false);
       dispatch(
-        getAllBlogCat({
+        getAllServCat({
           startDate: filters.startDate,
           endDate: filters.endDate,
           limit: filters.limit,
         }),
       );
-      setCategoryEntry({
+      setUpCategoryEntry({
         name: "",
         description: "",
-        active: 1,
+        active: "1",
       });
     }
   };
 
-  const categories = [
-    {
-      id: 1,
-      name: "meeting",
-      status: "true",
-      description: "Project discussion with team",
-      time: "10:30 AM",
-    },
-    {
-      id: 2,
-      name: "workout",
-      status: "false",
-      description: "Morning gym session",
-      time: "6:00 AM",
-    },
-    {
-      id: 3,
-      name: "study",
-      status: "true",
-      description: "PostgreSQL indexing concepts",
-      time: "8:00 PM",
-    },
-  ];
-
   useEffect(() => {
-    // fetchCategory();
+    fetchCategory();
   }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
 
   return (
@@ -216,33 +198,46 @@ const ServiceCatPage = () => {
               <th>Name</th>
               <th>Description</th>
               <th>Status</th>
-              <th>Time</th>
+              {/* <th>Time</th> */}
               <th>Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {categories.length > 0 &&
-              categories.map((item, index) => (
+            {list.length > 0 &&
+              list.map((item, index) => (
                 <tr key={item.id}>
                   <td>{filters.offset + index + 1}</td>
                   <td>{item.name}</td>
                   <td>{item.description}</td>
-                  <td>{item.status == "true" ? "Active" : "InActive"}</td>
-                  <td>{new Date(item.time).toLocaleDateString("en-GB")}</td>
+                  <td>
+                    {item.active.toString() == "true" ? "Active" : "InActive"}
+                  </td>
+                  {/* <td>{new Date(item.createdAt).toLocaleDateString("en-GB")}</td> */}
 
                   <td>
                     <div className="d-flex gap-2">
                       <button
                         className="btn btn-sm btn-primary"
-                        onClick={() => setShowEditModal((prev) => !prev)}
+                        onClick={() => {
+                          setShowEditModal((prev) => !prev);
+                          setUpCategoryEntry({
+                            name: item.name,
+                            description: item.name,
+                            active: item.active ? "1" : "0",
+                          });
+                          setSelectedCategoryId(item.id);
+                        }}
                       >
                         Edit
                       </button>
 
                       <button
                         className="btn btn-sm btn-danger"
-                        onClick={() => setShowDeleteModal((prev) => !prev)}
+                        onClick={() => {
+                          setShowDeleteModal((prev) => !prev);
+                          setSelectedCategoryId(item.id);
+                        }}
                       >
                         Delete
                       </button>
@@ -285,7 +280,7 @@ const ServiceCatPage = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Create Blog Category</h5>
+                  <h5 className="modal-title">Create Service Category</h5>
                   <button
                     className="btn-close"
                     onClick={() => setShowCreateModal(false)}
@@ -295,12 +290,31 @@ const ServiceCatPage = () => {
                 <div className="modal-body">
                   <div className="mb-3">
                     <label className="form-label">Category Name</label>
-                    <input className="form-control" />
+                    <input
+                      className="form-control"
+                      value={categoryEntry.name}
+                      onChange={(e) => {
+                        setCategoryEntry({
+                          ...categoryEntry,
+                          name: e.target.value,
+                        });
+                      }}
+                    />
                   </div>
 
                   <div className="mb-3">
                     <label className="form-label">Description</label>
-                    <textarea className="form-control" rows={3} />
+                    <textarea
+                      className="form-control"
+                      rows={3}
+                      value={categoryEntry.description}
+                      onChange={(e) => {
+                        setCategoryEntry({
+                          ...categoryEntry,
+                          description: e.target.value,
+                        });
+                      }}
+                    />
                   </div>
 
                   <div className="mb-3">
@@ -308,6 +322,12 @@ const ServiceCatPage = () => {
                     <select
                       className="form-select"
                       value={categoryEntry.active}
+                      onChange={(e) => {
+                        setCategoryEntry({
+                          ...categoryEntry,
+                          active: e.target.value,
+                        });
+                      }}
                     >
                       <option value="">Select Status</option>
                       <option value="1">Active</option>
@@ -323,7 +343,12 @@ const ServiceCatPage = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success" onClick={() => {}}>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => {
+                      handleCreate();
+                    }}
+                  >
                     Save
                   </button>
                 </div>
@@ -346,7 +371,7 @@ const ServiceCatPage = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Edit Blog Category</h5>
+                  <h5 className="modal-title">Edit Service Category</h5>
                   <button
                     className="btn-close"
                     onClick={() => setShowEditModal(false)}
@@ -356,19 +381,44 @@ const ServiceCatPage = () => {
                 <div className="modal-body">
                   <div className="mb-3">
                     <label className="form-label">Category Name</label>
-                    <input className="form-control" />
+                    <input
+                      className="form-control"
+                      value={upCategoryEntry.name}
+                      onChange={(e) => {
+                        setUpCategoryEntry({
+                          ...upCategoryEntry,
+                          name: e.target.value,
+                        });
+                      }}
+                    />
                   </div>
 
                   <div className="mb-3">
                     <label className="form-label">Description</label>
-                    <textarea className="form-control" rows={3} />
+                    <textarea
+                      className="form-control"
+                      rows={3}
+                      value={upCategoryEntry.description}
+                      onChange={(e) => {
+                        setUpCategoryEntry({
+                          ...upCategoryEntry,
+                          description: e.target.value,
+                        });
+                      }}
+                    />
                   </div>
 
                   <div className="mb-3">
                     <label className="form-label">Active</label>
                     <select
                       className="form-select"
-                      
+                      value={upCategoryEntry.active}
+                      onChange={(e) => {
+                        setUpCategoryEntry({
+                          ...upCategoryEntry,
+                          active: e.target.value,
+                        });
+                      }}
                     >
                       <option value="1">Active</option>
                       <option value="0">Inactive</option>
@@ -383,7 +433,12 @@ const ServiceCatPage = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success" onClick={() => {}}>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => {
+                      handleUpdate();
+                    }}
+                  >
                     Update
                   </button>
                 </div>
@@ -438,7 +493,7 @@ const ServiceCatPage = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-danger">Delete</button>
+                  <button className="btn btn-sm btn-danger" onClick={()=>handleDelete()}>Delete</button>
                 </div>
               </div>
             </div>

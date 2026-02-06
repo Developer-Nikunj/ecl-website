@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import ServiceCatPage from "@/components/admin/service/ServiceCatTable";
+import ServiceTable from "@/components/admin/service/serviceTable";
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
                     <div className="d-flex align-items-lg-center flex-lg-row flex-column">
                       <div className="flex-grow-1">
                         {/* <h4 className="fs-16 mb-1">Good Morning, Anna!</h4> */}
-                        <ServiceCatPage />
+                        <ServiceTable />
                       </div>
                     </div>
                   </div>

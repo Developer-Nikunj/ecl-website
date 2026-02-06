@@ -24,7 +24,7 @@ export interface ServCatResponse {
 export interface ServCatPayload {
   name: string;
   description: string;
-  active: string;
+  active: boolean;
 }
 
 export interface GetServCatParams {

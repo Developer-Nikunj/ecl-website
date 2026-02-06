@@ -56,9 +56,9 @@ const servCatSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(createServCat.fulfilled, (state, action) => {
+      .addCase(createServCat.fulfilled, (state, action) => {    
         state.loading = false;
-        state.list.unshift(...action.payload.data);
+        // state.list.unshift(...action.payload.data);
       })
       .addCase(createServCat.rejected, (state, action) => {
         state.loading = false;
@@ -91,8 +91,8 @@ const servCatSlice = createSlice({
       })
       .addCase(deleteServCat.fulfilled, (state, action) => {
         state.loading = false;
-        const deletedId = action.meta.arg;
-        state.list = state.list.filter((item) => item.id !== Number(deletedId));
+        // const deletedId = action.meta.arg;
+        // state.list = state.list.filter((item) => item.id !== Number(deletedId));
       })
       .addCase(deleteServCat.rejected, (state, action) => {
         state.loading = false;
@@ -107,13 +107,13 @@ const servCatSlice = createSlice({
       })
       .addCase(updateServCat.fulfilled, (state, action) => {
         state.loading = false;
-        const updated = action.payload.data[0];
+        // const updated = action.payload.data[0];
 
-        const index = state.list.findIndex((item) => item.id === updated.id);
+        // const index = state.list.findIndex((item) => item.id === updated.id);
 
-        if (index !== -1) {
-          state.list[index] = updated;
-        }
+        // if (index !== -1) {
+        //   state.list[index] = updated;
+        // }
       })
       .addCase(updateServCat.rejected, (state, action) => {
         state.loading = false;

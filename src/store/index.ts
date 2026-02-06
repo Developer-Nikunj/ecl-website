@@ -12,6 +12,7 @@ import profileReducer from "./slices/module1/profile/profile.slices";
 import blogCategoryReducer from "./slices/module1/blogCategory/blogCategory.slices";
 import blogReducer from "./slices/module1/blog/blog.slices";
 import employeeReducer from "./slices/module1/Employee/Employee.slices";
+import serviceCategoryReducer from "./slices/module1/services/services.slices";
 import { injectStore } from "@/lib/axios";
 
 export const store = configureStore({
@@ -29,6 +30,7 @@ export const store = configureStore({
     blogCat: blogCategoryReducer,
     blog: blogReducer,
     employee: employeeReducer,
+    ServCat: serviceCategoryReducer,
   },
 });
 

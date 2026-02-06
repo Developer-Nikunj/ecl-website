@@ -39,9 +39,9 @@ export async function POST(request: NextRequest) {
       image: imagePath,
       name,
       description,
-      active:active=='true' ? true:false,
+      active: active == "true" ? true : false,
       details,
-      otherDetail,
+      otherDetails:otherDetail,
     });
 
     if (!services) {

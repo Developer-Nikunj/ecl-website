@@ -170,12 +170,12 @@ const ServiceTable = () => {
 
   const fetchCategory = async () => {
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/blog`,
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/service`,
       );
 
       setCat(res.data.data);
-      console.log("cat (api response)", res.data.data); // ✅ correct
+      console.log("cat (api response)", res.data); // ✅ correct
     } catch (error) {
       console.error(error);
     } finally {

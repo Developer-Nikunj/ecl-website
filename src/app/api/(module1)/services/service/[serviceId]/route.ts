@@ -52,7 +52,7 @@ export async function PUT(
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
     const details = formData.get("details") as string;
-    const otherDetail = formData.get("otherDetail") as string;
+    const otherDetail = formData.get("category") as string;
     const active = formData.get("active") === "true";
 
     let imgPath = service.dataValues.image;
@@ -67,7 +67,7 @@ export async function PUT(
       description: description,
       image: imgPath,
       details: details,
-      otherDetail: otherDetail,
+      otherDetails: otherDetail,    
       active,
     });
 

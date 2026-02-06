@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 async function getServices() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/service`,
@@ -16,7 +18,7 @@ async function getServices() {
 const Services = async() => {
 
     const data = await getServices();
-    console.log("data",data.data)
+    // console.log("data",data.data)
   return (
     <>
       <section className="service pt-140 pb-140">
@@ -68,32 +70,37 @@ const Services = async() => {
             <div className="col-lg-8 col-md-6 mt-30">
               <div className="row mt-30">
                 {data.data.map((i) => (
-                  <div className="col-12 col-md-6" key={i.id}>
-                    <div className="service-box">
-                      <div className="service-item">
+                  <div className="col-12 col-md-6 d-flex" key={i.id}>
+                    <div className="service-box w-100">
+                      <div className="service-item h-100 d-flex flex-column justify-content-between">
                         <div className="xb-item--holder mb-85">
                           <h3 className="xb-item--title">{i.name}</h3>
-                          <span className="xb-item--contact">
+                          <span className="xb-item--contact d-block text-truncate">
                             {i.description}
                           </span>
                         </div>
 
-                        <div className="xb-item--icon ul_li_between">
+                        <div className="xb-item--icon d-flex justify-content-between align-items-center">
                           <div className="xb-item--img">
                             <img src={i.image} alt={i.name} />
                           </div>
-                          <a
-                            href={`/service/${i.slug}`}
+
+                          <Link
+                            href={`/service-one/${i.id}`}
                             className="xb-item--arrow"
                           >
                             <img
                               src="assets/front/img/icon/arrow-black.svg"
                               alt="Arrow"
                             />
-                          </a>
+                          </Link>
                         </div>
                       </div>
-                      <a href={`/service/${i.slug}`} className="xb-overlay" />
+
+                      <Link
+                        href={`/service-one/${i.id}`}
+                        className="xb-overlay"
+                      />
                     </div>
                   </div>
                 ))}

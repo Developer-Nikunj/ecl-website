@@ -16,6 +16,10 @@ export const CompanyService = sequelize.define(
     image: {
       type: DataTypes.STRING,
     },
+    slug: {
+      type: DataTypes.STRING,
+      unique:true,
+    },
     description: {
       type: DataTypes.TEXT,
     },

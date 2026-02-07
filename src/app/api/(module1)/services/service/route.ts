@@ -35,13 +35,20 @@ export async function POST(request: NextRequest) {
     console.log("active", active);
     const imagePath = await saveImage(image, "company_services");
 
+    const slug = name
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-");;
+
     const services = await CompanyService.create({
       image: imagePath,
       name,
       description,
       active: active == "true" ? true : false,
       details,
-      otherDetails:otherDetail,
+      otherDetails: otherDetail,
+      slug,
     });
 
     if (!services) {

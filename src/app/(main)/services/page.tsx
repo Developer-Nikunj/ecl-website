@@ -1,5 +1,5 @@
 import Image from "next/image";
-
+import Link from "next/link";
 
 async function getServices() {
   const res = await fetch(
@@ -78,16 +78,16 @@ export default async function Services() {
                       <div className="xb-item--img">
                         <img src={i.image} alt={i.name} />
                       </div>
-                      <a href={`/service/${i.slug}`} className="xb-item--arrow">
+                      <Link href={`/service/${i.slug}`} className="xb-item--arrow">
                         <img
                           src="assets/front/img/icon/arrow-black.svg"
                           alt="Arrow"
                         />
-                      </a>
+                      </Link>
                     </div>
                   </div>
 
-                  <a href={`/service/${i.id}`} className="xb-overlay" />
+                  <Link href={`/service/${i.id}`} className="xb-overlay" ></Link>
                 </div>
               </div>
             ))}
@@ -98,12 +98,12 @@ export default async function Services() {
             data-wow-delay="450ms"
             data-wow-duration="600ms"
           >
-            <a
-              href="service.html"
+            <Link
+              href="/contact"
               className="thm-btn thm-btn--aso thm-btn--aso_yellow"
             >
               Book a free consultation
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -231,7 +231,7 @@ export default async function Services() {
       </section>
       {/* process section end  */}
       {/* testimonial section start */}
-      <section className="testimonial o-hidden pb-130 pt-130">
+      {/* <section className="testimonial o-hidden pb-130 pt-130">
         <div className="container">
           <div className="sa-tes_top pos-rel mb-60">
             <div className="sec-title--two">
@@ -448,7 +448,7 @@ export default async function Services() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* testimonial section end  */}
       {/* cta section start  */}
       <section className="cta">

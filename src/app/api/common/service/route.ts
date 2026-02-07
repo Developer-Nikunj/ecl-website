@@ -98,7 +98,8 @@ export async function GET(request: NextRequest) {
         "description",
         "image",
         "otherDetails",
-        "active"
+        "active",
+        "slug",
       ],
     });
 

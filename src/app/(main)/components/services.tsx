@@ -58,12 +58,12 @@ const Services = async() => {
                   data-wow-delay="450ms"
                   data-wow-duration="600ms"
                 >
-                  <a
-                    href="service.html"
+                  <Link
+                    href="/services"
                     className="thm-btn thm-btn--aso thm-btn--aso_yellow"
                   >
                     View more services
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -1470,7 +1470,7 @@ export default function Home() {
               className="xb-btn text-center mt-50 wow fadeInUp"
               data-wow-duration="600ms"
             >
-              <a href="team.html" className="thm-btn thm-btn--aso">
+              <Link href="team.html" className="thm-btn thm-btn--aso">
                 Meet our all team member
               </a>
             </div>

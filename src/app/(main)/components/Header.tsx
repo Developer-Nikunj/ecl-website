@@ -28,17 +28,17 @@ export default function Header() {
         <div className="container">
           <div className="header__wrap ul_li_between">
             <div className="header-logo">
-              <a href="/">
+              <Link href="/">
                 <img src="assets/front/img/logo/logo.png" alt="Expert Code Lab" />
-              </a>
+              </Link>
             </div>
             <div className="main-menu__wrap ul_li navbar navbar-expand-xl">
               <nav className="main-menu collapse navbar-collapse">
                 <ul>
                   <li className="active">
-                    <a href="/">
+                    <Link href="/">
                       <span>Home</span>
-                    </a>
+                    </Link>
                   
                   </li>
                   <li className="menu-item-has-children megamenu">
@@ -290,12 +290,12 @@ export default function Header() {
                                   </div>
                                   <ul className="btns_group p-0 unordered_list justify-content-start">
                                     <li>
-                                      <a
-                                        href="contact.html"
+                                      <Link
+                                        href="/contact"
                                         className="thm-btn thm-btn--aso megamenu-btn thm-btn--header-black"
                                       >
                                         Get free consultation
-                                      </a>
+                                      </Link>
                                     </li>
                                     <li>
                                       <div className="review_short_info_2">
@@ -586,9 +586,9 @@ export default function Header() {
                   
                   </li>
                   <li>
-                    <a href="/contact">
+                    <Link href="/contact">
                       <span>Contact</span>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </nav>
@@ -1147,21 +1147,21 @@ export default function Header() {
                           </ul>
                         </li>
                         <li>
-                          <a href="/technology-and-solutions">
+                          <Link href="/technology-and-solutions">
                             <span>Technology & Solutions</span>
-                          </a>
+                          </Link>
                          
                         </li>
                         <li>
-                          <a href="/">
+                          <Link href="/blogs">
                             <span>Blog</span>
-                          </a>
+                          </Link>
                         
                         </li>
                         <li>
-                          <a href="/contact">
+                          <Link href="/contact">
                             <span>Contact</span>
-                          </a>
+                          </Link>
                         </li>
                       </ul>
                     </nav>
@@ -1176,13 +1176,13 @@ export default function Header() {
               </a>
             </div>
             <div className="header-contact d-none d-md-block">
-              <a
+              <Link
                 href="/contact"
                 className="thm-btn thm-btn--aso thm-btn--header-black"
               >
                 Let’s talk
                 <img src="assets/front/img/icon/sms-white-icon01.svg" alt="Expert Code Lab" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>

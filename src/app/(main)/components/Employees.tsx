@@ -6,6 +6,7 @@ import axios from "axios";
 
 import "swiper/css";
 import "swiper/css/navigation";
+import Link from "next/link";
 
 interface TeamMember {
   id: string;
@@ -235,12 +236,12 @@ const Teams = () => {
 
         {/* View All Team Button */}
         <div className="text-center mt-5">
-          <a
+          <Link
             href="/team"
             className="btn btn-primary btn-lg px-4 py-3 rounded-pill"
           >
             Meet our all team member
-          </a>
+          </Link>
         </div>
 
         {/* Custom CSS for Swiper */}

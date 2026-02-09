@@ -86,7 +86,7 @@ const Services = async() => {
                           </div>
 
                           <Link
-                            href={`/service-one/${i.id}`}
+                            href={`/service/${i.slug}`}
                             className="xb-item--arrow"
                           >
                             <img
@@ -98,7 +98,7 @@ const Services = async() => {
                       </div>
 
                       <Link
-                        href={`/service-one/${i.id}`}
+                        href={`/service/${i.slug}`}
                         className="xb-overlay"
                       />
                     </div>

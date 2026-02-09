@@ -7,7 +7,7 @@ export const getBlog = cache(async (slug: string) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/blog/${slug}`,
     {
-      cache: "no-store", // SSR (change later if needed)
+      cache: "no-store", 
     },
   );
 

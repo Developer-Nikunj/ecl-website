@@ -4,20 +4,23 @@ import axios from "axios";
 import Image from "next/image";
 import React,{useState,useEffect} from "react";
 import BlogsComponent from "@/app/(main)/components/Blogs";
+import Link from "next/link";
 
 export default function Blogs() {
   
   const [blog, setBlog] = useState([]);
+  const [first3blogs, setFirst3blogs] = useState([]);
 
   const fetchBlogs = async ()=>{
     try {
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/blog`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/blogCategory`,
       );
-      if (res.data.data.length > 1) {
-        setBlog(res.data.data);
+      console.log("blogs", res.data.ans);
+      if (res.data.ans.length > 1) {
+        setBlog(res.data.ans);
+        setFirst3blogs(res.data.first3blogs);
       }
-      // console.log("blogs",blog)
     } catch (error) {
       
     }finally{
@@ -277,106 +280,37 @@ export default function Blogs() {
                 <div className="sidebar_widget">
                   <h3 className="sidebar_widget_title">related posts</h3>
                   <ul className="recent_post_block list-unstyled">
-                    <li className="recent_post_item">
-                      <h3 className="post-title border-effect-2">
-                        <a href="blog-details.html">
-                          Measuring SEO success key metrics and tools you need..
-                        </a>
-                      </h3>
-                      <span>
-                        <img
-                          src="assets/front/img/icon/profile-circle.svg"
-                          alt=""
-                        />
-                        By Michael david
-                      </span>
-                    </li>
-                    <li className="recent_post_item">
-                      <h3 className="post-title border-effect-2">
-                        <a href="blog-details.html">
-                          Maximizing efficiency the role of automation in IT..
-                        </a>
-                      </h3>
-                      <span>
-                        <img
-                          src="assets/front/img/icon/profile-circle.svg"
-                          alt=""
-                        />
-                        By William thomas
-                      </span>
-                    </li>
-                    <li className="recent_post_item">
-                      <h3 className="post-title border-effect-2">
-                        <a href="blog-details.html">
-                          Navigating the challenges of remote IT management..
-                        </a>
-                      </h3>
-                      <span>
-                        <img
-                          src="assets/front/img/icon/profile-circle.svg"
-                          alt=""
-                        />
-                        By Christopher
-                      </span>
-                    </li>
+                    {first3blogs.map((i) => (
+                      <li key={i.id} className="recent_post_item">
+                        <h3 className="post-title border-effect-2 text-truncate">
+                          <Link href={`/blogs/${i.slug}`}>
+                            {i.title}.
+                          </Link>
+                        </h3>
+                        <span>
+                          <img
+                            src="assets/front/img/icon/profile-circle.svg"
+                            alt=""
+                          />
+                          By Expert Code Lab
+                        </span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
                 <div className="sidebar_widget">
                   <h3 className="sidebar_widget_title">Categories</h3>
                   <ul className="category_list_block list-unstyled">
-                    <li>
-                      <a href="#">
-                        <span>
-                          <i className="far fa-arrow-right" /> Cybersecurity
-                        </span>
-                        <span>(05)</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <span>
-                          <i className="far fa-arrow-right" />
-                          Tech Trends
-                        </span>
-                        <span>(02)</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <span>
-                          <i className="far fa-arrow-right" />
-                          Digital Transformation
-                        </span>
-                        <span>(02)</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <span>
-                          <i className="far fa-arrow-right" />
-                          Seo Marketing
-                        </span>
-                        <span>(04)</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <span>
-                          <i className="far fa-arrow-right" />
-                          Mobile App
-                        </span>
-                        <span>(03)</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <span>
-                          <i className="far fa-arrow-right" />
-                          Cloud Computing
-                        </span>
-                        <span>(07)</span>
-                      </a>
-                    </li>
+                    {blog.map((i) => (
+                      <li key={i.name}>
+                        <a href="#">
+                          <span>
+                            <i className="far fa-arrow-right" /> {i.name}
+                          </span>
+                          <span>({i.total})</span>
+                        </a>
+                      </li>
+                    ))}
                   </ul>
                 </div>
                 <div className="sidebar_widget">

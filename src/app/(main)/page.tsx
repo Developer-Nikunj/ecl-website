@@ -4,6 +4,7 @@ import TeamSlider from "@/app/(main)/components/Employees";
 import Services from "@/app/(main)/components/services"
 import SeoWork from "./components/SeoWork";
 import Link from "next/link";
+import Faq from "./components/Faq";
 
 export default function Home() {
   return (
@@ -1500,7 +1501,8 @@ export default function Home() {
               Have a question look here{" "}
             </h2>
           </div>
-          <div className="row">
+          <Faq />
+          {/* <div className="row">
             <div className="col-lg-12">
               <div
                 className="xb-faq wow fadeInUp"
@@ -1671,7 +1673,7 @@ export default function Home() {
                 </ul>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
       {/* faq section end  */}

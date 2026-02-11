@@ -195,94 +195,103 @@ const BlogCategoryTable = () => {
           Apply
         </button>
       </div>
-      {/* <PermissionGate permission="postrole"> */}
-      <div className="d-flex justify-content-end mb-3">
-        <button
-          onClick={() => setShowCreateModal((prev) => !prev)}
-          className="btn btn-sm btn-success"
-        >
-          Create Category
-        </button>
-      </div>
-      {/* </PermissionGate> */}
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle">
-          <thead className="table-light">
-            <tr>
-              <th>SNo.</th>
-              <th>Name</th>
-              <th>Description</th>
-              {/* <th>Image</th> */}
-              <th>Time</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-           {categories.length > 0 && categories.map((item, index) => (
-              <tr key={item.id}>
-                <td>{filters.offset + index + 1}</td>
-                <td>{item.name}</td>
-                <td>{item.description}</td>
-                {/* <td>{item.img || "NA"}</td> */}
-                <td>{new Date(item.createdAt).toLocaleDateString("en-GB")}</td>
-
-                <td>
-                  <div className="d-flex gap-2">
-                    <button
-                      className="btn btn-sm btn-primary"
-                      onClick={() => {
-                        setSelectedCategoryId(item.id);
-                        setCategoryEntry({
-                          name: item.name,
-                          description: item.description,
-                          active: 1,
-                        });
-                        setShowEditModal(true);
-                      }}
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => {
-                        setSelectedCategoryId(item.id);
-                        setShowDeleteModal(true);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="d-flex justify-content-between align-items-center mt-3">
+      <PermissionGate permission="postblogcategory">
+        <div className="d-flex justify-content-end mb-3">
           <button
-            className="btn btn-sm text-white"
-            style={{
-              background: "linear-gradient(135deg, #667eea, #764ba2)",
-            }}
-            onClick={handlePrevious}
-            disabled={filters.offset === 0}
+            onClick={() => setShowCreateModal((prev) => !prev)}
+            className="btn btn-sm btn-success"
           >
-            Previous
-          </button>
-
-          <button
-            className="btn btn-sm text-white"
-            style={{
-              background: "linear-gradient(135deg, #43cea2, #185a9d)",
-            }}
-            onClick={handleNext}
-            disabled={!meta || filters.offset + filters.limit >= meta.total}
-          >
-            Next
+            Create Category
           </button>
         </div>
-      </div>
+      </PermissionGate>
+
+      <PermissionGate permission="getblogcategory">
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover align-middle">
+            <thead className="table-light">
+              <tr>
+                <th>SNo.</th>
+                <th>Name</th>
+                <th>Description</th>
+                {/* <th>Image</th> */}
+                <th>Time</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {categories.length > 0 &&
+                categories.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{filters.offset + index + 1}</td>
+                    <td>{item.name}</td>
+                    <td>{item.description}</td>
+                    {/* <td>{item.img || "NA"}</td> */}
+                    <td>
+                      {new Date(item.createdAt).toLocaleDateString("en-GB")}
+                    </td>
+
+                    <td>
+                      <div className="d-flex gap-2">
+                        <PermissionGate permission="putblogcategory">
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => {
+                              setSelectedCategoryId(item.id);
+                              setCategoryEntry({
+                                name: item.name,
+                                description: item.description,
+                                active: 1,
+                              });
+                              setShowEditModal(true);
+                            }}
+                          >
+                            Edit
+                          </button>
+                        </PermissionGate>
+                        <PermissionGate permission="deleteblogcategory">
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => {
+                              setSelectedCategoryId(item.id);
+                              setShowDeleteModal(true);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </PermissionGate>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #667eea, #764ba2)",
+              }}
+              onClick={handlePrevious}
+              disabled={filters.offset === 0}
+            >
+              Previous
+            </button>
+
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #43cea2, #185a9d)",
+              }}
+              onClick={handleNext}
+              disabled={!meta || filters.offset + filters.limit >= meta.total}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </PermissionGate>
       {showCreateModal && (
         <>
           <div

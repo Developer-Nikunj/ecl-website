@@ -245,7 +245,7 @@ const fetchCategory = async () => {
       </div>
 
       {/* Create Blog */}
-      {/* <PermissionGate permission="postblog"> */}
+      <PermissionGate permission="postblog">
       <div className="d-flex justify-content-end mb-3">
         <button
           onClick={() => setShowCreateModal(true)}
@@ -254,10 +254,10 @@ const fetchCategory = async () => {
           Create Blog
         </button>
       </div>
-      {/* </PermissionGate> */}
+      </PermissionGate>
 
       {/* Blog Table */}
-      {/* <PermissionGate permission="getblog"> */}
+      <PermissionGate permission="getblog">
       <div className="table-responsive">
         <table className="table table-bordered table-hover align-middle mb-0">
           <thead className="table-light">
@@ -290,7 +290,7 @@ const fetchCategory = async () => {
                   <td>{item.views}</td>
                   <td>
                     <div className="d-flex gap-2">
-                      {/* <PermissionGate permission="putblog"> */}
+                      <PermissionGate permission="putblog">
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => {
@@ -310,9 +310,9 @@ const fetchCategory = async () => {
                       >
                         Edit
                       </button>
-                      {/* </PermissionGate> */}
+                      </PermissionGate>
 
-                      {/* <PermissionGate permission="deleteblog"> */}
+                      <PermissionGate permission="deleteblog">
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() => {
@@ -322,7 +322,7 @@ const fetchCategory = async () => {
                       >
                         Delete
                       </button>
-                      {/* </PermissionGate> */}
+                      </PermissionGate>
                     </div>
                   </td>
                 </tr>
@@ -351,7 +351,7 @@ const fetchCategory = async () => {
           </button>
         </div>
       </div>
-      {/* </PermissionGate> */}
+      </PermissionGate>
 
       {showCreateModal && (
         <>

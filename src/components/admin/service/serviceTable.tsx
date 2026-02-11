@@ -249,7 +249,7 @@ const ServiceTable = () => {
       </div>
 
       {/* Create Blog */}
-      {/* <PermissionGate permission="postblog"> */}
+      <PermissionGate permission="postservice">
       <div className="d-flex justify-content-end mb-3">
         <button
           onClick={() => setShowCreateModal(true)}
@@ -258,10 +258,10 @@ const ServiceTable = () => {
           Create Service
         </button>
       </div>
-      {/* </PermissionGate> */}
+      </PermissionGate>
 
       {/* Blog Table */}
-      {/* <PermissionGate permission="getblog"> */}
+      <PermissionGate permission="getservice">
       <div className="table-responsive">
         <table className="table table-bordered table-hover align-middle mb-0">
           <thead className="table-light">
@@ -292,7 +292,7 @@ const ServiceTable = () => {
                   </td>
                   <td>
                     <div className="d-flex gap-2">
-                      {/* <PermissionGate permission="putblog"> */}
+                      <PermissionGate permission="putservice">
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => {
@@ -311,9 +311,9 @@ const ServiceTable = () => {
                       >
                         Edit
                       </button>
-                      {/* </PermissionGate> */}
+                      </PermissionGate>
 
-                      {/* <PermissionGate permission="deleteblog"> */}
+                      <PermissionGate permission="deleteservice">
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() => {
@@ -323,7 +323,7 @@ const ServiceTable = () => {
                       >
                         Delete
                       </button>
-                      {/* </PermissionGate> */}
+                      </PermissionGate>
                     </div>
                   </td>
                 </tr>
@@ -352,7 +352,7 @@ const ServiceTable = () => {
           </button>
         </div>
       </div>
-      {/* </PermissionGate> */}
+      </PermissionGate>
 
       {showCreateModal && (
         <>

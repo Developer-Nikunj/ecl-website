@@ -59,7 +59,7 @@ const ProfilePageContent: React.FC = () => {
   const dispatch = useAppDispatch();
   const {profile,activity,loading,error} = useAppSelector((state)=>state.profile);
 
-  console.log("activity", activity);
+  // console.log("activity", activity);
 
   const [user] = useState({
     name: randomName(),

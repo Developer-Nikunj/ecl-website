@@ -180,93 +180,98 @@ const ServiceCatPage = () => {
         {/* Apply Button */}
         <button className="btn btn-primary px-4">Apply</button>
       </div>
-      {/* <PermissionGate permission="postrole"> */}
-      <div className="d-flex justify-content-end mb-3">
-        <button
-          onClick={() => setShowCreateModal((prev) => !prev)}
-          className="btn btn-sm btn-success"
-        >
-          Create Category
-        </button>
-      </div>
-      {/* </PermissionGate> */}
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle">
-          <thead className="table-light">
-            <tr>
-              <th>SNo.</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Status</th>
-              {/* <th>Time</th> */}
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {list.length > 0 &&
-              list.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{filters.offset + index + 1}</td>
-                  <td>{item.name}</td>
-                  <td>{item.description}</td>
-                  <td>
-                    {item.active.toString() == "true" ? "Active" : "InActive"}
-                  </td>
-                  {/* <td>{new Date(item.createdAt).toLocaleDateString("en-GB")}</td> */}
-
-                  <td>
-                    <div className="d-flex gap-2">
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => {
-                          setShowEditModal((prev) => !prev);
-                          setUpCategoryEntry({
-                            name: item.name,
-                            description: item.name,
-                            active: item.active ? "1" : "0",
-                          });
-                          setSelectedCategoryId(item.id);
-                        }}
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => {
-                          setShowDeleteModal((prev) => !prev);
-                          setSelectedCategoryId(item.id);
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        <div className="d-flex justify-content-between align-items-center mt-3">
+      <PermissionGate permission="postservicecategory">
+        <div className="d-flex justify-content-end mb-3">
           <button
-            className="btn btn-sm text-white"
-            style={{
-              background: "linear-gradient(135deg, #667eea, #764ba2)",
-            }}
+            onClick={() => setShowCreateModal((prev) => !prev)}
+            className="btn btn-sm btn-success"
           >
-            Previous
-          </button>
-
-          <button
-            className="btn btn-sm text-white"
-            style={{
-              background: "linear-gradient(135deg, #43cea2, #185a9d)",
-            }}
-          >
-            Next
+            Create Category
           </button>
         </div>
-      </div>
+      </PermissionGate>
+      <PermissionGate permission="getservicecategory">
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover align-middle">
+            <thead className="table-light">
+              <tr>
+                <th>SNo.</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                {/* <th>Time</th> */}
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {list.length > 0 &&
+                list.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{filters.offset + index + 1}</td>
+                    <td>{item.name}</td>
+                    <td>{item.description}</td>
+                    <td>
+                      {item.active.toString() == "true" ? "Active" : "InActive"}
+                    </td>
+                    {/* <td>{new Date(item.createdAt).toLocaleDateString("en-GB")}</td> */}
+
+                    <td>
+                      <div className="d-flex gap-2">
+                        <PermissionGate permission="putservicecategory">
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => {
+                              setShowEditModal((prev) => !prev);
+                              setUpCategoryEntry({
+                                name: item.name,
+                                description: item.name,
+                                active: item.active ? "1" : "0",
+                              });
+                              setSelectedCategoryId(item.id);
+                            }}
+                          >
+                            Edit
+                          </button>
+                        </PermissionGate>
+                        <PermissionGate permission="deleteservicecategory">
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => {
+                              setShowDeleteModal((prev) => !prev);
+                              setSelectedCategoryId(item.id);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </PermissionGate>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #667eea, #764ba2)",
+              }}
+            >
+              Previous
+            </button>
+
+            <button
+              className="btn btn-sm text-white"
+              style={{
+                background: "linear-gradient(135deg, #43cea2, #185a9d)",
+              }}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </PermissionGate>
       {showCreateModal && (
         <>
           <div
@@ -493,7 +498,12 @@ const ServiceCatPage = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-danger" onClick={()=>handleDelete()}>Delete</button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDelete()}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

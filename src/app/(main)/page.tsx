@@ -2,6 +2,8 @@ import Image from "next/image";
 import Testimonials from "@/app/(main)/components/Testimonial"
 import TeamSlider from "@/app/(main)/components/Employees";
 import Services from "@/app/(main)/components/services"
+import SeoWork from "./components/SeoWork";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -50,12 +52,12 @@ export default function Home() {
                     data-wow-delay="300ms"
                     data-wow-duration="600ms"
                   >
-                    <a
-                      href="contact.html"
+                    <Link
+                      href="/contact"
                       className="thm-btn thm-btn--aso thm-btn--aso_yellow"
                     >
                       Book a free consultation
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -470,7 +472,7 @@ export default function Home() {
           </div>
         </div>
       </section> */}
-      <Services/>
+      <Services />
       {/* service section end  */}
       {/* project section start  */}
       <section className="project o-hidden pb-140">
@@ -495,13 +497,14 @@ export default function Home() {
               className="xb-btn text-center wow fadeInRight mb-30"
               data-wow-duration="600ms"
             >
-              <a href="casestudy.html" className="thm-btn thm-btn--aso">
+              <a href="#" className="thm-btn thm-btn--aso">
                 View more casestudy
               </a>
             </div>
           </div>
         </div>
-        <div className="sa-project_wrapper">
+        <SeoWork />
+        {/* <div className="sa-project_wrapper">
           <div className="seo-project-slider-inner">
             <div className="seo-project-slider">
               <div
@@ -874,13 +877,13 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </section>
       {/* project section end  */}
       {/* process section start  */}
       <section
         className="process pt-130 pb-100 pos-rel"
-        data-bg-color="#0F55DC"
+        style={{ backgroundColor: "#0F55DC" }}
       >
         <div className="container">
           <div className="sec-title--two text-center mb-90">

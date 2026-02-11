@@ -498,9 +498,9 @@ export default function Home() {
               className="xb-btn text-center wow fadeInRight mb-30"
               data-wow-duration="600ms"
             >
-              <a href="#" className="thm-btn thm-btn--aso">
+              <Link href="/case-study" className="thm-btn thm-btn--aso">
                 View more casestudy
-              </a>
+              </Link>
             </div>
           </div>
         </div>

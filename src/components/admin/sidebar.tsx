@@ -87,16 +87,6 @@ const Sidebar = () => {
                     SEO
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link href="/dev/seo" className="nav-link">
-                    SEO
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link href="/dev/seo" className="nav-link">
-                    SEO
-                  </Link>
-                </li>
               </ul>
             </div>
           </li>

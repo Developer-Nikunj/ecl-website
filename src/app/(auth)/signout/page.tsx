@@ -113,7 +113,7 @@ const Page = () => {
                         onClick={handleSubmit}
                       >
                         <i className="mdi mdi-logout fs-16 me-2" />
-                        Logout
+                        SignOut
                       </button>
                     </div>
                     {/* end card body */}

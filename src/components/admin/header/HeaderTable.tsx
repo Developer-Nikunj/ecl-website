@@ -335,12 +335,12 @@ const HeaderManagementComponent = () => {
                   <form>
                     <div className="mb-4">
                       <label className="form-label fw-bold mb-2">
-                        Footer Content (HTML)
+                        Header Content (HTML)
                       </label>
                       <textarea
                         className="form-control"
                         rows={10}
-                        placeholder="Paste footer HTML here"
+                        placeholder="Paste Header HTML here"
                         value={createHeaderEntry.name}
                         onChange={(e) =>
                           setHeaderEntry({

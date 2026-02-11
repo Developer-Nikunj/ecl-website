@@ -103,9 +103,9 @@ const Page = () => {
                   <div>
                     <Link href="/dev" className="d-inline-block auth-logo">
                       <img
-                        src="/assets/backend/images/logo-light.png"
+                        src="/assets/backend/images/logo-ecl.png"
                         alt="Logo"
-                        height={20}
+                        height={50}
                       />
                     </Link>
                   </div>

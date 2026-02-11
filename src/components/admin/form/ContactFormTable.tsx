@@ -87,7 +87,7 @@ const ContactFormTable: React.FC = () => {
   }, [page, startDate, endDate]);
 
   return (
-    <div className="container my-5">
+    <div className=" my-5">
       <h2 className="mb-4">Contact Form Submissions</h2>
 
       {/* Date Filter */}

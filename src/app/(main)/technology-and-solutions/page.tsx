@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Technology() {
   return (
@@ -1873,7 +1874,7 @@ export default function Technology() {
               <li>24/7 Support and Monitoring.</li>
             </ul>
             <div className="team-btn">
-              <a href="team.html" className="thm-btn thm-btn--fill_icon">
+              <Link href="/team" className="thm-btn thm-btn--fill_icon">
                 <div className="xb-item--hidden-text">
                   <span className="text">Meet our team</span>
                 </div>
@@ -1884,7 +1885,7 @@ export default function Technology() {
                   </div>
                   <span className="xb-item--text">Meet our team</span>
                 </div>
-              </a>
+              </Link>
             </div>
             <div className="xb-item--holders">
               <h3 className="xb-item--title">

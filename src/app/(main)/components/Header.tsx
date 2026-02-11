@@ -17,10 +17,16 @@ export default function Header() {
         </span>
         <div className="header-shape">
           <div className="shape shape--one">
-            <img src="assets/front/img/shape/trangle-shape.png" alt="Expert Code Lab" />
+            <img
+              src="assets/front/img/shape/trangle-shape.png"
+              alt="Expert Code Lab"
+            />
           </div>
           <div className="shape shape--two">
-            <img src="assets/front/img/shape/trangle-shape.png" alt="Expert Code Lab" />
+            <img
+              src="assets/front/img/shape/trangle-shape.png"
+              alt="Expert Code Lab"
+            />
           </div>
         </div>
       </div>
@@ -29,7 +35,10 @@ export default function Header() {
           <div className="header__wrap ul_li_between">
             <div className="header-logo">
               <Link href="/">
-                <img src="assets/front/img/logo/logo.png" alt="Expert Code Lab" />
+                <img
+                  src="assets/front/img/logo/logo.png"
+                  alt="Expert Code Lab"
+                />
               </Link>
             </div>
             <div className="main-menu__wrap ul_li navbar navbar-expand-xl">
@@ -39,8 +48,8 @@ export default function Header() {
                     <Link href="/">
                       <span>Home</span>
                     </Link>
-                  
                   </li>
+
                   <li className="menu-item-has-children megamenu">
                     <a href="#!">
                       <span>About ECL</span>
@@ -55,9 +64,9 @@ export default function Header() {
                                   <div className="megamenu_pages_wrapper mb-5">
                                     <div className="row g-10">
                                       <div className="col-xl-4 col-md-4">
-                                        <a
+                                        <Link
                                           className="iconbox_block_2"
-                                          href="about.html"
+                                          href="/"
                                         >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
@@ -73,12 +82,12 @@ export default function Header() {
                                           <span className="deScription mb-0">
                                             Learn more about ECL
                                           </span>
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="col-xl-4 col-md-4">
-                                        <a
+                                        <Link
                                           className="iconbox_block_2"
-                                          href="pricing.html"
+                                          href="/"
                                         >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
@@ -94,12 +103,12 @@ export default function Header() {
                                           <span className="deScription mb-0">
                                             Streamlined Pricing{" "}
                                           </span>
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="col-xl-4 col-md-4">
-                                        <a
+                                        <Link
                                           className="iconbox_block_2"
-                                          href="team.html"
+                                          href="/team"
                                         >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
@@ -109,18 +118,18 @@ export default function Header() {
                                               />
                                             </small>
                                             <small className="iconbox_title">
-                                               Our Experts
+                                              Our Experts
                                             </small>
                                           </span>
                                           <span className="deScription mb-0">
                                             We are friendly Join our team.
                                           </span>
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="col-xl-4 col-md-4">
-                                        <a
+                                        <Link
                                           className="iconbox_block_2"
-                                          href="services"
+                                          href="/services"
                                         >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
@@ -136,13 +145,10 @@ export default function Header() {
                                           <span className="deScription mb-0">
                                             Happy to help you!
                                           </span>
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="col-xl-4 col-md-4">
-                                        <a
-                                          className="iconbox_block_2"
-                                          href="#"
-                                        >
+                                        <Link className="iconbox_block_2" href="/services">
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
                                               <img
@@ -157,12 +163,12 @@ export default function Header() {
                                           <span className="deScription mb-0">
                                             Happy to help you!
                                           </span>
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="col-xl-4 col-md-4">
-                                        <a
+                                        <Link
                                           className="iconbox_block_2"
-                                          href="casestudy.html"
+                                          href="/case-study"
                                         >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
@@ -178,12 +184,12 @@ export default function Header() {
                                           <span className="deScription mb-0">
                                             Explore our all casestudy.
                                           </span>
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="col-xl-4 col-md-4">
-                                        <a
+                                        <Link
                                           className="iconbox_block_2"
-                                          href="career.html"
+                                          href="/career"
                                         >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
@@ -199,12 +205,12 @@ export default function Header() {
                                           <span className="deScription mb-0">
                                             Happy to help you!{" "}
                                           </span>
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="col-xl-4 col-md-4">
-                                        <a
+                                        <Link
                                           className="iconbox_block_2"
-                                          href="career-details.html"
+                                          href="/career"
                                         >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
@@ -221,12 +227,12 @@ export default function Header() {
                                             {" "}
                                             We are friendly Join our team.
                                           </span>
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="col-xl-4 col-md-4">
-                                        <a
+                                        <Link
                                           className="iconbox_block_2"
-                                          href="casestudy-details.html"
+                                          href="/case-study"
                                         >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
@@ -242,12 +248,12 @@ export default function Header() {
                                           <span className="deScription mb-0">
                                             Explore our all casestudy.
                                           </span>
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="col-xl-4 col-md-4">
-                                        <a
+                                        <Link
                                           className="iconbox_block_2"
-                                          href="terms-conditions.html"
+                                          href="/"
                                         >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
@@ -263,12 +269,12 @@ export default function Header() {
                                           <span className="deScription mb-0">
                                             Your Rights and Responsibilities.
                                           </span>
-                                        </a>
+                                        </Link>
                                       </div>
                                       <div className="col-xl-4 col-md-4">
-                                        <a
+                                        <Link
                                           className="iconbox_block_2"
-                                          href="privacy-policy.html"
+                                          href="/"
                                         >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
@@ -284,7 +290,7 @@ export default function Header() {
                                           <span className="deScription mb-0">
                                             Commitment to Confidentiality.
                                           </span>
-                                        </a>
+                                        </Link>
                                       </div>
                                     </div>
                                   </div>
@@ -385,12 +391,12 @@ export default function Header() {
                                         </div>
                                       </div>
                                       <p className="mb-0 text-white">
-                                        “As a CEO at Expert Code Lab I have been voice
-                                        crying in the wilderness, trying to make
-                                        requirements clear, use every minute to
-                                        deliver the result, and not reinvent the
-                                        wheel. Here at ECL, I made that
-                                        possible for the clients”.{" "}
+                                        “As a CEO at Expert Code Lab I have been
+                                        voice crying in the wilderness, trying
+                                        to make requirements clear, use every
+                                        minute to deliver the result, and not
+                                        reinvent the wheel. Here at ECL, I made
+                                        that possible for the clients”.{" "}
                                       </p>
                                       <div className="author_box_quote">
                                         <img
@@ -409,9 +415,9 @@ export default function Header() {
                     </ul>
                   </li>
                   <li className="menu-item-has-children megamenu">
-                    <a href="services">
+                    <Link href="/services">
                       <span>Services</span>
-                    </a>
+                    </Link>
                     <ul className="submenu">
                       <li>
                         <div className="mega_menu_wrapper">
@@ -573,17 +579,15 @@ export default function Header() {
                       </li>
                     </ul>
                   </li>
-                  <li >
-                    <a href="/technology-and-solutions">
+                  <li>
+                    <Link href="/technology-and-solutions">
                       <span>Technology & Solutions</span>
-                    </a>
-                    
+                    </Link>
                   </li>
                   <li className="">
                     <Link href="/blogs">
                       <span>Blog</span>
                     </Link>
-                  
                   </li>
                   <li>
                     <Link href="/contact">
@@ -597,18 +601,20 @@ export default function Header() {
                   <div className="xb-header-menu-scroll lenis lenis-smooth">
                     <div className="xb-menu-close xb-hide-xl xb-close" />
                     <div className="xb-logo-mobile xb-hide-xl">
-                      <a href="/" rel="home">
-                        <img src="assets/front/img/logo/logo.png" alt="Expert Code Lab" />
-                      </a>
+                      <Link href="/" rel="home">
+                        <img
+                          src="assets/front/img/logo/logo.png"
+                          alt="Expert Code Lab"
+                        />
+                      </Link>
                     </div>
-                    
+
                     <nav className="xb-header-nav">
                       <ul className="xb-menu-primary clearfix">
                         <li className="active">
-                          <a href="/">
+                          <Link href="/">
                             <span>Home</span>
-                          </a>
-                         
+                          </Link>
                         </li>
                         <li className="menu-item menu-item-has-children megamenu">
                           <a href="#!">
@@ -624,9 +630,9 @@ export default function Header() {
                                         <div className="megamenu_pages_wrapper mb-5">
                                           <div className="row g-10">
                                             <div className="col-xl-4 col-lg-12">
-                                              <a
+                                              <Link
                                                 className="iconbox_block_2"
-                                                href="about.html"
+                                                href="/"
                                               >
                                                 <span className="icon_title_wrap">
                                                   <small className="iconbox_icon">
@@ -642,12 +648,12 @@ export default function Header() {
                                                 <span className="deScription mb-0">
                                                   Learn more about ECL
                                                 </span>
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="col-xl-4 col-lg-12">
-                                              <a
+                                              <Link
                                                 className="iconbox_block_2"
-                                                href="#"
+                                                href="/contact"
                                               >
                                                 <span className="icon_title_wrap">
                                                   <small className="iconbox_icon">
@@ -663,12 +669,12 @@ export default function Header() {
                                                 <span className="deScription mb-0">
                                                   Streamlined Pricing{" "}
                                                 </span>
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="col-xl-4 col-lg-12">
-                                              <a
+                                              <Link
                                                 className="iconbox_block_2"
-                                                href="#"
+                                                href="/team"
                                               >
                                                 <span className="icon_title_wrap">
                                                   <small className="iconbox_icon">
@@ -684,12 +690,12 @@ export default function Header() {
                                                 <span className="deScription mb-0">
                                                   We are friendly Join our team.
                                                 </span>
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="col-xl-4 col-lg-12">
-                                              <a
+                                              <Link
                                                 className="iconbox_block_2"
-                                                href="#"
+                                                href="/services"
                                               >
                                                 <span className="icon_title_wrap">
                                                   <small className="iconbox_icon">
@@ -705,12 +711,12 @@ export default function Header() {
                                                 <span className="deScription mb-0">
                                                   Happy to help you!
                                                 </span>
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="col-xl-4 col-lg-12">
-                                              <a
+                                              <Link
                                                 className="iconbox_block_2"
-                                                href="#"
+                                                href="/services"
                                               >
                                                 <span className="icon_title_wrap">
                                                   <small className="iconbox_icon">
@@ -726,12 +732,12 @@ export default function Header() {
                                                 <span className="deScription mb-0">
                                                   Happy to help you!
                                                 </span>
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="col-xl-4 col-lg-12">
-                                              <a
+                                              <Link
                                                 className="iconbox_block_2"
-                                                href="casestudy.html"
+                                                href="/case-study"
                                               >
                                                 <span className="icon_title_wrap">
                                                   <small className="iconbox_icon">
@@ -747,12 +753,12 @@ export default function Header() {
                                                 <span className="deScription mb-0">
                                                   Explore our all casestudy.
                                                 </span>
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="col-xl-4 col-lg-12">
-                                              <a
+                                              <Link
                                                 className="iconbox_block_2"
-                                                href="career.html"
+                                                href="/career"
                                               >
                                                 <span className="icon_title_wrap">
                                                   <small className="iconbox_icon">
@@ -768,12 +774,12 @@ export default function Header() {
                                                 <span className="deScription mb-0">
                                                   Happy to help you!{" "}
                                                 </span>
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="col-xl-4 col-lg-12">
-                                              <a
+                                              <Link
                                                 className="iconbox_block_2"
-                                                href="career-details.html"
+                                                href="/career"
                                               >
                                                 <span className="icon_title_wrap">
                                                   <small className="iconbox_icon">
@@ -790,12 +796,12 @@ export default function Header() {
                                                   {" "}
                                                   We are friendly Join our team.
                                                 </span>
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="col-xl-4 col-lg-12">
-                                              <a
+                                              <Link
                                                 className="iconbox_block_2"
-                                                href="casestudy-details.html"
+                                                href="case-study"
                                               >
                                                 <span className="icon_title_wrap">
                                                   <small className="iconbox_icon">
@@ -811,12 +817,12 @@ export default function Header() {
                                                 <span className="deScription mb-0">
                                                   Explore our all casestudy.
                                                 </span>
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="col-xl-4 col-lg-12">
-                                              <a
+                                              <Link
                                                 className="iconbox_block_2"
-                                                href="terms-conditions.html"
+                                                href="/"
                                               >
                                                 <span className="icon_title_wrap">
                                                   <small className="iconbox_icon">
@@ -833,12 +839,12 @@ export default function Header() {
                                                   Your Rights and
                                                   Responsibilities.
                                                 </span>
-                                              </a>
+                                              </Link>
                                             </div>
                                             <div className="col-xl-4 col-lg-12">
-                                              <a
+                                              <Link
                                                 className="iconbox_block_2"
-                                                href="privacy-policy.html"
+                                                href="/"
                                               >
                                                 <span className="icon_title_wrap">
                                                   <small className="iconbox_icon">
@@ -854,18 +860,18 @@ export default function Header() {
                                                 <span className="deScription mb-0">
                                                   Commitment to Confidentiality.
                                                 </span>
-                                              </a>
+                                              </Link>
                                             </div>
                                           </div>
                                         </div>
                                         <ul className="btns_group p-0 unordered_list justify-content-start">
                                           <li>
-                                            <a
-                                              href="contact.html"
+                                            <Link
+                                              href="/contact"
                                               className="thm-btn thm-btn--aso megamenu-btn thm-btn--header-black"
                                             >
                                               Get free consultation
-                                            </a>
+                                            </Link>
                                           </li>
                                           <li>
                                             <div className="review_short_info_2">
@@ -955,13 +961,13 @@ export default function Header() {
                                               </div>
                                             </div>
                                             <p className="mb-0 text-white">
-                                              “As a CEO at ECL I have been
-                                              voice crying in the wilderness,
-                                              trying to make requirements clear,
-                                              use every minute to deliver the
+                                              “As a CEO at ECL I have been voice
+                                              crying in the wilderness, trying
+                                              to make requirements clear, use
+                                              every minute to deliver the
                                               result, and not reinvent the
-                                              wheel. Here at ECL, I made
-                                              that possible for the clients”.{" "}
+                                              wheel. Here at ECL, I made that
+                                              possible for the clients”.{" "}
                                             </p>
                                             <div className="author_box_quote">
                                               <img
@@ -980,9 +986,9 @@ export default function Header() {
                           </ul>
                         </li>
                         <li className="menu-item menu-item-has-children megamenu">
-                          <a href="#!">
+                          <Link href="/services">
                             <span>Services</span>
-                          </a>
+                          </Link>
                           <ul className="sub-menu">
                             <li>
                               <div className="mega_menu_wrapper">
@@ -1101,9 +1107,7 @@ export default function Header() {
                                           </div>
                                           <p className="career_link m-0">
                                             Looking for new career?{" "}
-                                            <a href="#">
-                                              We’re Hiring
-                                            </a>
+                                            <Link href="/career">We’re Hiring</Link>
                                           </p>
                                         </div>
                                       </div>
@@ -1115,10 +1119,7 @@ export default function Header() {
                                             src="assets/front/img/casestudy/mm_img.png"
                                             alt="Expert Code Lab"
                                           />
-                                          <a
-                                            className="megamenu_btn"
-                                            href="#"
-                                          >
+                                          <a className="megamenu_btn" href="#">
                                             <span className="btn_label">
                                               Read casestudy
                                             </span>
@@ -1150,13 +1151,11 @@ export default function Header() {
                           <Link href="/technology-and-solutions">
                             <span>Technology & Solutions</span>
                           </Link>
-                         
                         </li>
                         <li>
                           <Link href="/blogs">
                             <span>Blog</span>
                           </Link>
-                        
                         </li>
                         <li>
                           <Link href="/contact">
@@ -1181,7 +1180,10 @@ export default function Header() {
                 className="thm-btn thm-btn--aso thm-btn--header-black"
               >
                 Let’s talk
-                <img src="assets/front/img/icon/sms-white-icon01.svg" alt="Expert Code Lab" />
+                <img
+                  src="assets/front/img/icon/sms-white-icon01.svg"
+                  alt="Expert Code Lab"
+                />
               </Link>
             </div>
           </div>

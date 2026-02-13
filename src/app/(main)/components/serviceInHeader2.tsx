@@ -1,27 +1,32 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Link from "next/link";
 
-async function getServices() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/service`,
-      {
-        cache: "no-store", // always fresh (SSR)
-      },
-    );
+const ServiceInHeader2 = () => {
+  const [data, setData] = useState([]);
 
-    if (!res.ok) throw new Error("Failed to fetch services");
+  const getData = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/service`,
+      );
 
-    const result = await res.json();
-    return result.data || [];
-  } catch (error) {
-    console.error("Error fetching services:", error);
-    return [];
-  }
-}
+      console.log(res.data);
 
-const ServiceInHeader = async () => {
-  const data = await getServices();
+      // FIX: store only the array
+      setData(res.data.data || []);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
 
+  useEffect(() => {
+    getData();
+  }, []);
+
+  // Vertical split
   const leftServices = data.filter((_, index) => index % 2 === 0);
   const rightServices = data.filter((_, index) => index % 2 !== 0);
 
@@ -31,7 +36,7 @@ const ServiceInHeader = async () => {
       <div className="col-xl-6 col-12">
         <div className="megamenu_widget">
           <ul className="icon_list unordered_list_block">
-            {leftServices.map((i: any) => (
+            {leftServices.map((i) => (
               <li key={i.id}>
                 <Link href={`/service/${i.slug}`}>
                   <span className="icon_list_text">{i.name}</span>
@@ -46,7 +51,7 @@ const ServiceInHeader = async () => {
       <div className="col-xl-6 col-12">
         <div className="megamenu_widget">
           <ul className="icon_list unordered_list_block">
-            {rightServices.map((i: any) => (
+            {rightServices.map((i) => (
               <li key={i.id}>
                 <Link href={`/service/${i.slug}`}>
                   <span className="icon_list_text">{i.name}</span>
@@ -60,4 +65,4 @@ const ServiceInHeader = async () => {
   );
 };
 
-export default ServiceInHeader;
+export default ServiceInHeader2;

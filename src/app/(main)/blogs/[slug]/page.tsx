@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { cache } from "react";
 
 
@@ -255,12 +256,12 @@ export default async function Home({ params }: PageProps) {
                   Book a free consultation for the SEO results you need.
                 </span>
                 <div className="xb-btn mt-45">
-                  <a
-                    href="contact.html"
+                  <Link
+                    href="/contact"
                     className="thm-btn thm-btn--aso thm-btn--aso_white"
                   >
                     Book a free consultation
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 export default function Home() {
   const [entry, setEntry] = useState({
@@ -278,12 +279,12 @@ export default function Home() {
                   Book a free consultation for the SEO results you need.
                 </span>
                 <div className="xb-btn mt-45">
-                  <a
-                    href="contact.html"
+                  <Link
+                    href="/contact"
                     className="thm-btn thm-btn--aso thm-btn--aso_white"
                   >
                     Book a free consultation
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div

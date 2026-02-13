@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ServiceInHeader from "@/app/(main)/components/serviceInHeader";
 
 export default function Header() {
   return (
@@ -148,7 +149,10 @@ export default function Header() {
                                         </Link>
                                       </div>
                                       <div className="col-xl-4 col-md-4">
-                                        <Link className="iconbox_block_2" href="/services">
+                                        <Link
+                                          className="iconbox_block_2"
+                                          href="/services"
+                                        >
                                           <span className="icon_title_wrap">
                                             <small className="iconbox_icon">
                                               <img
@@ -426,76 +430,7 @@ export default function Header() {
                               <div className="row justify-content-lg-between">
                                 <div className="col-xl-8">
                                   <div className="megamenu_widget_inner">
-                                    <div className="row">
-                                      <div className="col-xl-6">
-                                        <div className="megamenu_widget">
-                                          <ul className="icon_list unordered_list_block">
-                                            <li>
-                                              <a href="#">
-                                                <span className="icon_list_text">
-                                                  International SEO
-                                                </span>
-                                              </a>
-                                            </li>
-                                            <li>
-                                              <a href="#">
-                                                <span className="icon_list_text">
-                                                  Niche research
-                                                </span>
-                                              </a>
-                                            </li>
-                                            <li>
-                                              <a href="#">
-                                                <span className="icon_list_text">
-                                                  Link building{" "}
-                                                </span>
-                                              </a>
-                                            </li>
-                                            <li>
-                                              <a href="#">
-                                                <span className="icon_list_text">
-                                                  Enterprise SEO
-                                                </span>
-                                              </a>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      </div>
-                                      <div className="col-xl-6">
-                                        <div className="megamenu_widget">
-                                          <ul className="icon_list unordered_list_block">
-                                            <li>
-                                              <a href="#">
-                                                <span className="icon_list_text">
-                                                  Penalty recovery
-                                                </span>
-                                              </a>
-                                            </li>
-                                            <li>
-                                              <a href="#">
-                                                <span className="icon_list_text">
-                                                  Content optimization
-                                                </span>
-                                              </a>
-                                            </li>
-                                            <li>
-                                              <a href="#">
-                                                <span className="icon_list_text">
-                                                  Technical SEO
-                                                </span>
-                                              </a>
-                                            </li>
-                                            <li>
-                                              <a href="#">
-                                                <span className="icon_list_text">
-                                                  Competitor analysis
-                                                </span>
-                                              </a>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      </div>
-                                    </div>
+                                    <ServiceInHeader />
                                   </div>
                                   <div className="social_area">
                                     <div className="social_inner ul_li">
@@ -536,14 +471,14 @@ export default function Header() {
                                     </div>
                                     <p className="career_link m-0">
                                       Looking for new career?{" "}
-                                      <a href="career.html">We’re Hiring</a>
+                                      <Link href="/career">We’re Hiring</Link>
                                     </p>
                                   </div>
                                 </div>
                                 <div className="col-xl-3">
                                   <div className="megamenu_case">
                                     <h3>Software</h3>
-                                    <h4>Madical SEO success..</h4>
+                                    <h4>Medical SEO success..</h4>
                                     <img
                                       src="assets/front/img/casestudy/mm_img.png"
                                       alt="Expert Code Lab"
@@ -997,76 +932,7 @@ export default function Header() {
                                     <div className="row justify-content-lg-between">
                                       <div className="col-xl-8">
                                         <div className="megamenu_widget_inner">
-                                          <div className="row">
-                                            <div className="col-xl-6">
-                                              <div className="megamenu_widget">
-                                                <ul className="icon_list unordered_list_block">
-                                                  <li>
-                                                    <a href="#">
-                                                      <span className="icon_list_text">
-                                                        International SEO
-                                                      </span>
-                                                    </a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">
-                                                      <span className="icon_list_text">
-                                                        Niche research
-                                                      </span>
-                                                    </a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">
-                                                      <span className="icon_list_text">
-                                                        Link building{" "}
-                                                      </span>
-                                                    </a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">
-                                                      <span className="icon_list_text">
-                                                        Enterprise SEO
-                                                      </span>
-                                                    </a>
-                                                  </li>
-                                                </ul>
-                                              </div>
-                                            </div>
-                                            <div className="col-xl-6">
-                                              <div className="megamenu_widget">
-                                                <ul className="icon_list unordered_list_block">
-                                                  <li>
-                                                    <a href="#">
-                                                      <span className="icon_list_text">
-                                                        Penalty recovery
-                                                      </span>
-                                                    </a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">
-                                                      <span className="icon_list_text">
-                                                        Content optimization
-                                                      </span>
-                                                    </a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">
-                                                      <span className="icon_list_text">
-                                                        Technical SEO
-                                                      </span>
-                                                    </a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">
-                                                      <span className="icon_list_text">
-                                                        Competitor analysis
-                                                      </span>
-                                                    </a>
-                                                  </li>
-                                                </ul>
-                                              </div>
-                                            </div>
-                                          </div>
+                                          <ServiceInHeader />
                                         </div>
                                         <div className="social_area">
                                           <div className="social_inner ul_li">
@@ -1107,7 +973,9 @@ export default function Header() {
                                           </div>
                                           <p className="career_link m-0">
                                             Looking for new career?{" "}
-                                            <Link href="/career">We’re Hiring</Link>
+                                            <Link href="/career">
+                                              We’re Hiring
+                                            </Link>
                                           </p>
                                         </div>
                                       </div>

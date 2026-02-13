@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -550,15 +551,15 @@ export default function Home() {
                       solutions, boosting visibility and driving growth.
                     </p>
                     <div className="xb-btn mt-50">
-                      <a
-                        href="casestudy-details.html"
+                      <Link
+                        href="/casestudy-details"
                         className="thm-btn thm-btn--border"
                       >
                         Read case study{" "}
                         <span>
                           <img src="assets/front/img/icon/proj-arrow.svg" alt="Expert Code Lab" />
                         </span>
-                      </a>
+                      </Link>
                     </div>
                   </div>
                   <div className="xb-item--item-box mt-none-50">

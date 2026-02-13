@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 
 import "swiper/css";
+import Link from "next/link";
 
 const SeoWork = () => {
   const swiperRef = useRef<SwiperType | null>(null);
@@ -44,8 +45,8 @@ const SeoWork = () => {
                   visibility and organic traffic for strong ROI.
                 </p>
                 <div className="xb-btn mt-50">
-                  <a
-                    href="casestudy-details.html"
+                  <Link
+                    href="/"
                     className="thm-btn thm-btn--border"
                   >
                     Read case study
@@ -63,7 +64,7 @@ const SeoWork = () => {
                         />
                       </svg>
                     </span>
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="xb-item--item-box mt-none-50">
@@ -110,8 +111,8 @@ const SeoWork = () => {
                   eco-conscious audiences and driving traffic effectively.
                 </p>
                 <div className="xb-btn mt-50">
-                  <a
-                    href="casestudy-details.html"
+                  <Link
+                    href="/"
                     className="thm-btn thm-btn--border"
                   >
                     Read case study
@@ -129,7 +130,7 @@ const SeoWork = () => {
                         />
                       </svg>
                     </span>
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="xb-item--item-box mt-none-50">
@@ -176,8 +177,8 @@ const SeoWork = () => {
                   solutions, boosting visibility and driving growth.
                 </p>
                 <div className="xb-btn mt-50">
-                  <a
-                    href="casestudy-details.html"
+                  <Link
+                    href="/"
                     className="thm-btn thm-btn--border"
                   >
                     Read case study
@@ -195,7 +196,7 @@ const SeoWork = () => {
                         />
                       </svg>
                     </span>
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="xb-item--item-box mt-none-50">
@@ -242,8 +243,8 @@ const SeoWork = () => {
                   footprint,visibility and driving engagement.
                 </p>
                 <div className="xb-btn mt-50">
-                  <a
-                    href="casestudy-details.html"
+                  <Link
+                    href="/"
                     className="thm-btn thm-btn--border"
                   >
                     Read case study
@@ -261,7 +262,7 @@ const SeoWork = () => {
                         />
                       </svg>
                     </span>
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="xb-item--item-box mt-none-50">
@@ -308,8 +309,8 @@ const SeoWork = () => {
                   solutions, boosting visibility and driving growth.
                 </p>
                 <div className="xb-btn mt-50">
-                  <a
-                    href="casestudy-details.html"
+                  <Link
+                    href="/"
                     className="thm-btn thm-btn--border"
                   >
                     Read case study
@@ -327,7 +328,7 @@ const SeoWork = () => {
                         />
                       </svg>
                     </span>
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="xb-item--item-box mt-none-50">

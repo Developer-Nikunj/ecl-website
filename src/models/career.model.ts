@@ -55,4 +55,4 @@ export const JobModel = sequelize.define(
 );
 
 
-await JobModel.sync({alter:true});
+// await JobModel.sync({alter:true});

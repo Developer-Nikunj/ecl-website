@@ -45,4 +45,4 @@ export const CompanyService = sequelize.define(
   },
 );
 
-await CompanyService.sync({ alter: true });
+// await CompanyService.sync({ alter: true });

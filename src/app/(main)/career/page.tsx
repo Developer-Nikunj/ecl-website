@@ -1,4 +1,6 @@
 import Image from "next/image";
+import HiringProcess from "@/app/(main)/components/HirinhProcess"
+import Link from "next/link";
 
 export default function Career() {
   return (
@@ -88,78 +90,9 @@ export default function Career() {
           </div>
           <div className="xb-faq cp-faq">
             <ul className="accordion_box clearfix list-unstyled">
-              <li className="accordion block active-block">
-                <div className="acc-btn active">
-                  <span className="number">01-</span> Send your CV
-                  <span className="arrow" />
-                </div>
-                <div className="acc_body current">
-                  <div className="content">
-                    <p>
-                      Apply for a position by sending us your CV or providing a
-                      link to your LinkedIn profile, and take the first step
-                      toward joining our team.
-                    </p>
-                  </div>
-                </div>
-              </li>
-              <li className="accordion block">
-                <div className="acc-btn">
-                  <span className="number">02-</span> Initial screening results?
-                  <span className="arrow" />
-                </div>
-                <div className="acc_body">
-                  <div className="content">
-                    <p>
-                      Our recruiter will get back to you if your resume meets
-                      our requirements in order to introduce you to the role.
-                    </p>
-                  </div>
-                </div>
-              </li>
-              <li className="accordion block">
-                <div className="acc-btn">
-                  <span className="number">03-</span> Job interview
-                  <span className="arrow" />
-                </div>
-                <div className="acc_body">
-                  <div className="content">
-                    <p>
-                      You will meet a few of your potential colleagues to talk
-                      about your skills, background, and expectations in detail.
-                    </p>
-                  </div>
-                </div>
-              </li>
-              <li className="accordion block">
-                <div className="acc-btn">
-                  <span className="number">04-</span> Test task
-                  <span className="arrow" />
-                </div>
-                <div className="acc_body">
-                  <div className="content">
-                    <p>
-                      If needed, we’ll arrange a small test task. Depending on
-                      the project and role, this may be followed by a client
-                      interview.
-                    </p>
-                  </div>
-                </div>
-              </li>
-              <li className="accordion block">
-                <div className="acc-btn">
-                  <span className="number">05-</span> You’re hired!
-                  <span className="arrow" />
-                </div>
-                <div className="acc_body">
-                  <div className="content">
-                    <p>
-                      By deciding we are a good match for each other, we’ll
-                      agree the terms of you starting your career at ECL.
-                    </p>
-                  </div>
-                </div>
-              </li>
+              <HiringProcess/>
+              
+              
             </ul>
           </div>
         </div>
@@ -467,13 +400,13 @@ export default function Career() {
           </div>
         </div>
         <div className="header-contact text-center mt-60">
-          <a
-            href="contact.html"
+          <Link
+            href="/contact"
             className="thm-btn thm-btn--aso thm-btn--header-black"
           >
             Let’s talk
             <img src="assets/front/img/icon/sms-white-icon01.svg" alt="Hire Experts" />
-          </a>
+          </Link>
         </div>
       </div>
     </div>

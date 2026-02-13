@@ -6,13 +6,15 @@ import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import PermissionGate from "@/components/admin/PermissionGate";
 import {
-//   createBlog,
-//   getAllBlog,
-//   updateBlog,
-//   deleteBlog,
-//   getOneBlog,
-} from "@/store/slices/module1/blog/blog.thunk";
+  createJob,
+  getJobs,
+  getJobById,
+  updateJob,
+  deleteJob,
+} from "@/store/slices/module1/career/career.thunk";
 import axios from "axios";
+import { title } from "process";
+import { set } from "zod";
 
 const Career = () => {
   const dispatch = useAppDispatch();
@@ -26,216 +28,150 @@ const Career = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-//   const [selectedBlogId, setSelectedBlogId] = useState(null);
-//   const [blogEntry, setBlogEntry] = useState({
-//     title: "",
-//     excerpt: "",
-//     content: "",
-//     status: "draft",
-//     active: true,
-//     categoryId: "",
-//     image: "",
-//   });
-//   const [editBlogData, setEditBlogData] = useState({
-//     title: "",
-//     content: "",
-//     excerpt: "",
-//     status: "",
-//     active: "",
-//     categoryId: "",
-//     image: "",
-//   });
-
-//   const [cat, setCat] = useState([]);
-
-//   const { loading, error, blogs, selectedBlog, meta } = useAppSelector(
-//     (state) => state.blog,
-//   );
-
-  // console.log("blogs", blogs);
-
-//   const fetchBlogs = async () => {
-//     await dispatch(
-//       getAllBlog({
-//         startDate: filters.startDate || undefined,
-//         endDate: filters.endDate || undefined,
-//         limit: filters.limit,
-//         offset: filters.offset,
-//       }),
-//     );
-//   };
-
-//   const handleCreate = async () => {
-//     const formData = new FormData();
-//     formData.append("title", blogEntry.title);
-//     formData.append("excerpt", blogEntry.excerpt);
-//     formData.append("content", blogEntry.content);
-//     formData.append("status", blogEntry.status);
-//     formData.append("active", blogEntry.active ? "true" : "false");
-//     formData.append("categoryId", blogEntry.categoryId);
-//     formData.append("image", blogEntry.image);
-
-//     const res = await dispatch(createBlog(formData));
-
-//     if (createBlog.fulfilled.match(res)) {
-//       setShowCreateModal(false);
-//       fetchBlogs();
-//     }
-//     setBlogEntry({
-//       title: "",
-//       excerpt: "",
-//       content: "",
-//       status: "draft",
-//       active: true,
-//       categoryId: "",
-//       image: "",
-//     });
-//   };
-
-//   const handleDelete = async () => {
-//     if (!selectedBlogId) return;
-
-//     const res = await dispatch(deleteBlog(selectedBlogId));
-
-//     if (deleteBlog.fulfilled.match(res)) {
-//       setShowDeleteModal(false);
-//       setSelectedBlogId(null);
-//     }
-
-//     await dispatch(
-//       getAllBlog({
-//         limit: filters.limit,
-//         offset: filters.offset,
-//         startDate: filters.startDate || undefined,
-//         endDate: filters.endDate || undefined,
-//       }),
-//     );
-//   };
-
-//   const applyFilter = () => {
-//     setFilters({ ...filters, offset: 0 });
-//     fetchBlogs();
-//   };
-
-//   const handleNext = () => {
-//     setFilters({
-//       ...filters,
-//       offset: filters.offset + filters.limit,
-//     });
-//   };
-
-//   const handlePrevious = () => {
-//     setFilters({
-//       ...filters,
-//       offset: Math.max(0, filters.offset - filters.limit),
-//     });
-//   };
-
-//   const handleUpdate = async () => {
-//     if (!selectedBlogId) return;
-//     const formData = new FormData();
-//     formData.append("title", blogEntry.title);
-//     formData.append("excerpt", blogEntry.excerpt);
-//     formData.append("content", blogEntry.content);
-//     formData.append("status", blogEntry.status);
-//     formData.append("active", blogEntry.active ? "true" : "false");
-//     formData.append("categoryId", blogEntry.categoryId);
-//     formData.append("image", blogEntry.image);
-
-//     const res = await dispatch(
-//       updateBlog({
-//         id: selectedBlogId,
-//         data: formData,
-//       }),
-//     );
-
-//     if (updateBlog.fulfilled.match(res)) {
-//       setShowEditModal(false);
-//       setBlogEntry({
-//         title: "",
-//         excerpt: "",
-//         content: "",
-//         status: "draft",
-//         active: true,
-//         categoryId: "",
-//         image: "",
-//       });
-
-//       await dispatch(
-//         getAllBlog({
-//           limit: filters.limit,
-//           offset: filters.offset,
-//           startDate: filters.startDate || undefined,
-//           endDate: filters.endDate || undefined,
-//         }),
-//       );
-//     }
-//   };
-
-//   const fetchCategory = async () => {
-//     try {
-//       const res = await axios.post(
-//         `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/blog`,
-//       );
-
-//       setCat(res.data.data);
-//       console.log("cat (api response)", res.data.data); // ✅ correct
-//     } catch (error) {
-//       console.error(error);
-//     } finally {
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchBlogs();
-//     fetchCategory();
-//   }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
-
-const jobs = [
-  {
-    id: 1,
-    title: "Frontend Developer",
-    type: "Full-Time",
-    category: "Development",
+  const [selectedCareerId, setSelectedCareerId] = useState(null);
+  const [selectedUpCareerId, setSelectedUpCareerId] = useState(null);
+  const [careerEntry, setCareerEntry] = useState({
+    title: "",
+    type: "",
+    category: "",
+    salary: "",
+    location: "",
+    description: "",
     active: true,
-    salary: "₹6,00,000 / year",
-    location:"Delhi",
-    description:""
-  },
-  {
-    id: 2,
-    title: "Backend Developer",
-    type: "Full-Time",
-    category: "Development",
-    active: true,
-    salary: "₹7,50,000 / year",
-  },
-  {
-    id: 3,
-    title: "UI/UX Designer",
-    type: "Contract",
-    category: "Design",
-    active: false,
-    salary: "₹4,00,000 / year",
-  },
-  {
-    id: 4,
-    title: "Digital Marketing Executive",
-    type: "Part-Time",
-    category: "Marketing",
-    active: true,
-    salary: "₹3,50,000 / year",
-  },
-  {
-    id: 5,
-    title: "DevOps Engineer",
-    type: "Full-Time",
-    category: "Infrastructure",
-    active: true,
-    salary: "₹8,00,000 / year",
-  },
-];
+  });
 
+  const { jobs, error, selectedJob, loading, total } = useAppSelector(
+    (state) => state.career,
+  );
+
+  console.log("selectedJobOP", selectedJob);
+
+  const fetchCareer = async () => {
+    await dispatch(
+      getJobs({
+        limit: filters.limit,
+        offset: filters.offset,
+      }),
+    );
+  };
+
+  const fetchCareerById = async (id: number) => {
+    const res = await dispatch(getJobById(id));
+
+    if (getJobById.fulfilled.match(res)) {
+      const job = res.payload;
+
+      setCareerEntry({
+        title: job.data.title,
+        type: job.data.type,
+        category: job.data.category,
+        salary: job.data.salary,
+        location: job.data.location,
+        description: job.data.description,
+        active: job.data.active,
+      });
+    }
+  };
+
+  const handleCreate = async () => {
+    console.log("data", careerEntry);
+
+    const res = await dispatch(
+      createJob({
+        title: careerEntry.title,
+        type: careerEntry.type,
+        category: careerEntry.category,
+        salary: careerEntry.salary,
+        location: careerEntry.location,
+        description: careerEntry.description,
+        active: careerEntry.active,
+      }),
+    );
+
+    if (createJob.fulfilled.match(res)) {
+      setShowCreateModal(false);
+      fetchCareer();
+    }
+    setCareerEntry({
+      title: "",
+      type: "",
+      category: "",
+      salary: "",
+      location: "",
+      description: "",
+      active: true,
+    });
+  };
+
+  const handleDelete = async () => {
+    if (!selectedCareerId) return;
+
+    const res = await dispatch(deleteJob(selectedCareerId));
+
+    if (deleteJob.fulfilled.match(res)) {
+      setShowDeleteModal(false);
+      setSelectedCareerId(null);
+    }
+
+    fetchCareer();
+  };
+
+  const applyFilter = () => {
+    setFilters({ ...filters, offset: 0 });
+    fetchCareer();
+  };
+
+  const handleNext = () => {
+    setFilters({
+      ...filters,
+      offset: filters.offset + filters.limit,
+    });
+  };
+
+  const handlePrevious = () => {
+    setFilters({
+      ...filters,
+      offset: Math.max(0, filters.offset - filters.limit),
+    });
+  };
+
+  const handleUpdate = async () => {
+    if (!selectedUpCareerId) return;
+    const res = await dispatch(
+      updateJob({
+        id: selectedUpCareerId,
+        data: careerEntry,
+      }),
+    );
+
+    if (updateJob.fulfilled.match(res)) {
+      setShowEditModal(false);
+      setCareerEntry({
+        title: "",
+        type: "",
+        category: "",
+        salary: "",
+        location: "",
+        description: "",
+        active: true,
+      });
+      setSelectedUpCareerId(null);
+      fetchCareer();
+    }
+  };
+
+  useEffect(() => {
+    fetchCareer();
+    if (selectedUpCareerId) {
+      fetchCareerById(selectedUpCareerId);
+    }
+  }, [
+    filters.limit,
+    filters.startDate,
+    filters.endDate,
+    filters.offset,
+    selectedUpCareerId,
+  ]);
 
   return (
     <div>
@@ -243,7 +179,13 @@ const jobs = [
         {/* Total Rows */}
         <div>
           <label className="form-label mb-1">Total Rows</label>
-          <select className="form-select">
+          <select
+            className="form-select"
+            value={filters.limit}
+            onChange={(e) =>
+              setFilters({ ...filters, limit: Number(e.target.value) })
+            }
+          >
             <option value={10}>10</option>
             <option value={25}>25</option>
             <option value={50}>50</option>
@@ -254,23 +196,39 @@ const jobs = [
         {/* Start Date */}
         <div>
           <label className="form-label mb-1">Start Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.startDate}
+            onChange={(e) =>
+              setFilters({ ...filters, startDate: e.target.value })
+            }
+          />
         </div>
 
         {/* End Date */}
         <div>
           <label className="form-label mb-1">End Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.endDate}
+            onChange={(e) =>
+              setFilters({ ...filters, endDate: e.target.value })
+            }
+          />
         </div>
 
-        <button className="btn btn-primary px-4">Apply</button>
+        <button className="btn btn-primary px-4" onClick={applyFilter}>
+          Apply
+        </button>
       </div>
 
       {/* Create Blog */}
       {/* <PermissionGate permission="postblog"> */}
       <div className="d-flex justify-content-end mb-3">
         <button
-          // onClick={() => setShowCreateModal(true)}
+          onClick={() => setShowCreateModal(true)}
           className="btn btn-sm btn-success"
         >
           Create Job Post
@@ -313,37 +271,28 @@ const jobs = [
                   <td>
                     <div className="d-flex gap-2">
                       {/* <PermissionGate permission="putblog"> */}
-                        <button
-                          className="btn btn-sm btn-primary"
-                        //   onClick={() => {
-                            // setSelectedBlogId(item.id);
-                            // setEditBlogData(item);
-                            // setShowEditModal(true);
-                            // setBlogEntry({
-                            //   title: item.title,
-                            //   excerpt: item.excerpt,
-                            //   content: item.content,
-                            //   status: item.status,
-                            //   active: item.active ? true : false,
-                            //   image: item.img,
-                            //   categoryId: item.categoryId,
-                            // });
-                        //   }}
-                        >
-                          Edit
-                        </button>
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => {
+                          setSelectedUpCareerId(item.id);
+
+                          setShowEditModal(true);
+                        }}
+                      >
+                        Edit
+                      </button>
                       {/* </PermissionGate> */}
 
                       {/* <PermissionGate permission="deleteblog"> */}
-                        <button
-                          className="btn btn-sm btn-danger"
-                        //   onClick={() => {
-                        //     setSelectedBlogId(item.id);
-                        //     setShowDeleteModal(true);
-                        //   }}
-                        >
-                          Delete
-                        </button>
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => {
+                          setSelectedCareerId(item.id);
+                          setShowDeleteModal(true);
+                        }}
+                      >
+                        Delete
+                      </button>
                       {/* </PermissionGate> */}
                     </div>
                   </td>
@@ -357,7 +306,7 @@ const jobs = [
           <button
             className="btn btn-sm text-white"
             style={{ background: "linear-gradient(135deg,#667eea,#764ba2)" }}
-            // onClick={handlePrevious}
+            onClick={handlePrevious}
             disabled={filters.offset === 0}
           >
             Previous
@@ -366,8 +315,8 @@ const jobs = [
           <button
             className="btn btn-sm text-white"
             style={{ background: "linear-gradient(135deg,#43cea2,#185a9d)" }}
-            // onClick={handleNext}
-            // disabled={!meta || filters.offset + filters.limit >= meta.total}
+            onClick={handleNext}
+            disabled={filters.offset + filters.limit >= total}
           >
             Next
           </button>
@@ -388,7 +337,7 @@ const jobs = [
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Create Blog</h5>
+                  <h5 className="modal-title">Create Job Post</h5>
                   <button
                     className="btn-close"
                     onClick={() => setShowCreateModal(false)}
@@ -402,60 +351,144 @@ const jobs = [
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter blog title"
-                        
+                        placeholder="Enter Job title"
+                        value={careerEntry.title}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
-
                     <div className="mb-3">
-                      <label className="form-label">Excerpt</label>
+                      <label className="form-label">Type</label>
+                      <select
+                        className="form-select"
+                        style={{ maxHeight: "150px", overflowY: "auto" }}
+                        value={careerEntry.type}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            type: e.target.value,
+                          }));
+                        }}
+                      >
+                        <option value="">Select Category</option>
+                        <option value="Part-Time">Part Time</option>
+                        <option value="Full-Time">Full Time</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Internship">Internship</option>
+                      </select>
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Category</label>
+                      <select
+                        className="form-select"
+                        style={{ maxHeight: "150px", overflowY: "auto" }}
+                        value={careerEntry.category}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            category: e.target.value,
+                          }));
+                        }}
+                      >
+                        <option value="">Select Category</option>
+                        <option value="Development">Development</option>
+                        <option value="Design">Design</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Infrastructure">Infrastructure</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="QA / Testing">QA / Testing</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="AI / Machine Learning">
+                          AI / Machine Learning
+                        </option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                        <option value="Product Management">
+                          Product Management
+                        </option>
+                        <option value="Project Management">
+                          Project Management
+                        </option>
+                        <option value="Business Development">
+                          Business Development
+                        </option>
+                        <option value="Sales">Sales</option>
+                        <option value="Customer Support">
+                          Customer Support
+                        </option>
+                        <option value="Human Resources">Human Resources</option>
+                        <option value="Finance & Accounting">
+                          Finance & Accounting
+                        </option>
+                        <option value="Operations">Operations</option>
+                        <option value="Content Writing">Content Writing</option>
+                        <option value="Legal">Legal</option>
+                        <option value="Administration">Administration</option>
+                      </select>
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Active</label>
+                      <select
+                        className="form-select"
+                        value={careerEntry.active ? "1" : "0"}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            active: e.target.value === "1",
+                          }));
+                        }}
+                      >
+                        <option value="">Select Status</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                      </select>
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Salary</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Short description"
-                        
+                        placeholder="Enter Job Salary"
+                        value={careerEntry.salary}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            salary: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
-
                     <div className="mb-3">
-                      <label className="form-label">Content</label>
-                      <textarea
-                        className="form-control"
-                        rows={4}
-                        
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="form-label">Category</label>
-                      
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="form-label">Status</label>
-                      <select
-                        className="form-select"
-                        // value={blogEntry.status}
-                        // onChange={(e) =>
-                        //   setBlogEntry({ ...blogEntry, status: e.target.value })
-                        // }
-                      >
-                        <option value="draft">Draft</option>
-                        <option value="published">Published</option>
-                      </select>
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="form-label">Image</label>
+                      <label className="form-label">Location</label>
                       <input
-                        type="file"
+                        type="text"
                         className="form-control"
-                        // onChange={(e) =>
-                        //   setBlogEntry({
-                        //     ...blogEntry,
-                        //     image: e.target.files[0],
-                        //   })
-                        // }
+                        placeholder="Enter Job Location"
+                        value={careerEntry.location}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            location: e.target.value,
+                          }));
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Description</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Job Description"
+                        value={careerEntry.description}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                   </form>
@@ -470,7 +503,7 @@ const jobs = [
                   </button>
                   <button
                     className="btn btn-sm btn-success"
-                    // onClick={handleCreate}
+                    onClick={handleCreate}
                   >
                     Save
                   </button>
@@ -495,7 +528,7 @@ const jobs = [
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Edit Blog</h5>
+                  <h5 className="modal-title">Edit Job Post</h5>
                   <button
                     className="btn-close"
                     onClick={() => setShowEditModal(false)}
@@ -510,152 +543,146 @@ const jobs = [
                       <input
                         type="text"
                         className="form-control"
-                        // value={blogEntry.title}
-                        // onChange={(e) =>
-                        //   setBlogEntry({ ...blogEntry, title: e.target.value })
-                        // }
+                        value={careerEntry.title}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
+                    <div className="mb-3">
+                      <label className="form-label">Type</label>
+                      <select
+                        className="form-select"
+                        style={{ maxHeight: "150px", overflowY: "auto" }}
+                        value={careerEntry.type}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            type: e.target.value,
+                          }));
+                        }}
+                      >
+                        <option value="">Select Category</option>
+                        <option value="Part-Time">Part Time</option>
+                        <option value="Full-Time">Full Time</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Internship">Internship</option>
+                      </select>
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Category</label>
+                      <select
+                        className="form-select"
+                        style={{ maxHeight: "150px", overflowY: "auto" }}
+                        value={careerEntry.category}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            category: e.target.value,
+                          }));
+                        }}
+                      >
+                        <option value="">Select Category</option>
+                        <option value="Development">Development</option>
+                        <option value="Design">Design</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Infrastructure">Infrastructure</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="QA / Testing">QA / Testing</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="AI / Machine Learning">
+                          AI / Machine Learning
+                        </option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                        <option value="Product Management">
+                          Product Management
+                        </option>
+                        <option value="Project Management">
+                          Project Management
+                        </option>
+                        <option value="Business Development">
+                          Business Development
+                        </option>
+                        <option value="Sales">Sales</option>
+                        <option value="Customer Support">
+                          Customer Support
+                        </option>
+                        <option value="Human Resources">Human Resources</option>
+                        <option value="Finance & Accounting">
+                          Finance & Accounting
+                        </option>
+                        <option value="Operations">Operations</option>
+                        <option value="Content Writing">Content Writing</option>
+                        <option value="Legal">Legal</option>
+                        <option value="Administration">Administration</option>
+                      </select>
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Active</label>
 
-                    {/* Slug (Readonly) */}
-                    {/* <div className="mb-3">
-                      <label className="form-label">Slug</label>
+                      <select
+                        className="form-select"
+                        value={careerEntry.active ? "1" : "0"}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            active: e.target.value === "1",
+                          }));
+                        }}
+                      >
+                        <option value="">Select Status</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                      </select>
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="form-label">Salary</label>
                       <input
                         type="text"
                         className="form-control"
-                        value={blogEntry.slug}
-                        disabled
-                      />
-                    </div> */}
-
-                    {/* Excerpt */}
-                    <div className="mb-3">
-                      <label className="form-label">Excerpt</label>
-                      <textarea
-                        className="form-control"
-                        rows={2}
-                        // value={blogEntry.excerpt}
-                        // onChange={(e) =>
-                        //   setBlogEntry({
-                        //     ...blogEntry,
-                        //     excerpt: e.target.value,
-                        //   })
-                        // }
-                      />
-                    </div>
-
-                    {/* Content */}
-                    <div className="mb-3">
-                      <label className="form-label">Content</label>
-                      <textarea
-                        className="form-control"
-                        rows={5}
-                        // value={blogEntry.content}
-                        // onChange={(e) =>
-                        //   setBlogEntry({
-                        //     ...blogEntry,
-                        //     content: e.target.value,
-                        //   })
-                        // }
-                      />
-                    </div>
-
-                    {/* Category */}
-                    <div className="mb-3">
-                      <label className="form-label">Category</label>
-                      {/* <select
-                        className="form-select"
-                        style={{ maxHeight: "150px", overflowY: "auto" }}
-                        value={blogEntry.categoryId?.toString() || ""}
-                        onChange={(e) =>
-                          setBlogEntry({
-                            ...blogEntry,
-                            categoryId: parseInt(e.target.value) || "",
-                          })
-                        }
-                      >
-                        <option value="">Select Category</option>
-                        {cat.map((c) => (
-                          <option key={c.id} value={c.id.toString()}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </select> */}
-                    </div>
-
-                    {/* Status */}
-                    <div className="mb-3">
-                      <label className="form-label">Status</label>
-                      {/* <select
-                        className="form-select"
-                        value={blogEntry.status}
-                        onChange={(e) =>
-                          setBlogEntry({ ...blogEntry, status: e.target.value })
-                        }
-                      >
-                        <option value="draft">Draft</option>
-                        <option value="published">Published</option>
-                      </select> */}
-                    </div>
-
-                    {/* Active */}
-                    <div className="mb-3 form-check">
-                      <input
-                        type="checkbox"
-                        className="form-check-input"
-                        id="activeCheck"
-                        // checked={blogEntry.active}
-                        // onChange={(e) =>
-                        //   setBlogEntry({
-                        //     ...blogEntry,
-                        //     active: e.target.checked,
-                        //   })
-                        // }
-                      />
-                      <label className="form-check-label" htmlFor="activeCheck">
-                        Active
-                      </label>
-                    </div>
-
-                    {/* Views (Readonly) */}
-                    {/* <div className="mb-3">
-                      <label className="form-label">Views</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={blogEntry.views}
-                        disabled
-                      />
-                    </div> */}
-
-                    {/* Featured Image */}
-                    <div className="mb-3">
-                      <label className="form-label">Featured Image</label>
-
-                      <input
-                        type="file"
-                        className="form-control"
-                        accept="image/*"
+                        placeholder="Enter Job Salary"
+                        value={careerEntry.salary}
                         onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (!file) return;
-
-                        //   setBlogEntry({
-                        //     ...blogEntry,
-                        //     image: file,
-                        //     img: URL.createObjectURL(file), // ✅ preview
-                        //   });
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            salary: e.target.value,
+                          }));
                         }}
                       />
-
-                      {/* {blogEntry.image && (
-                        <img
-                          src={blogEntry.image}
-                          alt="preview"
-                          className="img-fluid rounded mt-2"
-                          style={{ maxHeight: "120px" }}
-                        />
-                      )} */}
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Location</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Job Location"
+                        value={careerEntry.location}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            location: e.target.value,
+                          }));
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Description</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Job Description"
+                        value={careerEntry.description}
+                        onChange={(e) => {
+                          setCareerEntry((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }));
+                        }}
+                      />
                     </div>
                   </form>
                 </div>
@@ -669,7 +696,7 @@ const jobs = [
                   </button>
                   <button
                     className="btn btn-sm btn-success"
-                    // onClick={handleUpdate}
+                    onClick={handleUpdate}
                   >
                     Update
                   </button>
@@ -681,7 +708,6 @@ const jobs = [
           <div className="modal-backdrop fade show" />
         </>
       )}
-
       {showDeleteModal && (
         <>
           <div
@@ -695,7 +721,7 @@ const jobs = [
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Delete Blog</h5>
+                  <h5 className="modal-title">Delete Job Post</h5>
                   <button
                     className="btn-close"
                     onClick={() => setShowDeleteModal(false)}
@@ -704,7 +730,7 @@ const jobs = [
 
                 <div className="modal-body text-center">
                   <p className="fw-semibold">
-                    Are you sure you want to delete this blog?
+                    Are you sure you want to delete this Job Post?
                   </p>
                   <small className="text-muted">
                     This action cannot be undone.
@@ -720,7 +746,7 @@ const jobs = [
                   </button>
                   <button
                     className="btn btn-sm btn-danger"
-                    // onClick={handleDelete}
+                    onClick={handleDelete}
                   >
                     Delete
                   </button>

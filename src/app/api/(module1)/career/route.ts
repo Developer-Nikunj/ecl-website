@@ -1,34 +1,51 @@
 import { NextRequest, NextResponse } from "next/server";
 import { testConnection } from "@/database/db";
-import {blogCategoryModel} from "@/models/blogCategory.model"
+import { JobModel } from "@/models/career.model";
 import { verifyAdmin } from "@/utils/authorizations/validateToken";
 import { logsEntry } from "@/utils/logsEntry/logsEntry";
 import "@/models";
 import { Op } from "sequelize";
 
 /**
- * CREATE Blog Category
+ * CREATE Job
  */
 export async function POST(request: NextRequest) {
   try {
     await testConnection();
 
-    const auth = await verifyAdmin(request, "postblogcategory");
+    const auth = await verifyAdmin(request, "");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },
-        { status: auth.status }
+        { status: auth.status },
       );
     }
 
-    const {name,description} = await request.json();
+    const { title, type, category, salary, location, description } =
+      await request.json();
 
-    await blogCategoryModel.create({name,description});
+    // Basic validation
+    if (!title || !type || !category || !location) {
+      return NextResponse.json(
+        { status: 0, message: "Required fields are missing" },
+        { status: 400 },
+      );
+    }
+
+    const job = await JobModel.create({
+      title,
+      type,
+      category,
+      salary,
+      location,
+      description,
+      active: true,
+    });
 
     if (auth.user == null) {
       return NextResponse.json(
         { message: auth.message },
-        { status: auth.status }
+        { status: auth.status },
       );
     }
 
@@ -36,7 +53,7 @@ export async function POST(request: NextRequest) {
       userId: auth.user?.id.toString(),
       email: auth.user?.email,
       role: auth.user?.role,
-      action: "BLOG_CATEGORY_CREATED",
+      action: "JOB_CREATED",
       ipAddress: request.headers.get("x-forwarded-for") || "unknown",
       requestMethod: request.method,
       endPoint: request.nextUrl.pathname,
@@ -46,17 +63,17 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       status: 1,
-      message: "Blog Category created successfully",
+      message: "Job created successfully",
+      data:job,
     });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
       { status: 0, message: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-
 
 
 export async function GET(req: NextRequest) {
@@ -66,11 +83,17 @@ export async function GET(req: NextRequest) {
 
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
+  const category = searchParams.get("category");
+  const type = searchParams.get("type");
+  const active = searchParams.get("active");
+  const search = searchParams.get("search");
+
   const limit = Number(searchParams.get("limit")) || 10;
   const offset = Number(searchParams.get("offset")) || 0;
 
   const where: any = {};
 
+  // 📅 Date filter
   if (startDate && endDate) {
     where.createdAt = {
       [Op.between]: [new Date(startDate), new Date(endDate)],
@@ -81,11 +104,36 @@ export async function GET(req: NextRequest) {
     where.createdAt = { [Op.lte]: new Date(endDate) };
   }
 
-  const { rows, count } = await blogCategoryModel.findAndCountAll({
+  // 📂 Category filter
+  if (category) {
+    where.category = category;
+  }
+
+  // 💼 Type filter
+  if (type) {
+    where.type = type;
+  }
+
+  // 🟢 Active filter
+  if (active !== null) {
+    where.active = active === "true";
+  }
+
+  // 🔎 Search by title
+  if (search) {
+    where.title = {
+      [Op.like]: `%${search}%`,
+    };
+  }
+
+  const { rows, count } = await JobModel.findAndCountAll({
     where,
     order: [["createdAt", "DESC"]],
     limit,
     offset,
+    attributes:{
+      exclude:["createdAt","updatedAt","description"]
+    }
   });
 
   return NextResponse.json({
@@ -94,11 +142,7 @@ export async function GET(req: NextRequest) {
     meta: {
       limit,
       offset,
-      total: count, 
+      total: count,
     },
   });
 }
-
-
-
-

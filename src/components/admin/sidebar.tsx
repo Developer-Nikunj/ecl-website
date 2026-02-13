@@ -250,7 +250,7 @@ const Sidebar = () => {
               aria-expanded="false"
               aria-controls="sidebarServices"
             >
-              <i className="ri-book-2-line" />
+              <i className="ri-tools-line" />
               <span>Services</span>
             </Link>
 
@@ -268,6 +268,33 @@ const Sidebar = () => {
                 <li className="nav-item">
                   <Link href="/dev/services" className="nav-link">
                     Services
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link menu-link"
+              href="#sidebarCareer"
+              data-bs-toggle="collapse"
+              role="button"
+              aria-expanded="false"
+              aria-controls="sidebarCareer"
+            >
+              <i className="ri-building-line" />
+              <span>Career</span>
+            </Link>
+
+            <div
+              className="collapse menu-dropdown"
+              data-bs-parent="#sidebarAccordion"
+              id="sidebarCareer"
+            >
+              <ul className="nav nav-sm flex-column">
+                <li className="nav-item">
+                  <Link href="/dev/career" className="nav-link">
+                    Career
                   </Link>
                 </li>
               </ul>

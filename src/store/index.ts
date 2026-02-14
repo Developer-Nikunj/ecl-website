@@ -15,6 +15,7 @@ import employeeReducer from "./slices/module1/Employee/Employee.slices";
 import serviceCategoryReducer from "./slices/module1/services/services.slices";
 import serviceReducer from "./slices/module1/service/service.slices";
 import careerReducer from "./slices/module1/career/career.slices";
+import servingIndustryReducer from "./slices/module1/servingIndustry/servingIndustry.slices"
 import { injectStore } from "@/lib/axios";
 
 export const store = configureStore({
@@ -35,6 +36,7 @@ export const store = configureStore({
     ServCat: serviceCategoryReducer,
     service: serviceReducer,
     career: careerReducer,
+    servingIndustry: servingIndustryReducer,
   },
 });
 

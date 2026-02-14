@@ -300,6 +300,33 @@ const Sidebar = () => {
               </ul>
             </div>
           </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link menu-link"
+              href="#sidebarServingIndus"
+              data-bs-toggle="collapse"
+              role="button"
+              aria-expanded="false"
+              aria-controls="sidebarServingIndus"
+            >
+              <i className="ri-service-line" />
+              <span>Serving Industry</span>
+            </Link>
+
+            <div
+              className="collapse menu-dropdown"
+              data-bs-parent="#sidebarAccordion"
+              id="sidebarServingIndus"
+            >
+              <ul className="nav nav-sm flex-column">
+                <li className="nav-item">
+                  <Link href="/dev/serving-industry" className="nav-link">
+                    Serving Industry
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
         </ul>
       </div>
     </div>

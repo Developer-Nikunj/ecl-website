@@ -138,20 +138,22 @@ export const getServingIndustryById = createAsyncThunk<
 
 interface servingIndustryUpdatePayload {
   id: number;
-  data: servingIndustryPayload;
+  data: FormData;
 }
 
 export const updateServingIndustry = createAsyncThunk<
   servingIndustryResponse,
-  servingIndustryUpdatePayload,
+  { id: number; formData: FormData },
   { rejectValue: string }
->("servingIndustry/update", async ({ id, data }, { rejectWithValue }) => {
+>("servingIndustry/update", async ({ id, formData }, { rejectWithValue }) => {
   try {
     const res = await api.put<servingIndustryResponse>(
       `servingIndustry/${id}`,
+      formData,
       {
-        name: data.name,
-        description: data.description,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       },
     );
 
@@ -170,6 +172,7 @@ export const updateServingIndustry = createAsyncThunk<
     return rejectWithValue(message);
   }
 });
+
 
 /* ================= DELETE ================= */
 

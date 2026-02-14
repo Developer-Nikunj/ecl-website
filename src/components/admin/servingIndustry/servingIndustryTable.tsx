@@ -39,7 +39,7 @@ const ServingIndustryTable = () => {
     (state) => state.servingIndustry,
   );
 
-  console.log("items", items);
+  // console.log("items", items);
   const fetchCategory = () => {
     dispatch(
       getAllServingIndustry({
@@ -112,35 +112,38 @@ const ServingIndustryTable = () => {
   //   }
   // };
 
-  // const handleUpdate = async () => {
-  //   if (!selectedCategoryId) return;
+  const handleUpdate = async () => {
+    if (!selectedCategoryId) return;
 
-  //   const res = await dispatch(
-  //     updateServingIndustry({
-  //       id: selectedCategoryId,
-  //       data: {
-  //         name: categoryEntry.name,
-  //         img: categoryEntry.img,
-  //       },
-  //     }),
-  //   );
+    const formdata = new FormData();
 
-  //   if (updateServingIndustry.fulfilled.match(res)) {
-  //     setShowEditModal(false);
-  //     dispatch(
-  //       getAllServingIndustry({
-  //         startDate: filters.startDate,
-  //         endDate: filters.endDate,
-  //         limit: filters.limit,
-  //       }),
-  //     );
-  //     setCategoryEntry({
-  //       name: "",
-  //       img: "",
-  //       active: 1,
-  //     });
-  //   }
-  // };
+    formdata.append("name", categoryEntry.name);
+    formdata.append("image", categoryEntry.img); // must match backend
+    formdata.append("active", String(categoryEntry.active));
+
+    const res = await dispatch(
+      updateServingIndustry({
+        id: selectedCategoryId,
+        data: formdata,
+      }),
+    );
+
+    if (updateServingIndustry.fulfilled.match(res)) {
+      setShowEditModal(false);
+      dispatch(
+        getAllServingIndustry({
+          startDate: filters.startDate,
+          endDate: filters.endDate,
+          limit: filters.limit,
+        }),
+      );
+      setCategoryEntry({
+        name: "",
+        img: "",
+        active: 1,
+      });
+    }
+  };
 
   useEffect(() => {
     fetchCategory();
@@ -334,12 +337,12 @@ const ServingIndustryTable = () => {
                           <button
                             className="btn btn-sm btn-primary"
                             onClick={() => {
-                              // setSelectedCategoryId(item.id);
-                              // setCategoryEntry({
-                              //   name: item.name,
-                              //   img: item.img,
-                              //   active: 1,
-                              // });
+                              setSelectedCategoryId(item.id);
+                              setCategoryEntry({
+                                name: item.name,
+                                img: item.img,
+                                active: 1,
+                              });
                               setShowEditModal(true);
                             }}
                           >
@@ -350,7 +353,7 @@ const ServingIndustryTable = () => {
                           <button
                             className="btn btn-sm btn-danger"
                             onClick={() => {
-                              // setSelectedCategoryId(item.id);
+                              setSelectedCategoryId(item.id);
                               setShowDeleteModal(true);
                             }}
                           >
@@ -503,32 +506,32 @@ const ServingIndustryTable = () => {
                     <label className="form-label">Category Name</label>
                     <input
                       className="form-control"
-                      // value={categoryEntry.name}
-                      // onChange={(e) =>
-                      //   setCategoryEntry({
-                      //     ...categoryEntry,
-                      //     name: e.target.value,
-                      //   })
-                      // }
+                      value={categoryEntry.name}
+                      onChange={(e) =>
+                        setCategoryEntry({
+                          ...categoryEntry,
+                          name: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">img</label>
-                    <textarea
+                    <label className="form-label">Image</label>
+                    <input
+                      type="file"
                       className="form-control"
-                      rows={3}
-                      // value={categoryEntry.img}
-                      // onChange={(e) =>
-                      //   setCategoryEntry({
-                      //     ...categoryEntry,
-                      //     img: e.target.value,
-                      //   })
-                      // }
+                      accept="image/*"
+                      onChange={(e) =>
+                        setCategoryEntry({
+                          ...categoryEntry,
+                          img: e.target.files[0],
+                        })
+                      }
                     />
                   </div>
 
-                  {/* <div className="mb-3">
+                  <div className="mb-3">
                     <label className="form-label">Active</label>
                     <select
                       className="form-select"
@@ -543,7 +546,7 @@ const ServingIndustryTable = () => {
                       <option value="1">Active</option>
                       <option value="0">Inactive</option>
                     </select>
-                  </div> */}
+                  </div>
                 </div>
 
                 <div className="modal-footer">
@@ -556,7 +559,7 @@ const ServingIndustryTable = () => {
                   <button
                     className="btn btn-sm btn-success"
                     onClick={() => {
-                      // handleUpdate();
+                      handleUpdate();
                     }}
                   >
                     Update

@@ -58,8 +58,7 @@ export async function PUT(
   await testConnection();
 
   const { id } = await context.params;
-
-  const auth = await verifyAdmin(request, "putIndustry");
+  const auth = await verifyAdmin(request, "");
   if (!auth.valid) {
     return NextResponse.json(
       { message: auth.message },
@@ -77,10 +76,9 @@ export async function PUT(
   }
 
   const formData = await request.formData();
-
+  // formData.forEach((i)=>console.log("i",i))
   const name = formData.get("name") as string;
-  const description = formData.get("description") as string;
-  const activeValue = formData.get("active");
+  const activeValue = formData.get("active") ? true :false;
   const image = formData.get("image");
 
   let imgPath = industry.get("img") as string | null;
@@ -93,10 +91,8 @@ export async function PUT(
 
   await industry.update({
     name,
-    description,
     img: imgPath,
-    active:
-      activeValue === "true" || activeValue === "1" || activeValue === true,
+    active:activeValue
   });
 
   await logsEntry({

@@ -143,7 +143,7 @@ export async function GET(req: NextRequest) {
       order: [["createdAt", "DESC"]],
       limit,
       offset,
-      attributes:["id","name","img","active"]
+      attributes:["id","name","img","active","createdAt"]
     });
 
     return NextResponse.json({

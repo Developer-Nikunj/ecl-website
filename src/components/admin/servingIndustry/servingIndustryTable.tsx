@@ -14,7 +14,6 @@ import {
   servingIndustryMeta,
 } from "@/store/slices/module1/servingIndustry/servingIndustry.thunk";
 import PermissionGate from "@/components/admin/PermissionGate";
-import { title } from "../../../../public/assets/backend/libs/chart.js/plugins/plugin.tooltip";
 
 const ServingIndustryTable = () => {
   const dispatch = useAppDispatch();
@@ -72,45 +71,45 @@ const ServingIndustryTable = () => {
     });
   };
 
-  // const applyFilter = () => {
-  //   fetchCategory();
-  // };
+  const applyFilter = () => {
+    fetchCategory();
+  };
 
-  // const handlePrevious = () => {
-  //   setFilters((prev) => ({
-  //     ...prev,
-  //     offset: Math.max(prev.offset - prev.limit, 0),
-  //   }));
-  // };
+  const handlePrevious = () => {
+    setFilters((prev) => ({
+      ...prev,
+      offset: Math.max(prev.offset - prev.limit, 0),
+    }));
+  };
 
-  // const handleNext = () => {
-  //   if (meta && filters.offset + filters.limit < meta.total) {
-  //     setFilters((prev) => ({
-  //       ...prev,
-  //       offset: prev.offset + prev.limit,
-  //     }));
-  //   }
-  // };
+  const handleNext = () => {
+    if (meta && filters.offset + filters.limit < meta.total) {
+      setFilters((prev) => ({
+        ...prev,
+        offset: prev.offset + prev.limit,
+      }));
+    }
+  };
 
-  // const handleDelete = async () => {
-  //   if (!selectedCategoryId) return;
+  const handleDelete = async () => {
+    if (!selectedCategoryId) return;
 
-  //   const res = await dispatch(deleteServingIndustry(selectedCategoryId));
+    const res = await dispatch(deleteServingIndustry(selectedCategoryId));
 
-  //   if (deleteServingIndustry.fulfilled.match(res)) {
-  //     setShowDeleteModal(false);
-  //     setSelectedCategoryId(null);
+    if (deleteServingIndustry.fulfilled.match(res)) {
+      setShowDeleteModal(false);
+      setSelectedCategoryId(null);
 
-  //     dispatch(
-  //       getAllServingIndustry({
-  //         limit: filters.limit,
-  //         offset: filters.offset,
-  //         startDate: filters.startDate || undefined,
-  //         endDate: filters.endDate || undefined,
-  //       }),
-  //     );
-  //   }
-  // };
+      dispatch(
+        getAllServingIndustry({
+          limit: filters.limit,
+          offset: filters.offset,
+          startDate: filters.startDate || undefined,
+          endDate: filters.endDate || undefined,
+        }),
+      );
+    }
+  };
 
   const handleUpdate = async () => {
     if (!selectedCategoryId) return;
@@ -124,7 +123,7 @@ const ServingIndustryTable = () => {
     const res = await dispatch(
       updateServingIndustry({
         id: selectedCategoryId,
-        data: formdata,
+        formData: formdata,
       }),
     );
 
@@ -245,10 +244,10 @@ const ServingIndustryTable = () => {
           <select
             id="totalRows"
             className="form-select"
-            // value={filters.limit}
-            // onChange={(e) => {
-            //   setFilters({ ...filters, limit: Number(e.target.value) });
-            // }}
+            value={filters.limit}
+            onChange={(e) => {
+              setFilters({ ...filters, limit: Number(e.target.value) });
+            }}
           >
             <option value={10}>10</option>
             <option value={25}>25</option>
@@ -263,10 +262,10 @@ const ServingIndustryTable = () => {
           <input
             type="date"
             className="form-control"
-            // value={filters.startDate}
-            // onChange={(e) => {
-            //   setFilters({ ...filters, startDate: e.target.value });
-            // }}
+            value={filters.startDate}
+            onChange={(e) => {
+              setFilters({ ...filters, startDate: e.target.value });
+            }}
           />
         </div>
 
@@ -276,17 +275,17 @@ const ServingIndustryTable = () => {
           <input
             type="date"
             className="form-control"
-            // value={filters.endDate}
-            // onChange={(e) => {
-            //   setFilters({ ...filters, endDate: e.target.value });
-            // }}
+            value={filters.endDate}
+            onChange={(e) => {
+              setFilters({ ...filters, endDate: e.target.value });
+            }}
           />
         </div>
 
         {/* Apply Button */}
         <button
           className="btn btn-primary px-4"
-          //  onClick={applyFilter}
+           onClick={applyFilter}
         >
           Apply
         </button>
@@ -320,7 +319,7 @@ const ServingIndustryTable = () => {
               {items.length > 0 &&
                 items.map((item, index) => (
                   <tr key={item.id}>
-                    <td>{index + 1}</td>
+                    <td>{filters.offset + index + 1}</td>
                     <td>{item.name}</td>
                     <td>
                       <img src={item.img} alt="image" width="60" />
@@ -372,8 +371,8 @@ const ServingIndustryTable = () => {
               style={{
                 background: "linear-gradient(135deg, #667eea, #764ba2)",
               }}
-              // onClick={handlePrevious}
-              // disabled={filters.offset === 0}
+              onClick={handlePrevious}
+              disabled={filters.offset === 0}
             >
               Previous
             </button>
@@ -383,8 +382,8 @@ const ServingIndustryTable = () => {
               style={{
                 background: "linear-gradient(135deg, #43cea2, #185a9d)",
               }}
-              // onClick={handleNext}
-              // disabled={!meta || filters.offset + filters.limit >= meta.total}
+              onClick={handleNext}
+              disabled={!meta || filters.offset + filters.limit >= meta.total}
             >
               Next
             </button>
@@ -404,7 +403,7 @@ const ServingIndustryTable = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Create Blog Category</h5>
+                  <h5 className="modal-title">Create Serving Industry</h5>
                   <button
                     className="btn-close"
                     onClick={() => setShowCreateModal(false)}
@@ -413,7 +412,7 @@ const ServingIndustryTable = () => {
 
                 <div className="modal-body">
                   <div className="mb-3">
-                    <label className="form-label">Category Name</label>
+                    <label className="form-label">Name</label>
                     <input
                       className="form-control"
                       value={categoryEntry.name}
@@ -602,7 +601,7 @@ const ServingIndustryTable = () => {
 
                 <div className="modal-body text-center">
                   <p className="mb-1 fw-semibold">
-                    Are you sure you want to delete this Category?
+                    Are you sure you want to delete this Serving Industry?
                   </p>
                   <small className="text-muted">
                     This action cannot be undone.
@@ -618,7 +617,7 @@ const ServingIndustryTable = () => {
                   </button>
                   <button
                     className="btn btn-sm btn-danger"
-                    // onClick={handleDelete}
+                    onClick={handleDelete}
                   >
                     Delete
                   </button>

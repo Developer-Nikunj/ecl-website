@@ -150,11 +150,7 @@ export const updateServingIndustry = createAsyncThunk<
     const res = await api.put<servingIndustryResponse>(
       `servingIndustry/${id}`,
       formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      },
+      
     );
 
     if (res.data.status === 0) {

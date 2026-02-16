@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import Testimonial from "../components/techSolution/Testimonial";
+import RecentWorks from "../components/techSolution/RecentWorks";
 
 export default function Technology() {
   return (
@@ -8,7 +10,7 @@ export default function Technology() {
       <section
         id="integration"
         className="integration pt-120 pb-120"
-        data-bg-color="#f6f0e6"
+        style={{ backgroundColor: "#f6f0e6" }}
       >
         <div className="container">
           <div className="row">
@@ -467,12 +469,15 @@ export default function Technology() {
       {/* hero section start  */}
       <section
         className="hero hero-style-one pos-rel bg_img"
-        data-background="assets/front/img/bg/hero-bg01.jpg"
+        style={{ backgroundImage: "url('/assets/front/img/bg/hero-bg01.jpg')" }}
       >
         <div className="hero-shape">
           <div
             className="shape shape--one bg_img"
-            data-background="assets/front/img/shape/hero-glassisom.png"
+            style={{
+              backgroundImage:
+                "url('assets/front/img/shape/hero-glassisom.png')",
+            }}
           />
           <div className="shape shape--two">
             <img
@@ -511,8 +516,8 @@ export default function Technology() {
                     data-wow-delay="300ms"
                     data-wow-duration="600ms"
                   >
-                    <a
-                      href="contact.html"
+                    <Link
+                      href="/contact"
                       className="thm-btn thm-btn--fill_icon thm-btn--white_icon"
                     >
                       <div className="xb-item--hidden">
@@ -527,7 +532,7 @@ export default function Technology() {
                         </div>
                         <span className="xb-item--text">Get started now</span>
                       </div>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -756,21 +761,37 @@ export default function Technology() {
         <div className="service-images">
           <div
             className="service-image-item"
-            data-background="assets/front/img/service/service-img02.jpg"
+            style={{
+              backgroundImage:
+                "url('/assets/front/img/service/service-img02.jpg')",
+            }}
           />
+
           <div
             className="service-image-item active"
-            data-background="assets/front/img/service/service-img01.jpg"
+            style={{
+              backgroundImage:
+                "url('/assets/front/img/service/service-img01.jpg')",
+            }}
           />
+
           <div
             className="service-image-item"
-            data-background="assets/front/img/service/service-img03.jpg"
+            style={{
+              backgroundImage:
+                "url('/assets/front/img/service/service-img03.jpg')",
+            }}
           />
+
           <div
             className="service-image-item"
-            data-background="assets/front/img/service/service-img04.jpg"
+            style={{
+              backgroundImage:
+                "url('/assets/front/img/service/service-img04.jpg')",
+            }}
           />
         </div>
+
         <div className="service-content-box ul_li pos-rel">
           <div className="service-content-list">
             <h3 className="title">Core expertise</h3>
@@ -873,26 +894,44 @@ export default function Technology() {
           <div className="service-content-image">
             <div
               className="xb-item--img"
-              data-background="assets/front/img/service/service-img02.jpg"
+              style={{
+                backgroundImage:
+                  "url('/assets/front/img/service/service-img02.jpg')",
+              }}
             />
+
             <div
               className="xb-item--img active"
-              data-background="assets/front/img/service/service-img01.jpg"
+              style={{
+                backgroundImage:
+                  "url('/assets/front/img/service/service-img01.jpg')",
+              }}
             />
+
             <div
               className="xb-item--img"
-              data-background="assets/front/img/service/service-img03.jpg"
+              style={{
+                backgroundImage:
+                  "url('/assets/front/img/service/service-img03.jpg')",
+              }}
             />
+
             <div
               className="xb-item--img"
-              data-background="assets/front/img/service/service-img04.jpg"
+              style={{
+                backgroundImage:
+                  "url('/assets/front/img/service/service-img04.jpg')",
+              }}
             />
           </div>
         </div>
       </section>
       {/* service end */}
       {/* brand section start  */}
-      <section className="brand pt-135 pb-140" data-bg-color="#111112">
+      <section
+        className="brand pt-135 pb-140"
+        style={{ backgroundColor: "#111112" }}
+      >
         <div className="container">
           <div className="xb-brand-title mb-65">
             <img
@@ -1121,7 +1160,8 @@ export default function Technology() {
             </div>
           </div>
         </div>
-        <div className="project-wrapper pos-rel">
+        <RecentWorks/>
+        {/* <div className="project-wrapper pos-rel">
           <div className="project-slider">
             <div className="swiper-wrapper">
               <div className="swiper-slide">
@@ -1381,11 +1421,14 @@ export default function Technology() {
             </div>
             <div className="swiper-pagination" />
           </div>
-        </div>
+        </div> */}
       </section>
       {/* project section end  */}
       {/* process section start  */}
-      <section className="process pt-140 pb-40 pos-rel" data-bg-color="#fff">
+      <section
+        className="process pt-140 pb-40 pos-rel"
+        style={{ backgroundColor: "#fff" }}
+      >
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-5 col-md-8">
@@ -1542,7 +1585,9 @@ export default function Technology() {
       <section className="perallax">
         <div
           className="parallax-img parallaxie"
-          data-background="assets/front/img/bg/parallax.jpg"
+          style={{
+            backgroundImage: "url('/assets/front/img/bg/parallax.jpg')",
+          }}
         />
       </section>
       {/* parallax section end  */}
@@ -1550,7 +1595,9 @@ export default function Technology() {
       <section
         className="testimonial o-hidden pos-rel pt-125 pb-200 bg_img"
         data-bg-color="#000"
-        data-background="assets/front/img/bg/tes-glassisom.jpg"
+        style={{
+          backgroundImage: "url('assets/front/img/bg/tes-glassisom.jpg')",
+        }}
       >
         <div className="tes-heading text-center mb-60">
           <h2
@@ -1561,9 +1608,10 @@ export default function Technology() {
             Thousands of customers can't be lie
           </h2>
         </div>
-        <div className="testimonial-slider pb-40">
-          <div className="swiper-wrapper">
-            <div className="swiper-slide">
+        <Testimonial/>
+        {/* <div className="testimonial-slider pb-40">
+          <div className="swiper-wrapper"> */}
+             {/*<div className="swiper-slide">
               <div className="testimonial-item">
                 <div className="xb-item--holder">
                   <div className="xb-item--author">
@@ -1581,7 +1629,7 @@ export default function Technology() {
                     </div>
                     <div className="xb-item--avatar mt-20">
                       <h3 className="xb-item--name">Sophia Turner</h3>
-                      <span className="xb-item--desig" >
+                      <span className="xb-item--desig">
                         Founder at Fleet chaser
                       </span>
                     </div>
@@ -1759,9 +1807,10 @@ export default function Technology() {
                   </span>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="testimonial-pagination">
+            </div>*/} 
+          {/* </div> */}
+          
+          {/* <div className="testimonial-pagination">
             <div className="swiper-buttons swiper-button-next">
               <i className="far fa-angle-right" />
             </div>
@@ -1769,8 +1818,8 @@ export default function Technology() {
               <i className="far fa-angle-left" />
             </div>
             <div className="swiper-pagination" />
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
       </section>
       {/* testimonial section end  */}
       {/* team section start  */}

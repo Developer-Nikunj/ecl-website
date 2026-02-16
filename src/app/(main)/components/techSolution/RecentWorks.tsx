@@ -14,13 +14,13 @@ const RecentWorks = () => {
     // Initialize Swiper with modules
     swiperRef.current = new Swiper(".project-slider", {
       modules: [Autoplay, Pagination],
-      slidesPerView: 1.9,
+      slidesPerView: 1.2,
       centeredSlides: true,
-      spaceBetween: 10,
+      spaceBetween: 20,
       loop: true,
       grabCursor: true,
       autoplay: {
-        delay: 2000,
+        delay: 3000,
         disableOnInteraction: false,
         pauseOnMouseEnter: true,
       },
@@ -31,19 +31,19 @@ const RecentWorks = () => {
       },
       breakpoints: {
         640: {
-          slidesPerView: 1.5,
+          slidesPerView: 1.1,
           spaceBetween: 15,
         },
         768: {
-          slidesPerView: 1.8,
+          slidesPerView: 1.3,
           spaceBetween: 20,
         },
         1024: {
-          slidesPerView: 2.0,
+          slidesPerView: 1.5,
           spaceBetween: 25,
         },
         1280: {
-          slidesPerView: 2.5,
+          slidesPerView: 1.8,
           spaceBetween: 30,
         },
       },
@@ -105,22 +105,16 @@ const RecentWorks = () => {
             {projects.map((project) => (
               <div key={project.id} className="swiper-slide">
                 <div
-                  className=" p-3 p-md-4 p-lg-5 mx-4 h-100"
+                  className=" p-3 p-md-4 p-lg-5 mx-2 h-100"
                   style={{
                     minHeight: "clamp(400px, 50vh, 520px)",
                     display: "flex",
                     alignItems: "center",
                   }}
                 >
-                  <div className="d-flex flex-column flex-lg-row align-items-start gap-1 gap-lg-1 w-120">
+                  <div className="d-flex flex-column flex-lg-row align-items-start gap-3 gap-lg-4 w-100">
                     {/* Left Content */}
-                    <div
-                      className="flex-grow-1"
-                      style={{
-                        flex: "1 1 60%", // 👈 ADD THIS - takes 60% of space
-                        minWidth: "300px", // 👈 ADD THIS - prevents shrinking too much
-                      }}
-                    >
+                    <div className="flex-grow-1">
                       <div className="mb-3 mb-md-4">
                         <img
                           src={project.icon}
@@ -188,7 +182,7 @@ const RecentWorks = () => {
                     <div
                       className="flex-shrink-0"
                       style={{
-                        width: "clamp(250px, 50%, 450px)",
+                        width: "clamp(150px, 25%, 250px)",
                         maxWidth: "100%",
                       }}
                     >

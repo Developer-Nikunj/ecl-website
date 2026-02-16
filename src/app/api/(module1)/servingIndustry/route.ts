@@ -133,8 +133,7 @@ export async function GET(req: NextRequest) {
     // 🔹 Search by name
     if (search) {
       where.name = {
-        [Op.iLike]: `%${search}%`, // PostgreSQL
-        // For MySQL use: [Op.like]
+        [Op.iLike]: `%${search}%`, 
       };
     }
 

@@ -3,6 +3,7 @@ import Testimonials from "@/app/(main)/components/Testimonial"
 import TeamSlider from "@/app/(main)/components/Employees";
 import Services from "@/app/(main)/components/services"
 import SeoWork from "./components/SeoWork";
+import Industries from "./components/industries";
 import Link from "next/link";
 import Faq from "./components/Faq";
 
@@ -1007,7 +1008,8 @@ export default function Home() {
       {/* process section end  */}
       {/* industrie section start  */}
       <section className="industrie m-lr pt-140 pb-140">
-        <div className="industrie-wrap sec-bg pos-rel pt-130 pb-130">
+        <Industries/>
+        {/* <div className="industrie-wrap sec-bg pos-rel pt-130 pb-130">
           <div className="container">
             <div className="sec-title--two text-center mb-30">
               <div
@@ -1184,7 +1186,7 @@ export default function Home() {
               </Link>
             </div>
           </div>
-        </div>
+        </div> */}
       </section>
       {/* industrie section end  */}
       {/* testimonial section start */}

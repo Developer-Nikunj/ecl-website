@@ -327,6 +327,38 @@ const Sidebar = () => {
               </ul>
             </div>
           </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link menu-link"
+              href="#sidebarTechSol"
+              data-bs-toggle="collapse"
+              role="button"
+              aria-expanded="false"
+              aria-controls="sidebarTechSol"
+            >
+              <i className="ri-user-line" />
+              <span>Tech & Sol</span>
+            </Link>
+
+            <div
+              className="collapse menu-dropdown"
+              data-bs-parent="#sidebarAccordion"
+              id="sidebarTechSol"
+            >
+              <ul className="nav nav-sm flex-column">
+                <li className="nav-item">
+                  <Link href="/dev/tech-recent-works" className="nav-link">
+                    Recent Works
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/dev/tech-testimonial" className="nav-link">
+                    Testimonials
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
         </ul>
       </div>
     </div>

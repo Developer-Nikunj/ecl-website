@@ -20,7 +20,7 @@ function deleteImage(filePath: string | null) {
 
 
 /* ---------------- GET TECH TESTIMONIAL BY SLUG ---------------- */
-export async function GET_BY_SLUG(
+export async function GET(
   _req: NextRequest,
   context: { params: Promise<{ slug: string }> },
 ) {

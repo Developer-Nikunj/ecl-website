@@ -10,7 +10,6 @@ import fs from "fs";
 import path from "path";
 
 
-
 /* ---------------- CREATE TECH TESTIMONIAL ---------------- */
 export async function POST(request: NextRequest) {
   try {
@@ -48,8 +47,8 @@ export async function POST(request: NextRequest) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
 
-    const iconPath = await saveImage(iconFile, "techTestimonials");
-    const imagePath = await saveImage(imageFile, "techTestimonials");
+    const iconPath = await saveImage(iconFile, "techTestimonials/icons");
+    const imagePath = await saveImage(imageFile, "techTestimonials/images");
 
     const testimonial = await TechTestimonialModel.create({
       title,

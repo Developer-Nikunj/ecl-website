@@ -49,4 +49,4 @@ export const RecentWorksModel = sequelize.define(
 );
 
 // To create the table (sync with DB)
-await RecentWorksModel.sync({alter:true});
+// await RecentWorksModel.sync({alter:true});

@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     await testConnection();
 
     // ✅ Verify admin authorization
-    const auth = await verifyAdmin(request, "createRecentWork");
+    const auth = await verifyAdmin(request, "");
     if (!auth.valid) {
       return NextResponse.json(
         { message: auth.message },
@@ -39,6 +39,12 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+
+    const slug = title
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-");
 
     // ✅ Upload icon and image if provided
     let iconPath: string | null = null;
@@ -71,6 +77,7 @@ export async function POST(request: NextRequest) {
       icon: iconPath,
       image: imagePath,
       active: true,
+      slug:slug,
     });
 
     // ✅ Log action

@@ -50,7 +50,7 @@ export async function PUT(
   await testConnection();
   const { slug } = await context.params;
 
-  const auth = await verifyAdmin(request, "updateRecentWork");
+  const auth = await verifyAdmin(request, "");
   if (!auth.valid) {
     return NextResponse.json(
       { message: auth.message },
@@ -66,14 +66,20 @@ export async function PUT(
     );
   }
 
-  const formData = await request.formData();
+  const formData = await request.formData(); formData.forEach((i)=>console.log(i))
   const image = formData.get("image") as File | null;
+  const icon = formData.get("icon") as File | null;
 
   let imgPath = work.image;
+  let iconPath = work.icon;
 
   if (image && image.size > 0) {
     deleteImage(work.image);
-    imgPath = await saveImage(image, "recentWorks");
+    imgPath = await saveImage(image, "recent-works/images");
+  }
+  if (icon && icon.size > 0) {
+    deleteImage(work.icon);
+    imgPath = await saveImage(icon, "recent-works/icons");
   }
 
   const title = (formData.get("title") as string) || work.title;
@@ -89,7 +95,7 @@ export async function PUT(
     title,
     slug: newSlug,
     description: formData.get("description") as string,
-    icon: formData.get("icon") as string,
+    icon: iconPath,
     categories: JSON.parse((formData.get("categories") as string) || "[]"),
     image: imgPath,
     active: formData.get("active") === "true" || formData.get("active") === "1",

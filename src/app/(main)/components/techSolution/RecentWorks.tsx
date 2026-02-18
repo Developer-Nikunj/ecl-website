@@ -1,14 +1,33 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Swiper from "swiper";
 import { Autoplay, Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import axios from "axios";
+import Link from "next/link";
 
 const RecentWorks = () => {
   const swiperRef = useRef(null);
+  const [data, setData] = useState([]);
+
+  const getRecentWork = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/tech-recent-work`,
+      );
+
+      if (res.data.status != 1) {
+        return null;
+      }
+
+      setData(res.data.data);
+    } catch (error) {
+      return null;
+    }
+  };
 
   useEffect(() => {
     // Initialize Swiper with modules
@@ -57,6 +76,10 @@ const RecentWorks = () => {
     };
   }, []);
 
+  useEffect(() => {
+    getRecentWork();
+  }, []);
+
   // Project data for better maintainability
   const projects = [
     {
@@ -102,7 +125,7 @@ const RecentWorks = () => {
       <div className="position-relative">
         <div className="project-slider swiper">
           <div className="swiper-wrapper">
-            {projects.map((project) => (
+            {data.map((project) => (
               <div key={project.id} className="swiper-slide">
                 <div
                   className=" p-3 p-md-4 p-lg-5 mx-2 h-100"
@@ -165,8 +188,8 @@ const RecentWorks = () => {
                       </ul>
 
                       <div>
-                        <a
-                          href="casestudy-details.html"
+                        <Link
+                          href={`recent-work/${project.slug}`}
                           className="d-inline-flex align-items-center text-decoration-none text-dark fw-semibold"
                           style={{ fontSize: "clamp(13px, 1.5vw, 14px)" }}
                         >
@@ -174,7 +197,7 @@ const RecentWorks = () => {
                           <span className="mx-1 mx-md-2">
                             <i className="far fa-long-arrow-right" />
                           </span>
-                        </a>
+                        </Link>
                       </div>
                     </div>
 

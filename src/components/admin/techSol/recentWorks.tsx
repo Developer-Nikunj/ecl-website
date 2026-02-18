@@ -4,9 +4,16 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-
+import {
+  createRecentWork,
+  getAllRecentWork,
+  updateRecentWork,
+  getRecentWorkById,
+  deleteRecentWork,
+} from "@/store/slices/module1/recentWorks/recentwork.thunk";
 
 import PermissionGate from "@/components/admin/PermissionGate";
+import { json } from "sequelize";
 
 const RecentWorks = () => {
   const dispatch = useAppDispatch();
@@ -14,35 +21,146 @@ const RecentWorks = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  
+  const [createEntry, setCreateEntry] = useState({
+    title: "",
+    description: "",
+    active: true,
+    image: "",
+    icon: "",
+    categories: "",
+  });
 
-  const list = [
-    {
-      id: 2,
-      icon: "/uploads/recent-works/icons/1771349686015-Rectangle 10.png",
-      title: "nikunj",
-      slug: "nikunj",
-      description:
-        "descript iondescrip tiondescri ptiondesc riptiond escription",
-      categories: ["nodejs", "mongodb"],
-      image: "/uploads/recent-works/images/1771349686019-Rectangle 10.png",
-      active: true,
-      createdAt: "2026-02-17T17:34:46.029Z",
-      updatedAt: "2026-02-17T17:34:46.029Z",
-    },
-    {
-      id: 1,
-      icon: "/uploads/recent-works/icons/1771348745190-Rectangle 10.png",
-      title: "update erp",
-      slug: "update-erp",
-      description: "test test",
-      categories: [],
-      image: "/uploads/recent-works/images/1771348745191-Rectangle 10.png",
-      active: false,
-      createdAt: "2026-02-17T17:19:05.193Z",
-      updatedAt: "2026-02-17T17:28:22.385Z",
-    },
-  ];
+  const [selectedId, setSelectedId] = useState(null);
+
+  const [filters, setFilters] = useState({
+    startDate: "",
+    endDate: "",
+    limit: 10,
+    offset: 0,
+  });
+
+  const { works, selectedWork, meta, loading, error } = useAppSelector(
+    (state) => state.recentWork,
+  );
+  // console.log("works", works);
+  const fetchRecentWork = async () => {
+    await dispatch(
+      getAllRecentWork({
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        limit: filters.limit,
+        offset: filters.offset,
+      }),
+    );
+  };
+
+  const handleCreate = async () => {
+    try {
+      const categoryArr = createEntry.categories
+        .split(",")
+        .map((i) => i.trim());
+
+      const formData = new FormData();
+      formData.append("title", createEntry.title);
+      formData.append("description", createEntry.description);
+      formData.append("categories", JSON.stringify(categoryArr));
+      formData.append("image", createEntry.image);
+      formData.append("icon", createEntry.icon);
+      formData.append("active", createEntry.active ? "true" : "false");
+
+      const res = await dispatch(createRecentWork(formData));
+
+      if (createRecentWork.fulfilled.match(res)) {
+        setShowCreateModal(false);
+        fetchRecentWork();
+      }
+
+      setCreateEntry({
+        title: "",
+        description: "",
+        active: true,
+        image: "",
+        icon: "",
+        categories: "",
+      });
+    } catch (error) {
+      return error;
+    }
+  };
+
+  const handleUpdate= async () => {
+    if(!selectedId) return;
+    const categoryArr = createEntry.categories
+        .split(",")
+        .map((i) => i.trim());
+
+      const formData = new FormData();
+      formData.append("title", createEntry.title);
+      formData.append("description", createEntry.description);
+      formData.append("categories", JSON.stringify(categoryArr));
+      formData.append("image", createEntry.image);
+      formData.append("icon", createEntry.icon);
+      formData.append("active", createEntry.active ? "true" : "false");
+
+      const res = await dispatch(updateRecentWork({slug:selectedId,formData}));
+
+      if (updateRecentWork.fulfilled.match(res)) {
+        setShowCreateModal(false);
+        fetchRecentWork();
+      }
+
+      setCreateEntry({
+        title: "",
+        description: "",
+        active: true,
+        image: "",
+        icon: "",
+        categories: "",
+      });
+
+      setSelectedId(null);
+      
+      setShowEditModal(false);
+  };
+
+  const handleDelete = async ()=>{
+    try {
+      if(!selectedId) return;
+
+      const res = await dispatch(deleteRecentWork(selectedId));
+
+      if(deleteRecentWork.fulfilled.match(res)){
+        setShowDeleteModal(false);
+        fetchRecentWork();
+        setSelectedId(null);
+      }
+    } catch (error) {
+      return error;
+    }
+  }
+
+  const applyFilter = () => {
+    fetchRecentWork();
+  }
+
+  const handlePrevious = () => {
+    setFilters((prev) => ({
+      ...prev,
+      offset: Math.max(prev.offset - prev.limit, 0),
+    }));
+  }
+  const handleNext = () => {
+    if (meta && filters.offset + filters.limit < meta.total) {
+      setFilters((prev) => ({
+        ...prev,
+        offset: prev.offset + prev.limit,
+      }));
+    }
+  };
+
+  useEffect(() => {
+    fetchRecentWork();
+  }, [filters.limit, filters.startDate, filters.endDate, filters.offset]);
 
   return (
     <div>
@@ -53,7 +171,14 @@ const RecentWorks = () => {
             Total Rows
           </label>
 
-          <select id="totalRows" className="form-select">
+          <select
+            id="totalRows"
+            className="form-select"
+            value={filters.limit}
+            onChange={(e) => {
+              setFilters({ ...filters, limit: Number(e.target.value) });
+            }}
+          >
             <option value={10}>10</option>
             <option value={25}>25</option>
             <option value={50}>50</option>
@@ -64,17 +189,33 @@ const RecentWorks = () => {
         {/* Start Date */}
         <div>
           <label className="form-label mb-1">Start Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.startDate}
+            onChange={(e) => {
+              setFilters({ ...filters, startDate: e.target.value });
+            }}
+          />
         </div>
 
         {/* End Date */}
         <div>
           <label className="form-label mb-1">End Date</label>
-          <input type="date" className="form-control" />
+          <input
+            type="date"
+            className="form-control"
+            value={filters.endDate}
+            onChange={(e) => {
+              setFilters({ ...filters, endDate: e.target.value });
+            }}
+          />
         </div>
 
         {/* Apply Button */}
-        <button className="btn btn-primary px-4">Apply</button>
+        <button className="btn btn-primary px-4" onClick={applyFilter}>
+          Apply
+        </button>
       </div>
       <PermissionGate permission="postbanner">
         <div className="d-flex justify-content-end mb-3">
@@ -101,18 +242,20 @@ const RecentWorks = () => {
             </thead>
 
             <tbody>
-              {list.length > 0 &&
-                list.map((item, index) => (
+              {works.length > 0 &&
+                works.map((item, index) => (
                   <tr key={item.id}>
-                    <td>{index + 1}</td>
+                    <td>{filters.offset + index + 1}</td>
 
                     {/* name is HTML */}
                     <td>{item.title}</td>
 
                     <td>
-                      {item?.description.length > 50
-                        ? item.description.slice(0, 40) + "..."
-                        : item.description}
+                      {item?.description
+                        ? item.description.length > 50
+                          ? item.description.slice(0, 40) + "..."
+                          : item.description
+                        : "NA"}
                     </td>
 
                     <td>
@@ -138,7 +281,18 @@ const RecentWorks = () => {
                         <PermissionGate permission="putbanner">
                           <button
                             className="btn btn-sm btn-primary"
-                            onClick={() => setShowEditModal((prev) => !prev)}
+                            onClick={() => {
+                              setSelectedId(item.slug);
+                              setCreateEntry({
+                                title: item.title,
+                                description: item.description,
+                                active: item.active,
+                                image: item.image,
+                                icon: item.icon,
+                                categories: item.categories.toString(),
+                              });
+                              setShowEditModal((prev) => !prev);
+                            }}
                           >
                             Edit
                           </button>
@@ -147,7 +301,10 @@ const RecentWorks = () => {
                         <PermissionGate permission="deletebanner">
                           <button
                             className="btn btn-sm btn-danger"
-                            onClick={() => setShowDeleteModal((prev) => !prev)}
+                            onClick={() => {
+                              setSelectedId(item.slug);
+                              setShowDeleteModal((prev) => !prev);
+                            }}
                           >
                             Delete
                           </button>
@@ -164,6 +321,8 @@ const RecentWorks = () => {
               style={{
                 background: "linear-gradient(135deg, #667eea, #764ba2)",
               }}
+              onClick={handlePrevious}
+              disabled={filters.offset === 0}
             >
               Previous
             </button>
@@ -173,6 +332,8 @@ const RecentWorks = () => {
               style={{
                 background: "linear-gradient(135deg, #43cea2, #185a9d)",
               }}
+              onClick={handleNext}
+              disabled={!meta || filters.offset + filters.limit >= meta.total}
             >
               Next
             </button>
@@ -210,6 +371,13 @@ const RecentWorks = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Title"
+                        value={createEntry.title}
+                        onChange={(e) => {
+                          setCreateEntry((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="mb-3">
@@ -218,6 +386,13 @@ const RecentWorks = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Recent Work  description"
+                        value={createEntry.description}
+                        onChange={(e) => {
+                          setCreateEntry((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="mb-3">
@@ -226,15 +401,42 @@ const RecentWorks = () => {
                         type="text"
                         className="form-control"
                         placeholder="abc , abc , abc"
+                        value={createEntry.categories}
+                        onChange={(e) => {
+                          setCreateEntry((prev) => ({
+                            ...prev,
+                            categories: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Image</label>
-                      <input type="file" id="input" accept="image/*" />
+                      <input
+                        type="file"
+                        id="input"
+                        accept="image/*"
+                        onChange={(e) => {
+                          setCreateEntry({
+                            ...createEntry,
+                            image: e.target.files?.[0],
+                          });
+                        }}
+                      />
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Icon</label>
-                      <input type="file" id="input" accept="image/*" />
+                      <input
+                        type="file"
+                        id="input"
+                        accept="image/*"
+                        onChange={(e) => {
+                          setCreateEntry({
+                            ...createEntry,
+                            icon: e.target.files?.[0],
+                          });
+                        }}
+                      />
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Status</label>
@@ -243,6 +445,13 @@ const RecentWorks = () => {
                           className="form-check-input"
                           type="checkbox"
                           id="footerStatus"
+                          checked={createEntry.active}
+                          onChange={(e) => {
+                            setCreateEntry((prev) => ({
+                              ...prev,
+                              active: e.target.checked,
+                            }));
+                          }}
                         />
                         <label
                           className="form-check-label"
@@ -262,7 +471,12 @@ const RecentWorks = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => handleCreate()}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -293,7 +507,6 @@ const RecentWorks = () => {
                     onClick={() => setShowEditModal(false)}
                   />
                 </div>
-
                 <div className="modal-body">
                   <form>
                     <div className="mb-3">
@@ -302,6 +515,13 @@ const RecentWorks = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Title"
+                        value={createEntry.title}
+                        onChange={(e) => {
+                          setCreateEntry((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="mb-3">
@@ -310,6 +530,13 @@ const RecentWorks = () => {
                         type="text"
                         className="form-control"
                         placeholder="Enter Recent Work  description"
+                        value={createEntry.description}
+                        onChange={(e) => {
+                          setCreateEntry((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="mb-3">
@@ -318,15 +545,42 @@ const RecentWorks = () => {
                         type="text"
                         className="form-control"
                         placeholder="abc , abc , abc"
+                        value={createEntry.categories}
+                        onChange={(e) => {
+                          setCreateEntry((prev) => ({
+                            ...prev,
+                            categories: e.target.value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Image</label>
-                      <input type="file" id="input" accept="image/*" />
+                      <input
+                        type="file"
+                        id="input"
+                        accept="image/*"
+                        onChange={(e) => {
+                          setCreateEntry({
+                            ...createEntry,
+                            image: e.target.files?.[0],
+                          });
+                        }}
+                      />
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Icon</label>
-                      <input type="file" id="input" accept="image/*" />
+                      <input
+                        type="file"
+                        id="input"
+                        accept="image/*"
+                        onChange={(e) => {
+                          setCreateEntry({
+                            ...createEntry,
+                            icon: e.target.files?.[0],
+                          });
+                        }}
+                      />
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Status</label>
@@ -335,6 +589,13 @@ const RecentWorks = () => {
                           className="form-check-input"
                           type="checkbox"
                           id="footerStatus"
+                          checked={createEntry.active}
+                          onChange={(e) => {
+                            setCreateEntry((prev) => ({
+                              ...prev,
+                              active: e.target.checked,
+                            }));
+                          }}
                         />
                         <label
                           className="form-check-label"
@@ -346,7 +607,7 @@ const RecentWorks = () => {
                     </div>
                   </form>
                 </div>
-
+                ``
                 <div className="modal-footer">
                   <button
                     className="btn btn-sm btn-secondary"
@@ -354,7 +615,12 @@ const RecentWorks = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-success">Save</button>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => handleUpdate()}
+                  >
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -411,7 +677,12 @@ const RecentWorks = () => {
                   >
                     Cancel
                   </button>
-                  <button className="btn btn-sm btn-danger">Delete</button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDelete()}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

@@ -130,7 +130,7 @@ export const getRecentWorkById = createAsyncThunk<
 
 
 interface updateRecentWorkPayload {
-  id: number;
+  slug: string;
   formData: FormData;
 }
 
@@ -143,9 +143,9 @@ export const updateRecentWork = createAsyncThunk<
   updateRecentWorkResponse,
   updateRecentWorkPayload,
   { rejectValue: string }
->("recentWork/update", async ({ id, formData }, { rejectWithValue }) => {
+>("recentWork/update", async ({ slug, formData }, { rejectWithValue }) => {
   try {
-    const res = await api.put(`recentWork/${id}`, formData);
+    const res = await api.put(`recentWork/${slug}`, formData);
 
     if (!res.data.status) {
       toast.error(res.data.message);
@@ -170,11 +170,11 @@ interface deleteRecentWorkResponse {
 
 export const deleteRecentWork = createAsyncThunk<
   deleteRecentWorkResponse,
-  number,
+  string,
   { rejectValue: string }
->("recentWork/delete", async (id, { rejectWithValue }) => {
+>("recentWork/delete", async (slug, { rejectWithValue }) => {
   try {
-    const res = await api.delete(`recentWork/${id}`, { withCredentials: true });
+    const res = await api.delete(`recentWork/${slug}`, { withCredentials: true });
 
     if (!res.data.status) {
       toast.error(res.data.message);

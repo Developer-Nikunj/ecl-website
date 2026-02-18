@@ -28,7 +28,7 @@ export default function Footer() {
       style={{ paddingTop: "250px" }}
     >
       <div
-        className="container mx-auto px-3"
+        className=" w-full "
         dangerouslySetInnerHTML={{ __html: data || "" }}
       />
     </footer>

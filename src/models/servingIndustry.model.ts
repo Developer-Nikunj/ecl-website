@@ -30,4 +30,4 @@ export const servingIndustryModel = sequelize.define(
   { tableName: "servingIndustry", freezeTableName: true, timestamps: true },
 );
 
-await servingIndustryModel.sync({alter:true});
+// await servingIndustryModel.sync({alter:true});

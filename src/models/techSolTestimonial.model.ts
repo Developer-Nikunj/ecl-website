@@ -55,4 +55,4 @@ export const TechTestimonialModel = sequelize.define(
 );
 
 // To create the table (sync with DB)
-await TechTestimonialModel.sync({alter:true});
+// await TechTestimonialModel.sync({alter:true});

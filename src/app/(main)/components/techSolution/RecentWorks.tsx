@@ -161,10 +161,14 @@ const RecentWorks = () => {
                       </h3>
 
                       <p
-                        className="text-secondary small mb-3 mb-md-4"
+                        className="text-secondary mb-3 mb-md-4"
                         style={{
-                          fontSize: "clamp(13px, 1.5vw, 15px)",
-                          lineHeight: "1.5",
+                          fontSize: "clamp(15px, 1.4vw, 25px)",
+                          lineHeight: "1.7",
+                          maxWidth: "700px",
+                          wordBreak: "break-word",
+                          overflowWrap: "break-word",
+                          whiteSpace: "normal",
                         }}
                       >
                         {project.description}
@@ -177,7 +181,7 @@ const RecentWorks = () => {
                               href="#!"
                               className="d-inline-block px-2 py-1 bg-light text-decoration-none text-secondary rounded-pill small text-capitalize"
                               style={{
-                                fontSize: "clamp(10px, 1.2vw, 12px)",
+                                fontSize: "clamp(15px, 1.9vw, 29px)",
                                 whiteSpace: "nowrap",
                               }}
                             >
@@ -190,12 +194,38 @@ const RecentWorks = () => {
                       <div>
                         <Link
                           href={`recent-work/${project.slug}`}
-                          className="d-inline-flex align-items-center text-decoration-none text-dark fw-semibold"
-                          style={{ fontSize: "clamp(13px, 1.5vw, 14px)" }}
+                          className="d-inline-flex align-items-center gap-2 text-decoration-none fw-semibold position-relative"
+                          style={{
+                            fontSize: "clamp(16px, 1.4vw, 22px)",
+                            padding: "12px 22px",
+                            borderRadius: "50px",
+                            background:
+                              "linear-gradient(135deg, #4f46e5, #7c3aed)",
+                            color: "#fff",
+                            transition: "all 0.3s ease",
+                            overflow: "hidden",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform =
+                              "translateY(-3px)";
+                            e.currentTarget.style.boxShadow =
+                              "0 12px 25px rgba(79, 70, 229, 0.4)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "translateY(0)";
+                            e.currentTarget.style.boxShadow = "none";
+                          }}
                         >
-                          <span>View case study</span>
-                          <span className="mx-1 mx-md-2">
-                            <i className="far fa-long-arrow-right" />
+                          <span>View Case Study</span>
+
+                          <span
+                            style={{
+                              display: "inline-flex",
+                              transition: "transform 0.3s ease",
+                            }}
+                            className="arrow"
+                          >
+                            <i className="fas fa-arrow-right" />
                           </span>
                         </Link>
                       </div>
@@ -205,7 +235,7 @@ const RecentWorks = () => {
                     <div
                       className="flex-shrink-0"
                       style={{
-                        width: "clamp(150px, 25%, 250px)",
+                        width: "clamp(350px, 45%, 450px)",
                         maxWidth: "100%",
                       }}
                     >

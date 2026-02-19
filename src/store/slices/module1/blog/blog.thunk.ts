@@ -86,7 +86,7 @@ export const getAllBlog = createAsyncThunk<
       const res = await api.get<blogAllResponse>(url);
 
       if (res.data.status === 0) return rejectWithValue(res.data.message);
-
+      console.log("res.data",res.data);
       return res.data;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;

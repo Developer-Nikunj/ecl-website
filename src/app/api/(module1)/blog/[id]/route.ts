@@ -75,18 +75,17 @@ const { id } = await context.params;
   }
 
   const title = formData.get("title") as string;
-  const slug = title
-    ? title
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "")
-    : blog.slug;
+  const slug = formData.get("slug");
+
+    const slugAvail =await Blog.findOne({where:{slug:slug}});
+    if(slugAvail){
+      return NextResponse.json({message:"Slug already available!!"},{status:400});
+    }
 
   await blog.update({
     img: imgPath,
     title,
-    slug,
+    slug:formData.get("slug"),
     content: formData.get("content"),
     excerpt: formData.get("excerpt"),
     status: formData.get("status"),

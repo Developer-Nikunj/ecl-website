@@ -13,6 +13,7 @@ import {
   serviceItem,
 } from "@/store/slices/module1/service/service.thunk";
 import axios from "axios";
+import ReactQuill from "@/components/RichEditor";
 
 const ServiceTable = () => {
   const dispatch = useAppDispatch();
@@ -46,9 +47,9 @@ const ServiceTable = () => {
 
   const [cat, setCat] = useState([]);
 
-    const { loading, error, list, meta } = useAppSelector(
-      (state) => state.service,
-    );
+  const { loading, error, list, meta } = useAppSelector(
+    (state) => state.service,
+  );
 
   console.log("list", list);
 
@@ -189,6 +190,25 @@ const ServiceTable = () => {
       ? words.slice(0, limit).join(" ") + " ..."
       : text;
   };
+  const getPureText = (html) => {
+    if (!html) return "-";
+
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  };
+
+  const truncateWordsforhtml = (html, limit = 20) => {
+    const text = getPureText(html);
+
+    if (!text) return "-";
+
+    const words = text.trim().split(/\s+/);
+
+    return words.length > limit
+      ? words.slice(0, limit).join(" ") + " ..."
+      : text;
+  };
+
 
 
   useEffect(() => {
@@ -250,108 +270,108 @@ const ServiceTable = () => {
 
       {/* Create Blog */}
       <PermissionGate permission="postservice">
-      <div className="d-flex justify-content-end mb-3">
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="btn btn-sm btn-success"
-        >
-          Create Service
-        </button>
-      </div>
+        <div className="d-flex justify-content-end mb-3">
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="btn btn-sm btn-success"
+          >
+            Create Service
+          </button>
+        </div>
       </PermissionGate>
 
       {/* Blog Table */}
       <PermissionGate permission="getservice">
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle mb-0">
-          <thead className="table-light">
-            <tr>
-              <th>SNo.</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>details</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover align-middle mb-0">
+            <thead className="table-light">
+              <tr>
+                <th>SNo.</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>details</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {list.length > 0 &&
-              list.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{filters.offset + index + 1}</td>
-                  <td>{truncateWords(item.name)}</td>
-                  <td>{truncateWords(item.description || "-")}</td>
-                  <td>{truncateWords(item.details)}</td>
-                  <td>
-                    {item.active ? (
-                      <span className="badge bg-success">Active</span>
-                    ) : (
-                      <span className="badge bg-danger">Inactive</span>
-                    )}
-                  </td>
-                  <td>
-                    <div className="d-flex gap-2">
-                      <PermissionGate permission="putservice">
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => {
-                          setSelectedServiceId(item.id);
-                          // setEditBlogData(item);
-                          setShowEditModal(true);
-                          setServiceEntry({
-                            name: item.name,
-                            description: item.description,
-                            details: item.details,
-                            active: item.active ? true : false,
-                            image: item.image,
-                            category: item?.category || "",
-                          });
-                        }}
-                      >
-                        Edit
-                      </button>
-                      </PermissionGate>
+            <tbody>
+              {list.length > 0 &&
+                list.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{filters.offset + index + 1}</td>
+                    <td>{truncateWords(item.name)}</td>
+                    <td>{truncateWords(item.description.toString() || "-")}</td>
+                    <td>{truncateWordsforhtml(item.details)}</td>
+                    <td>
+                      {item.active ? (
+                        <span className="badge bg-success">Active</span>
+                      ) : (
+                        <span className="badge bg-danger">Inactive</span>
+                      )}
+                    </td>
+                    <td>
+                      <div className="d-flex gap-2">
+                        <PermissionGate permission="putservice">
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => {
+                              setSelectedServiceId(item.id);
+                              // setEditBlogData(item);
+                              setShowEditModal(true);
+                              setServiceEntry({
+                                name: item.name,
+                                description: item.description,
+                                details: item.details || "",
+                                active: item.active ? true : false,
+                                image: item.image,
+                                category: item?.category || "",
+                              });
+                            }}
+                          >
+                            Edit
+                          </button>
+                        </PermissionGate>
 
-                      <PermissionGate permission="deleteservice">
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => {
-                          setSelectedServiceId(item.id);
-                          setShowDeleteModal(true);
-                        }}
-                      >
-                        Delete
-                      </button>
-                      </PermissionGate>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+                        <PermissionGate permission="deleteservice">
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => {
+                              setSelectedServiceId(item.id);
+                              setShowDeleteModal(true);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </PermissionGate>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
 
-        {/* Pagination */}
-        <div className="d-flex justify-content-between align-items-center mt-3">
-          <button
-            className="btn btn-sm text-white"
-            style={{ background: "linear-gradient(135deg,#667eea,#764ba2)" }}
-            onClick={handlePrevious}
-            disabled={filters.offset === 0}
-          >
-            Previous
-          </button>
+          {/* Pagination */}
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <button
+              className="btn btn-sm text-white"
+              style={{ background: "linear-gradient(135deg,#667eea,#764ba2)" }}
+              onClick={handlePrevious}
+              disabled={filters.offset === 0}
+            >
+              Previous
+            </button>
 
-          <button
-            className="btn btn-sm text-white"
-            style={{ background: "linear-gradient(135deg,#43cea2,#185a9d)" }}
-            onClick={handleNext}
+            <button
+              className="btn btn-sm text-white"
+              style={{ background: "linear-gradient(135deg,#43cea2,#185a9d)" }}
+              onClick={handleNext}
             // disabled={!meta || filters.offset + filters.limit >= meta.total}
-          >
-            Next
-          </button>
+            >
+              Next
+            </button>
+          </div>
         </div>
-      </div>
       </PermissionGate>
 
       {showCreateModal && (
@@ -410,17 +430,22 @@ const ServiceTable = () => {
 
                     <div className="mb-3">
                       <label className="form-label">Details</label>
-                      <textarea
-                        className="form-control"
-                        rows={4}
+
+                      {/* 🔹 Rich Text Editor */}
+                      <ReactQuill
+                        theme="snow"
                         value={serviceEntry.details}
-                        onChange={(e) =>
+                        onChange={(value) =>
                           setServiceEntry({
                             ...serviceEntry,
-                            details: e.target.value,
+                            details: value,
                           })
                         }
+                        style={{ height: "200px", marginBottom: "40px" }}
                       />
+
+                      {/* 🔥 Preview */}
+                      
                     </div>
 
                     <div className="mb-3">
@@ -562,19 +587,20 @@ const ServiceTable = () => {
 
                     <div className="mb-3">
                       <label className="form-label">Details</label>
-                      <textarea
-                        className="form-control"
-                        rows={5}
-                        value={serviceEntry.details}
-                        onChange={(e) =>
+
+                      <ReactQuill
+                        theme="snow"
+                        value={serviceEntry.details || ""}
+                        onChange={(value) =>
                           setServiceEntry({
                             ...serviceEntry,
-                            details: e.target.value,
+                            details: value,
                           })
                         }
+                        style={{ height: "200px", marginBottom: "40px" }}
                       />
                     </div>
-
+                    
                     {/* Category */}
                     <div className="mb-3">
                       <label className="form-label">Category</label>

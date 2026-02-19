@@ -13,6 +13,8 @@ import {
   getOneBlog,
 } from "@/store/slices/module1/blog/blog.thunk";
 import axios from "axios";
+import ReactQuill from "@/components/RichEditor";
+
 
 const BlogTable = () => {
   const dispatch = useAppDispatch();
@@ -35,6 +37,7 @@ const BlogTable = () => {
     active: true,
     categoryId: "",
     image: "",
+    slug:""
   });
   const [editBlogData, setEditBlogData] = useState({
     title: "",
@@ -74,6 +77,7 @@ const BlogTable = () => {
     formData.append("active", blogEntry.active ? "true":"false");
     formData.append("categoryId", blogEntry.categoryId);
     formData.append("image", blogEntry.image);
+    formData.append("slug", blogEntry.slug);
 
     const res = await dispatch(createBlog(formData));
 
@@ -89,6 +93,7 @@ const BlogTable = () => {
       active: true,
       categoryId: "",
       image: "",
+      slug: "",
     });
   };
 
@@ -141,6 +146,7 @@ const BlogTable = () => {
     formData.append("active", blogEntry.active ? "true" : "false");
     formData.append("categoryId", blogEntry.categoryId);
     formData.append("image", blogEntry.image);
+    formData.append("slug", blogEntry.slug);
 
     const res = await dispatch(
       updateBlog({
@@ -159,6 +165,7 @@ const BlogTable = () => {
         active: true,
         categoryId: "",
         image: "",
+        slug: "",
       });
 
       await dispatch(
@@ -299,8 +306,9 @@ const fetchCategory = async () => {
                           setShowEditModal(true);
                           setBlogEntry({
                             title: item.title,
+                            slug: item.slug,
                             excerpt: item.excerpt,
-                            content: item.content,
+                            content: item.content || "",
                             status: item.status,  
                             active: item.active?true:false,
                             image: item.img,
@@ -387,6 +395,18 @@ const fetchCategory = async () => {
                         }
                       />
                     </div>
+                    <div className="mb-3">
+                      <label className="form-label">Slug</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter blog slug"
+                        value={blogEntry.slug}
+                        onChange={(e) =>
+                          setBlogEntry({ ...blogEntry, slug: e.target.value })
+                        }
+                      />
+                    </div>
 
                     <div className="mb-3">
                       <label className="form-label">Excerpt</label>
@@ -405,19 +425,21 @@ const fetchCategory = async () => {
                     </div>
 
                     <div className="mb-3">
-                      <label className="form-label">Content</label>
-                      <textarea
-                        className="form-control"
-                        rows={4}
-                        value={blogEntry.content}
-                        onChange={(e) =>
-                          setBlogEntry({
-                            ...blogEntry,
-                            content: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
+  <label className="form-label">Content</label>
+
+  <ReactQuill
+    theme="snow"
+    value={blogEntry.content || ""}
+    onChange={(value) =>
+      setBlogEntry({
+        ...blogEntry,
+        content: value,
+      })
+    }
+    style={{ height: "250px", marginBottom: "40px" }}
+  />
+</div>
+
 
                     <div className="mb-3">
                       <label className="form-label">Category</label>
@@ -526,17 +548,19 @@ const fetchCategory = async () => {
                         }
                       />
                     </div>
-
-                    {/* Slug (Readonly) */}
-                    {/* <div className="mb-3">
+                    <div className="mb-3">
                       <label className="form-label">Slug</label>
                       <input
                         type="text"
                         className="form-control"
                         value={blogEntry.slug}
-                        disabled
+                        onChange={(e) =>
+                          setBlogEntry({ ...blogEntry, slug: e.target.value })
+                        }
                       />
-                    </div> */}
+                    </div>
+
+                    
 
                     {/* Excerpt */}
                     <div className="mb-3">
@@ -557,18 +581,20 @@ const fetchCategory = async () => {
                     {/* Content */}
                     <div className="mb-3">
                       <label className="form-label">Content</label>
-                      <textarea
-                        className="form-control"
-                        rows={5}
-                        value={blogEntry.content}
-                        onChange={(e) =>
+
+                      <ReactQuill
+                        theme="snow"
+                        value={blogEntry.content || ""}
+                        onChange={(value) =>
                           setBlogEntry({
                             ...blogEntry,
-                            content: e.target.value,
+                            content: value,
                           })
                         }
+                        style={{ height: "260px", marginBottom: "40px" }}
                       />
                     </div>
+
 
                     {/* Category */}
                     <div className="mb-3">

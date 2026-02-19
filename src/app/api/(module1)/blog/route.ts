@@ -31,6 +31,12 @@ export async function POST(request: NextRequest) {
     const categoryId = Number(formData.get("categoryId"));
 
     const image = formData.get("image") as File | null;
+    const slug = formData.get("slug");
+
+    const slugAvail =await Blog.findOne({where:{slug:slug}});
+    if(slugAvail){
+      return NextResponse.json({message:"Slug already available!!"},{status:400});
+    }
     console.log(image);
 
     if (!title || !content || !categoryId) {
@@ -39,12 +45,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    const slug = title
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
 
     let imagePath: string | null = null;
     if (image && image.size > 0) {

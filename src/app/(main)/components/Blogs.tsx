@@ -23,7 +23,7 @@ const BlogsComponent = () => {
   const [blog, setBlog] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 3;
+  const postsPerPage = 6;
 
   const fetchBlogs = async () => {
     try {

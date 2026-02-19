@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
 
-    const limit = Number(searchParams.get("limit")) || 100;
+    const limit = Number(searchParams.get("limit")) || 16;
     const offset = Number(searchParams.get("offset")) || 0;
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
 
-    const limit = Number(searchParams.get("limit")) || 5;
+    const limit = Number(searchParams.get("limit")) || 15;
     const offset = Number(searchParams.get("offset")) || 0;
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");

@@ -95,7 +95,7 @@ const Testimonial = () => {
             className="btn btn-sm btn-success"
             onClick={() => setShowCreateModal((prev) => !prev)}
           >
-            Create Banner
+            Create Testimonial
           </button>
         </div>
       </PermissionGate>
@@ -207,7 +207,7 @@ const Testimonial = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Create Recent Works</h5>
+                  <h5 className="modal-title">Create Testimonial</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -230,7 +230,23 @@ const Testimonial = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter Recent Work  description"
+                        placeholder="Enter Testimonial  description"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Designation</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Testimonial  Designation"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Rating</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Testimonial  Rating"
                       />
                     </div>
                     <div className="mb-3">
@@ -299,7 +315,7 @@ const Testimonial = () => {
             >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Edit Recent Work</h5>
+                  <h5 className="modal-title">Edit Testimonial</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -322,7 +338,23 @@ const Testimonial = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Enter Recent Work  description"
+                        placeholder="Enter Testimonial  description"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Designation</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Testimonial Designatio"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Rating</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Testimonial  Rating"
                       />
                     </div>
                     <div className="mb-3">
@@ -385,7 +417,7 @@ const Testimonial = () => {
             tabIndex={-1}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="deleteBannerTitle"
+            aria-labelledby="deleteTestimonialTitle"
             onClick={() => setShowDeleteModal(false)}
           >
             <div
@@ -395,7 +427,7 @@ const Testimonial = () => {
             >
               <div className="modal-content rounded-3 shadow">
                 <div className="modal-header border-0">
-                  <h5 className="modal-title" id="deleteBannerTitle">
+                  <h5 className="modal-title" id="deleteTestimonialTitle">
                     Confirm Deletion
                   </h5>
                   <button
@@ -408,7 +440,7 @@ const Testimonial = () => {
 
                 <div className="modal-body text-center">
                   <p className="mb-1 fw-semibold">
-                    Are you sure you want to delete this Recent Work?
+                    Are you sure you want to delete this Testimonial?
                   </p>
                   <small className="text-muted">
                     This action cannot be undone.

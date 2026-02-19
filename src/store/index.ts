@@ -17,6 +17,7 @@ import serviceReducer from "./slices/module1/service/service.slices";
 import careerReducer from "./slices/module1/career/career.slices";
 import servingIndustryReducer from "./slices/module1/servingIndustry/servingIndustry.slices";
 import recentWorkReducer from "./slices/module1/recentWorks/recentwork.slices";
+import techTestimonialReducer from "./slices/module1/tech-testimonial/testimonial.slices"
 import { injectStore } from "@/lib/axios";
 
 export const store = configureStore({
@@ -39,6 +40,7 @@ export const store = configureStore({
     career: careerReducer,
     servingIndustry: servingIndustryReducer,
     recentWork: recentWorkReducer,
+    techTestimoial:techTestimonialReducer
   },
 });
 

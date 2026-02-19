@@ -87,4 +87,122 @@ interface getOneTstimonialResponse {
     data:Testimonial
 }
 
-// export const getTechTestimonial = createAsyncThunk<getOneTstimonialResponse,slug>;
+interface getOneTstimonialPayload {
+  id: number | string;
+}
+
+export const getOneTechTestimonial = createAsyncThunk<
+  getOneTstimonialResponse,
+  getOneTstimonialPayload,
+  { rejectValue: string }
+>(
+  "tech-testimonial/getone",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const res = await api.get(`tech-testimonial/${id}`, {
+        withCredentials: true,
+      });
+
+      if (res.data.status === 0) {
+        toast.error(res.data.message);
+        return rejectWithValue(res.data.message);
+      }
+
+      return res.data;
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message ||
+        "Fetching testimonial failed";
+
+      toast.error(message);
+
+      return rejectWithValue(message);
+    }
+  }
+);
+
+
+interface deleteTestimonialResponse {
+  status: boolean;
+  message: string;
+}
+
+export const deleteTechTestimonial = createAsyncThunk<
+  deleteTestimonialResponse,
+  number | string,
+  { rejectValue: string }
+>(
+  "tech-testimonial/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await api.delete(`tech-testimonial/${id}`, {
+        withCredentials: true,
+      });
+
+      if (res.data.status === 0) {
+        toast.error(res.data.message);
+        return rejectWithValue(res.data.message);
+      }
+
+      toast.success(res.data.message);
+
+      return res.data;
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message ||
+        "Delete testimonial failed";
+
+      toast.error(message);
+
+      return rejectWithValue(message);
+    }
+  }
+);
+
+
+
+interface updateTestimonialResponse {
+  status: boolean;
+  message: string;
+}
+
+interface updateTestimonialPayload {
+  id: number | string;
+  formData: FormData;
+}
+
+export const updateTechTestimonial = createAsyncThunk<
+  updateTestimonialResponse,
+  updateTestimonialPayload,
+  { rejectValue: string }
+>(
+  "tech-testimonial/update",
+  async ({ id, formData }, { rejectWithValue }) => {
+    try {
+      const res = await api.put(
+        `tech-testimonial/${id}`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res.data.status === 0) {
+        toast.error(res.data.message);
+        return rejectWithValue(res.data.message);
+      }
+
+      toast.success(res.data.message);
+
+      return res.data;
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message ||
+        "Tech testimonial update failed";
+
+      toast.error(message);
+
+      return rejectWithValue(message);
+    }
+  }
+);

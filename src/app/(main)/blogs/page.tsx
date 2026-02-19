@@ -6,6 +6,9 @@ import React,{useState,useEffect} from "react";
 import BlogsComponent from "@/app/(main)/components/Blogs";
 import Link from "next/link";
 
+import BlogSlider from "../components/BlogSlider";
+
+
 export default function Blogs() {
   
   const [blog, setBlog] = useState([]);
@@ -16,7 +19,7 @@ export default function Blogs() {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/common/blogCategory`,
       );
-      console.log("blogs", res.data.ans);
+      console.log("blogs", res);
       if (res.data.ans.length > 1) {
         setBlog(res.data.ans);
         setFirst3blogs(res.data.first3blogs);
@@ -71,115 +74,9 @@ export default function Blogs() {
       </section>
       {/* page title end  */}
       {/* blog-slide end  */}
-      <div className="blog pt-70">
-        <div className="container">
-          <div className="blog-slider swiper-container pos-rel">
-            <div className="swiper-wrapper">
-              <div className="swiper-slide">
-                <div className="blog-slide-item">
-                  <div className="xb-item--img">
-                    <a href="blog-details.html">
-                      <img src="assets/front/img/blog/b-img01.jpg" alt="" />
-                    </a>
-                  </div>
-                  <div className="xb-item--holder">
-                    <a href="#!" className="xb-item--tag">
-                      software
-                    </a>
-                    <h2 className="xb-item--title border-effect">
-                      <a href="blog-details.html">
-                        How to optimize your IT network for maximum performance.
-                      </a>
-                    </h2>
-                    <p className="xb-item--content">
-                      Embark on an enlightening journey through the realm of IT
-                      solutions as we delve into the <br /> latest technological
-                      advancements shaping the digital landscape.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="swiper-slide">
-                <div className="blog-slide-item">
-                  <div className="xb-item--img">
-                    <img src="assets/front/img/blog/b-img02.jpg" alt="" />
-                  </div>
-                  <div className="xb-item--holder">
-                    <a href="#!" className="xb-item--tag">
-                      technology
-                    </a>
-                    <h2 className="xb-item--title border-effect">
-                      <a href="blog-details.html">
-                        How to perform a comprehensive SEO audit step by step
-                        guide.
-                      </a>
-                    </h2>
-                    <p className="xb-item--content">
-                      Performing a comprehensive SEO audit involves a systematic
-                      analysis of your website to <br /> identify areas for
-                      improvement and ensure that it aligns with best practices.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="swiper-slide">
-                <div className="blog-slide-item">
-                  <div className="xb-item--img">
-                    <img src="assets/front/img/blog/b-img01.jpg" alt="" />
-                  </div>
-                  <div className="xb-item--holder">
-                    <a href="#!" className="xb-item--tag">
-                      software
-                    </a>
-                    <h2 className="xb-item--title border-effect">
-                      <a href="blog-details.html">
-                        How to optimize your IT network for maximum performance.
-                      </a>
-                    </h2>
-                    <p className="xb-item--content">
-                      Embark on an enlightening journey through the realm of IT
-                      solutions as we delve into the <br /> latest technological
-                      advancements shaping the digital landscape.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="swiper-slide">
-                <div className="blog-slide-item">
-                  <div className="xb-item--img">
-                    <img src="assets/front/img/blog/b-img02.jpg" alt="" />
-                  </div>
-                  <div className="xb-item--holder">
-                    <a href="#!" className="xb-item--tag">
-                      technology
-                    </a>
-                    <h2 className="xb-item--title border-effect">
-                      <a href="blog-details.html">
-                        How to perform a comprehensive SEO audit step by step
-                        guide.
-                      </a>
-                    </h2>
-                    <p className="xb-item--content">
-                      Performing a comprehensive SEO audit involves a systematic
-                      analysis of your website to <br /> identify areas for
-                      improvement and ensure that it aligns with best practices.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="swiper-pagination" />
-            <div className="blog-item_button">
-              <div className="blog-swiper-btn swiper-button-prev">
-                <img src="assets/front/img/icon/prev-icon.png" alt="" />
-              </div>
-              <div className="blog-swiper-btn swiper-button-next">
-                <img src="assets/front/img/icon/next-icon.png" alt="" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <BlogSlider blogs={first3blogs} />
+
+
       {/* blog-slide end  */}
       {/* blog content start  */}
       <section className="blog_details_section pb-130 mt-120">

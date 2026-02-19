@@ -37,7 +37,7 @@ export async function GET(){
             active: true,
             status : "published",
           },
-          attributes: ["id", "slug", "title"],
+          attributes: ["id", "slug", "title","excerpt"],
           raw: true,
           limit: 3,
         });

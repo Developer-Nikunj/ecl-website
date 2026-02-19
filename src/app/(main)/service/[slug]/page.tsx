@@ -349,22 +349,21 @@ export default async function Service({params}:PageProps) {
                       src="/assets/front/img/icon/ser-01.svg"
                       alt="Expert Code Lab"
                     />
-                    Feature-services
+                    {slug}
                   </span>
                   <h2
                     className="title wow skewIn"
                     data-wow-delay="100ms"
                     data-wow-duration="600ms"
                   >
-                    Growth with <br /> SEO services
+                    {serviceData.data.name}
                   </h2>
                   <p
                     className="content wow fadeInUp"
                     data-wow-delay="300ms"
                     data-wow-duration="600ms"
                   >
-                    SEO services boost visibility and organic traffic, driving
-                    leads and growth.
+                    {serviceData.data.description}
                   </p>
                 </div>
                 <div
@@ -381,40 +380,41 @@ export default async function Service({params}:PageProps) {
                 </div>
               </div>
             </div>
-            <div className="col-8 mt-30">
+            <div className="col-12 col-md-10 col-lg-8 mt-4 mt-md-5">
               <div className="service-all_item">
                 <div className="service-box">
                   <div className="service-item">
-                    <div className="xb-item--holder mb-85">
-                      <h3 className="xb-item--title">
-                        {serviceData.data.name}
-                      </h3>
-                      <h5>Description</h5>
-                      <span className="xb-item--contact">
-                        {serviceData.data.description}
-                      </span>
-                      <h5>Details</h5>
-                      <span className="xb-item--contact">
-                        {serviceData.data.details}
-                      </span>
-                      <h5>Category</h5>
-                      <span className="xb-item--contact">
-                        {serviceData.data.otherDetails}
-                      </span>
+
+                    {/* DETAILS */}
+                    <div className="xb-item--holder mb-4 mb-md-5">
+                      <h5 className="mb-3">Details</h5>
+
+                      <div
+                        className="xb-item--contact p-3 p-md-4 bg-white border rounded shadow-sm lh-lg text-break overflow-auto"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            serviceData.data.details ||
+                            "<p>No details available</p>",
+                        }}
+                      />
                     </div>
-                    <div className="xb-item--icon d-flex justify-content-between align-items-center">
-                      <div className="xb-item--img">
+
+                    {/* IMAGE */}
+                    <div className="xb-item--icon d-flex justify-content-center justify-content-md-between align-items-center">
+                      <div className="xb-item--img w-10">
                         <img
                           src={serviceData.data.image}
                           alt={serviceData.data.name}
+                          className="img-fluid rounded w-100"
                         />
                       </div>
                     </div>
+
                   </div>
-                  {/* <a href="service-details.html" className="xb-overlay" /> */}
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>

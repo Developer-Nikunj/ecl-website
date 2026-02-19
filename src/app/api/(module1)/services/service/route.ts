@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
     const active = formData.get("active") ;
+    const slug = formData.get("slug") ;
     const details = formData.get("details") as string;
     const otherDetail = formData.get("category") as string;
     if (!image || !name) {
@@ -35,11 +36,11 @@ export async function POST(request: NextRequest) {
     console.log("active", active);
     const imagePath = await saveImage(image, "company_services");
 
-    const slug = name
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-");;
+    const slugAvailable = await CompanyService.findOne({where:{slug:slug}});
+
+    if(slugAvailable){
+      return NextResponse.json({message:"Slug already available !!"},{status:400});
+    }
 
     const services = await CompanyService.create({
       image: imagePath,
@@ -129,7 +130,8 @@ export async function GET(request: NextRequest) {
         "image",
         "details",
         "otherDetails",
-        "active"
+        "active",
+        "slug",
       ],
     });
 

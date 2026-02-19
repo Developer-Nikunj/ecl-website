@@ -35,6 +35,7 @@ const ServiceTable = () => {
     active: true,
     category: "",
     image: "",
+    slug:""
   });
   const [editBlogData, setEditBlogData] = useState({
     name: "",
@@ -72,6 +73,7 @@ const ServiceTable = () => {
     formData.append("active", serviceEntry.active ? "true" : "false");
     formData.append("category", serviceEntry.category);
     formData.append("image", serviceEntry.image);
+    formData.append("slug", serviceEntry.slug);
 
     const res = await dispatch(createService(formData));
     formData.forEach((i) => {
@@ -88,6 +90,7 @@ const ServiceTable = () => {
       active: true,
       category: "",
       image: "",
+      slug: "",
     });
   };
 
@@ -139,6 +142,7 @@ const ServiceTable = () => {
     formData.append("active", serviceEntry.active ? "true" : "false");
     formData.append("category", serviceEntry.category);
     formData.append("image", serviceEntry.image);
+    formData.append("slug", serviceEntry.slug);
 
     const res = await dispatch(
       updateService({
@@ -156,6 +160,7 @@ const ServiceTable = () => {
         active: true,
         category: "",
         image: "",
+        slug: "",
       });
 
       await dispatch(
@@ -325,6 +330,7 @@ const ServiceTable = () => {
                                 details: item.details || "",
                                 active: item.active ? true : false,
                                 image: item.image,
+                                slug: item.slug,
                                 category: item?.category || "",
                               });
                             }}
@@ -407,6 +413,21 @@ const ServiceTable = () => {
                           setServiceEntry({
                             ...serviceEntry,
                             name: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Slug</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Service slug"
+                        value={serviceEntry.slug}
+                        onChange={(e) =>
+                          setServiceEntry({
+                            ...serviceEntry,
+                            slug: e.target.value,
                           })
                         }
                       />
@@ -565,6 +586,20 @@ const ServiceTable = () => {
                           setServiceEntry({
                             ...serviceEntry,
                             name: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Slug</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={serviceEntry.slug}
+                        onChange={(e) =>
+                          setServiceEntry({
+                            ...serviceEntry,
+                            slug: e.target.value,
                           })
                         }
                       />

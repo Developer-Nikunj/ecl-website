@@ -718,7 +718,6 @@ const fetchCategory = async () => {
           <div className="modal-backdrop fade show" />
         </>
       )}
-
       {showDeleteModal && (
         <>
           <div

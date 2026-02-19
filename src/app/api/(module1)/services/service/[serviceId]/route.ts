@@ -54,6 +54,7 @@ export async function PUT(
     const details = formData.get("details") as string;
     const otherDetail = formData.get("category") as string;
     const active = formData.get("active") === "true";
+    const slug = formData.get("slug");
 
     let imgPath = service.dataValues.image;
 
@@ -69,6 +70,7 @@ export async function PUT(
       details: details,
       otherDetails: otherDetail,    
       active,
+      slug
     });
 
     if (!updatedService) {

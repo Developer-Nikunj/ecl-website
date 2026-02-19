@@ -13,11 +13,15 @@ const Testimonial = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const [createBannerEntry, setCreateBannerEntry] = useState({
-    name: "",
+  const [createEntry, setCreateEntry] = useState({
+    title: "",
     description: "",
-    img: "",
+    designation: "",
     active: true,
+    image: "",
+    icon: "",
+    rating:"",
+    categories:"",
   });
 
   const list = [
@@ -31,20 +35,25 @@ const Testimonial = () => {
       categories: ["nodejs", "mongodb"],
       image: "/uploads/recent-works/images/1771349686019-Rectangle 10.png",
       active: true,
+      designation: "client",
+      rating:"4.4",
       createdAt: "2026-02-17T17:34:46.029Z",
       updatedAt: "2026-02-17T17:34:46.029Z",
     },
     {
       id: 1,
-      icon: "/uploads/recent-works/icons/1771348745190-Rectangle 10.png",
-      title: "update erp",
-      slug: "update-erp",
-      description: "test test",
-      categories: [],
-      image: "/uploads/recent-works/images/1771348745191-Rectangle 10.png",
-      active: false,
-      createdAt: "2026-02-17T17:19:05.193Z",
-      updatedAt: "2026-02-17T17:28:22.385Z",
+      icon: "/uploads/recent-works/icons/1771349686015-Rectangle 10.png",
+      title: "nikunj1",
+      slug: "nikunj1",
+      description:
+        "descript iondescrip tiondescri ptiondesc riptiond escription",
+      categories: ["nodejs", "mongodb"],
+      image: "/uploads/recent-works/images/1771349686019-Rectangle 10.png",
+      active: true,
+      designation: "client",
+      rating:"4.4",
+      createdAt: "2026-02-17T17:34:46.029Z",
+      updatedAt: "2026-02-17T17:34:46.029Z",
     },
   ];
 

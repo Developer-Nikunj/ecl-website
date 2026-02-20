@@ -187,16 +187,19 @@ export default async function Home({ params }: PageProps) {
       {/* hero section start  */}
       <section
         className="hero o-hidden hero-style-two pos-rel pt-120 pb-120 bg_img"
-        data-background="/assets/front/img/bg/hero-bg02.jpg"
+        style={{
+          backgroundImage: "url('/assets/front/img/bg/hero-bg02.jpg')",
+          
+        }}
       >
         <div className="container">
-          <div className="row align-items-center gy-5">
+          <div className="row align-items-center gy-5 mt-5">
             {/* IMAGE */}
             <div className="col-lg-6 text-center">
               <Image
                 src={blogData.data.img}
                 alt={blogData.data.title}
-                width={700}
+                width={500}
                 height={460}
                 className="img-fluid rounded-4 shadow-lg"
               />
@@ -225,7 +228,14 @@ export default async function Home({ params }: PageProps) {
                 <hr />
 
                 {/* Content */}
-                <p className="mb-4">{blogData.data.content}</p>
+                <div className="content-box border rounded p-4 mb-4 bg-white shadow-sm">
+                  <div
+                    className="text-break"
+                    dangerouslySetInnerHTML={{
+                      __html: blogData.data.content,
+                    }}
+                  />
+                </div>
 
                 {/* Footer Info */}
                 <div className="d-flex align-items-center text-muted">

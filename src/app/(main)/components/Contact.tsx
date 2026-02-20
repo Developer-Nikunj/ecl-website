@@ -40,8 +40,11 @@ export default function Home() {
     <main>
       {/* page title start  */}
       <section
-        className="page-title  pt-200 pos-rel bg_img"
-        data-background="assets/front/img/bg/page_bg01.jpg"
+        className="page-title pt-200 pos-rel"
+        style={{
+          backgroundImage: "url('/assets/front/img/bg/page_bg01.jpg')",
+          
+        }}
       >
         <div className="container">
           <div className="page-title-wrap sd-title-wrap">

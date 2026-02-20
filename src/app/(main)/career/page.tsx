@@ -8,10 +8,15 @@ export default function Career() {
    
    <main>
   {/* page title start  */}
-  <section
-    className="page-title cp-page-title pt-200 pos-rel bg_img"
-    data-background="assets/front/img/bg/page_bg01.jpg"
-  >
+      <section
+        className="page-title cp-page-title pt-200 pos-rel bg_img"
+        style={{
+          backgroundImage: "url('/assets/front/img/bg/page_bg01.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
     <div className="container">
       <div className="page-title-wrap">
         <div className="row mt-none-30 align-items-center">

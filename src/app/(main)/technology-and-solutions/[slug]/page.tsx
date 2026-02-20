@@ -6,8 +6,10 @@ export default function Home() {
     <main>
       {/* hero section start  */}
       <section
-        className="hero o-hidden hero-style-two pos-rel pt-120 bg_img"
-        data-background="assets/front/img/bg/hero-bg02.jpg"
+        className="hero o-hidden hero-style-two pos-rel pt-120"
+        style={{
+          backgroundImage: "url('/assets/front/img/bg/hero-bg02.jpg')",
+        }}
       >
         <div className="container">
           <div className="hero_wrap pt-40">
@@ -432,8 +434,10 @@ export default function Home() {
           <div className="seo-project-slider-inner">
             <div className="seo-project-slider">
               <div
-                className="sa-project-item bg_img"
-                data-background="assets/front/img/testimonial/sa-tes02.jpg"
+                className="sa-project-item"
+                style={{
+                  backgroundImage: "url('/assets/front/img/testimonial/sa-tes02.jpg')",
+                }}
               >
                 <div className="xb-item--inner ul_li_between pos-rel z-1">
                   <div className="xb-item--project_title">
@@ -490,8 +494,10 @@ export default function Home() {
                 </div>
               </div>
               <div
-                className="sa-project-item bg_img"
-                data-background="assets/front/img/testimonial/sa-tes01.jpg"
+                className="sa-project-item"
+                style={{
+                  backgroundImage: "url('/assets/front/img/testimonial/sa-tes01.jpg')",
+                }}
               >
                 <div className="xb-item--inner ul_li_between pos-rel z-1">
                   <div className="xb-item--project_title">
@@ -538,7 +544,9 @@ export default function Home() {
               </div>
               <div
                 className="sa-project-item bg_img"
-                data-background="assets/front/img/testimonial/sa-tes03.jpg"
+                style={{
+                  backgroundImage: "url('/assets/front/img/testimonial/sa-tes03.jpg')",
+                }}
               >
                 <div className="xb-item--inner ul_li_between pos-rel z-1">
                   <div className="xb-item--project_title">
@@ -585,7 +593,9 @@ export default function Home() {
               </div>
               <div
                 className="sa-project-item bg_img"
-                data-background="assets/front/img/testimonial/sa-tes04.jpg"
+                style={{
+                  backgroundImage: "url('/assets/front/img/testimonial/sa-tes04.jpg')",
+                }}
               >
                 <div className="xb-item--inner ul_li_between pos-rel z-1">
                   <div className="xb-item--project_title">
@@ -632,7 +642,10 @@ export default function Home() {
               </div>
               <div
                 className="sa-project-item bg_img"
-                data-background="assets/front/img/testimonial/sa-tes03.jpg"
+                style={{
+                  backgroundImage: "url('/assets/front/img/testimonial/sa-tes03.jpg')",
+                   
+                }}
               >
                 <div className="xb-item--inner ul_li_between pos-rel z-1">
                   <div className="xb-item--project_title">
@@ -679,7 +692,10 @@ export default function Home() {
               </div>
               <div
                 className="sa-project-item bg_img"
-                data-background="assets/front/img/testimonial/sa-tes04.jpg"
+                style={{
+                  backgroundImage: "url('/assets/front/img/testimonial/sa-tes04.jpg')",
+                   
+                }}
               >
                 <div className="xb-item--inner ul_li_between pos-rel z-1">
                   <div className="xb-item--project_title">

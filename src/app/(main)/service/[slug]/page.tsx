@@ -188,8 +188,10 @@ export default async function Service({params}:PageProps) {
       )}
       {/* hero section start  */}
       <section
-        className="hero o-hidden hero-style-two pos-rel pt-120 bg_img"
-        data-background="/assets/front/img/bg/hero-bg02.jpg"
+        className="hero o-hidden hero-style-two pos-rel pt-120"
+        style={{
+          backgroundImage: "url('/assets/front/img/bg/hero-bg02.jpg')",
+        }}
       >
         <div className="container">
           <div className="hero_wrap pt-40">

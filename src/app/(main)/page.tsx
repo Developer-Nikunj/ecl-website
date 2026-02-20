@@ -13,7 +13,9 @@ export default function Home() {
       {/* hero section start  */}
       <section
         className="hero o-hidden hero-style-two pos-rel pt-120 bg_img"
-        data-background="assets/front/img/bg/hero-bg02.jpg"
+        style={{
+          backgroundImage: "url('/assets/front/img/bg/hero-bg02.jpg')", 
+        }}
       >
         <div className="container">
           <div className="hero_wrap pt-40">

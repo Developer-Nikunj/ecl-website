@@ -18,90 +18,85 @@ export default function BlogSlider({ blogs = [] }) {
     if (!blogs.length) return null;
 
     return (
-        <div className="blog py-5">
+        <div className="blog pt-70">
             <div className="container">
 
-                <Swiper
-                    modules={[Navigation, Pagination, Autoplay]}
-                    slidesPerView={1}   // 🔥 ONE ITEM ONLY
-                    spaceBetween={20}
-                    loop={true}
+                <div className="blog-slider switer-container pos-rel">
+                    <Swiper
+                        modules={[Navigation, Pagination, Autoplay]}
+                        slidesPerView={1}
+                        spaceBetween={20}
+                        loop={true}
+                        autoplay={{
+                            delay: 3000,
+                            disableOnInteraction: false,
+                            pauseOnMouseEnter: true,
+                        }}
+                        pagination={{ clickable: true }}
 
-                    autoplay={{
-                        delay: 3000,
-                        disableOnInteraction: false,
-                        pauseOnMouseEnter: true,
-                    }}
+                        onSwiper={(swiper) => {
+                            setTimeout(() => {
+                                swiper.params.navigation.prevEl = prevRef.current;
+                                swiper.params.navigation.nextEl = nextRef.current;
 
-                    pagination={{ clickable: true }}
+                                swiper.navigation.destroy();
+                                swiper.navigation.init();
+                                swiper.navigation.update();
+                            });
+                        }}
 
-                    onBeforeInit={(swiper) => {
-                        swiper.params.navigation.prevEl = prevRef.current;
-                        swiper.params.navigation.nextEl = nextRef.current;
-                    }}
+                        navigation={{
+                            prevEl: prevRef.current,
+                            nextEl: nextRef.current,
+                        }}
+                    >
+                        {blogs.map((i) => (
+                            <SwiperSlide key={i.id}>
 
-                    navigation
-                >
-                    {blogs.map((i) => (
-                        <SwiperSlide key={i.id}>
-
-                            {/* Bootstrap centered card */}
-                            <div className="d-flex justify-content-center">
-
-                                <div className="card shadow-sm border-0 w-100" style={{ maxWidth: "700px" }}>
-
-                                    <Link href={`/blog/${i.slug || i.id}`}>
-                                        <Image
-                                            src={i.image || "/assets/front/img/blog/b-img01.jpg"}
-                                            alt={i.title}
-                                            width={700}
-                                            height={420}
-                                            className="card-img-top"
-                                        />
-                                    </Link>
-
-                                    <div className="card-body">
-
-                                        <span className="badge bg-primary mb-2">
-                                            {i.category || "Software"}
-                                        </span>
-
-                                        <h4 className="card-title">
-                                            <Link
-                                                href={`/blog/${i.slug || i.id}`}
-                                                className="text-decoration-none text-dark"
-                                            >
+                                {/* Bootstrap centered card */}
+                                <div key={i.id} className="blog-slide-item">
+                                    <div className="xb-item--img">
+                                        <Link href={`/blogs/${i.slug}`}>
+                                            <img src="assets/front/img/blog/b-img01.jpg" alt="" />
+                                        </Link>
+                                    </div>
+                                    <div className="xb-item--holder">
+                                        <Link href={`/blogs/${i.slug}`} className="xb-item--tag">
+                                            {i.slug}
+                                        </Link>
+                                        <h2 className="xb-item--title border-effect">
+                                            <Link href={`/blogs/${i.slug}`}>
                                                 {i.title}
                                             </Link>
-                                        </h4>
-
-                                        <p className="card-text text-muted">
+                                        </h2>
+                                        <p className="xb-item--content">
                                             {i.excerpt}
                                         </p>
-
                                     </div>
-
                                 </div>
 
-                            </div>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                    <div className="swiper-pagination" />
+                    <div className="blog-item_button">
+                        <div
+                            ref={prevRef}
+                            className="blog-swiper-btn swiper-button-prev"
+                        >
+                            <img src="/assets/front/img/icon/prev-icon.png" alt="prev" />
+                        </div>
 
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-
-                {/* 🔥 Bootstrap Controls */}
-                <div className="d-flex justify-content-center gap-3 mt-4">
-
-                    <button ref={prevRef} className="btn btn-outline-primary">
-                        ← Prev
-                    </button>
-
-                    <button ref={nextRef} className="btn btn-outline-primary">
-                        Next →
-                    </button>
-
+                        <div
+                            ref={nextRef}
+                            className="blog-swiper-btn swiper-button-next"
+                        >
+                            <img src="/assets/front/img/icon/next-icon.png" alt="next" />
+                        </div>
+                    </div>
                 </div>
 
+                
             </div>
         </div>
     );

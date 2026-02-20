@@ -76,20 +76,6 @@ const BlogsComponent = () => {
     fetchBlogs();
   }, []);
 
-  const getCategoryName = (categoryId: number): string => {
-    const categories: { [key: number]: string } = {
-      1: "Technology",
-      2: "Design",
-      3: "Marketing",
-      4: "Development",
-      5: "Business",
-      6: "Lifestyle",
-      7: "SEO",
-      8: "Web Development",
-    };
-    return categories[categoryId] || "General";
-  };
-
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -128,6 +114,7 @@ const BlogsComponent = () => {
             <div
               key={post.id}
               className="blog_details_item d-flex flex-column flex-md-row gap-6 mb-5 pb-4 border-bottom position-relative"
+              style={{ minHeight: "350px" }}
             >
               {/* Decorative background element */}
               <div
@@ -145,8 +132,8 @@ const BlogsComponent = () => {
                     <div
                       className="position-relative overflow-hidden rounded-4 shadow"
                       style={{
-                        width: "300px",
-                        height: "300px",
+                        width: "350px",
+                        height: "350px",
                         transition: "all 0.5s ease",
                       }}
                       onMouseEnter={(e) => {
@@ -181,15 +168,7 @@ const BlogsComponent = () => {
                         }}
                       />
 
-                      {/* Category badge */}
-                      <div className="position-absolute top-0 start-0 m-3">
-                        <span className="badge bg-primary text-white px-3 py-2 rounded-pill d-flex align-items-center gap-1 shadow">
-                          <i className="fas fa-tag"></i>
-                          <span>{getCategoryName(post.categoryId)}</span>
-                        </span>
-                      </div>
-
-                      {/* Gradient overlay */}
+                      
                       <div
                         className="position-absolute bottom-0 start-0 w-100 h-25"
                         style={{
@@ -207,16 +186,7 @@ const BlogsComponent = () => {
                 {/* Date with enhanced styling */}
                 <div className="d-flex align-items-center gap-3 mb-3">
                   <div className="d-flex align-items-center gap-2 text-primary bg-primary bg-opacity-10 px-3 py-1 rounded-pill">
-                    <i className="far fa-calendar"></i>
-                    <span className="small fw-medium">
-                      {formatDate(post.createdAt)}
-                    </span>
-                  </div>
-
-                  {/* Author info */}
-                  <div className="d-flex align-items-center gap-2 text-muted">
-                    <i className="far fa-user-circle"></i>
-                    <span className="small">By Admin</span>
+                    <span>{post.category.name}</span>
                   </div>
                 </div>
 
@@ -263,21 +233,7 @@ const BlogsComponent = () => {
                     {post.excerpt || post.content?.substring(0, 180) + "..."}
                   </p>
 
-                  {/* Tags */}
-                  <div className="d-flex flex-wrap gap-2 mb-3">
-                    <span className="badge bg-light text-dark px-3 py-1 rounded-pill border d-flex align-items-center gap-1">
-                      <i className="fas fa-hashtag text-primary"></i>
-                      <span>Trending</span>
-                    </span>
-                    <span className="badge bg-light text-dark px-3 py-1 rounded-pill border d-flex align-items-center gap-1">
-                      <i className="fas fa-hashtag text-primary"></i>
-                      <span>Tutorial</span>
-                    </span>
-                    <span className="badge bg-light text-dark px-3 py-1 rounded-pill border d-flex align-items-center gap-1">
-                      <i className="fas fa-hashtag text-primary"></i>
-                      <span>Guide</span>
-                    </span>
-                  </div>
+                  
                 </div>
 
                 {/* Enhanced Read More Button */}
@@ -309,97 +265,8 @@ const BlogsComponent = () => {
                     <i className="fas fa-arrow-right"></i>
                   </Link>
 
-                  {/* Action buttons */}
-                  <div className="d-flex gap-2">
-                    <button
-                      className="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        transition: "all 0.3s ease",
-                      }}
-                      title="Save for later"
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "#f8f9fa";
-                        e.currentTarget.style.transform = "scale(1.1)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "";
-                        e.currentTarget.style.transform = "scale(1)";
-                      }}
-                    >
-                      <i className="far fa-bookmark"></i>
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        transition: "all 0.3s ease",
-                      }}
-                      title="Share article"
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "#f8f9fa";
-                        e.currentTarget.style.transform = "scale(1.1)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "";
-                        e.currentTarget.style.transform = "scale(1)";
-                      }}
-                    >
-                      <i className="fas fa-share-alt"></i>
-                    </button>
-                  </div>
                 </div>
 
-                {/* Stats row */}
-                <div className="d-flex gap-4 mt-4 pt-3 border-top">
-                  <div className="text-center">
-                    <div
-                      className="text-primary fw-bold fs-5"
-                      style={{ transition: "transform 0.3s ease" }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = "scale(1.2)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = "scale(1)";
-                      }}
-                    >
-                      125
-                    </div>
-                    <small className="text-muted">Views</small>
-                  </div>
-                  <div className="text-center">
-                    <div
-                      className="text-warning fw-bold fs-5"
-                      style={{ transition: "transform 0.3s ease" }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = "scale(1.2)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = "scale(1)";
-                      }}
-                    >
-                      24
-                    </div>
-                    <small className="text-muted">Likes</small>
-                  </div>
-                  <div className="text-center">
-                    <div
-                      className="text-success fw-bold fs-5"
-                      style={{ transition: "transform 0.3s ease" }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = "scale(1.2)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = "scale(1)";
-                      }}
-                    >
-                      8
-                    </div>
-                    <small className="text-muted">Comments</small>
-                  </div>
-                </div>
               </div>
             </div>
           );
@@ -468,49 +335,7 @@ const BlogsComponent = () => {
           </nav>
         )}
 
-        {/* Alternative Pagination with Bootstrap Button Group */}
-        {/* {blog.length > postsPerPage && (
-          <div className="d-none d-md-flex justify-content-center mt-5">
-            <div
-              className="btn-group"
-              role="group"
-              aria-label="Blog navigation"
-            >
-              <button
-                type="button"
-                className={`btn btn-outline-primary ${currentPage === 1 ? "disabled" : ""}`}
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-              >
-                <i className="fas fa-chevron-left me-1"></i> Previous
-              </button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (pageNum) => (
-                  <button
-                    key={pageNum}
-                    type="button"
-                    className={`btn ${currentPage === pageNum ? "btn-primary" : "btn-outline-primary"}`}
-                    onClick={() => setCurrentPage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                ),
-              )}
-
-              <button
-                type="button"
-                className={`btn btn-outline-primary ${currentPage === totalPages ? "disabled" : ""}`}
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-              >
-                Next <i className="fas fa-chevron-right ms-1"></i>
-              </button>
-            </div>
-          </div>
-        )} */}
+        
 
         {/* Mobile Pagination */}
         {blog.length > postsPerPage && (
@@ -541,18 +366,7 @@ const BlogsComponent = () => {
           </div>
         )}
 
-        {/* View All Button */}
-        {blog.length > 0 && (
-          <div className="text-center mt-5">
-            <Link
-              href="/blogs"
-              className="btn btn-primary px-5 py-3 rounded-pill fw-semibold"
-            >
-              <i className="fas fa-book me-2"></i>
-              View All Blog Posts
-            </Link>
-          </div>
-        )}
+        
 
         {/* No Posts Message */}
         {blog.length === 0 && !loading && (

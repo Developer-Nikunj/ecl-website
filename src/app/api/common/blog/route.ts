@@ -104,6 +104,11 @@ export async function GET(request: NextRequest) {
       attributes:{
         exclude:["updatedAt","views","status","active"],
       },
+      include: {
+        model: blogCategoryModel,
+        as: "category",
+        attributes: ["id", "name"],
+      },
     });
 
     const total = await Blog.count({ where });
